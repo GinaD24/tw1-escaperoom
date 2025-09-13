@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Inicio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <!-- Boostrap core css -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+
+    <!-- css -->
+    <link rel="stylesheet" th:href="@{/css/inicio.css}"/>
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a  class="navbar-brand" href="#">ESCAPE ROOM</a>
+        <div class="d-flex">
+            <button class="btn btn-outline-light rounded-circle me-2"><i class="bi bi-person"></i></button>
+            <button class="btn btn-outline-light"><i class="bi bi-list"></i></button>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container my-5">
+    <div class="row justify-content-center g-4">
+
+            <div class="col-md-3"  th:each="sala : ${salas}">
+                <a th:href="@{/inicio/sala/{id}(id=${sala.id})}">
+
+                <div class="card text-center p-3 shadow">
+                    <span class="lock-icon"><i class="bi bi-unlock"></i></span>
+                    <img src="https://via.placeholder.com/80x80/6c63ff/ffffff?text=Door1"
+                         class="card-img-top mx-auto" alt="Sala">
+                    <h5 class="mt-2" th:text="${sala.nombre}"></h5>
+                    <p th:text="'Dificultad: ' + ${sala.dificultad}"></p>
+                    <p th:text="'Escenario: ' + ${sala.escenario}"></p>
+                </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+
+<!-- Bootstrap JS + Icons -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</body>
+</html>

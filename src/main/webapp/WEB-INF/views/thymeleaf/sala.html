@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Sala</title>
+
+    <!-- Boostrap core css -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+
+    <!-- custom style -->
+    <link rel="stylesheet" th:href="@{/css/sala.css}"/>
+</head>
+<body>
+
+<!-- Logo -->
+<div class="logo">
+    <i class="bi bi-door-open-fill" style="font-size: 2rem; color:#000;"></i>
+</div>
+
+<!-- Contenido principal -->
+<div class="container">
+    <h1 th:text="${SalaObtenida.nombre}"></h1>
+    <div  class="nivel" th:text="${SalaObtenida.dificultad}"></div>
+
+    <p class="historia" th:text="${SalaObtenida.historia}"> </p>
+
+    <img src="https://via.placeholder.com/120x200/6c63ff/ffffff?text=DOOR" class="door-img" alt="Puerta">
+
+    <div>
+        <button class="btn btn-primary">ESTOY LISTO</button>
+        <button class="btn btn-danger">ELEGIR OTRA SALA</button>
+    </div>
+
+    <p class="nota">
+        Una vez que entres a la sala, el cronómetro comenzará a correr.
+        Tu misión es resolver los acertijos antes de que el tiempo llegue a cero.
+    </p>
+</div>
+
+</body>
+
+</html>
