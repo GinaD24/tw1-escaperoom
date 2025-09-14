@@ -2,6 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.Sala;
 import com.tallerwebi.dominio.ServicioSala;
+import com.tallerwebi.dominio.excepcion.NoHaySalasExistentes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,9 +26,13 @@ public class ControladorInicio {
 
     @GetMapping("/")
     public ModelAndView verInicio() {
-
         ModelMap modelo = new ModelMap();
-        modelo.put("salas", servicioSala.getSalas());
+
+        try{
+            modelo.put("salas", servicioSala.getSalas());
+        }catch(NoHaySalasExistentes e){
+            modelo.put("error", "No hay salas existentes.");
+        }
         return new ModelAndView("inicio", modelo);
     }
 

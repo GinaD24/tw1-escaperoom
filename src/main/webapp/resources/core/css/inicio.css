@@ -12,8 +12,11 @@ body {
 .navbar-brand {
     font-family: 'Rajdhani', sans-serif;
     font-weight: bold;
-    font-size: 3rem;
-    color: #ffeb3b;
+    font-size: 4rem;
+    color: #fafb63;
+}
+.logo-escape{
+    width: 60px;
 }
 .card {
     background-color: rgba(0,0,0,0.5);

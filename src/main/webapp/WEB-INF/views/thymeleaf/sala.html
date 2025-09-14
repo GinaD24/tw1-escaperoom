@@ -14,13 +14,18 @@
 </head>
 <body>
 
-<!-- Logo -->
-<div class="logo">
-    <i class="bi bi-door-open-fill" style="font-size: 2rem; color:#000;"></i>
-</div>
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <div>
+            <a th:href="@{/inicio/}">
+                <img class="logo-escape" style="width: 60px" th:src="@{/img/Logo.png}">
+            </a>
+        </div>
+    </div>
+</nav>
 
 <!-- Contenido principal -->
-<div class="container">
+<div class="container" th:if="${SalaObtenida != null}">
     <h1 th:text="${SalaObtenida.nombre}"></h1>
     <div  class="nivel" th:text="${SalaObtenida.dificultad}"></div>
 
@@ -38,6 +43,8 @@
         Tu misión es resolver los acertijos antes de que el tiempo llegue a cero.
     </p>
 </div>
+
+<h3 th:if="${error != null}" th:text="${error}" class="text-danger"></h3>
 
 </body>
 

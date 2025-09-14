@@ -1,5 +1,7 @@
 package com.tallerwebi.dominio;
 
+import java.time.Duration;
+
 public class Sala {
 
     private Integer id;
@@ -8,17 +10,22 @@ public class Sala {
     private String escenario;
     private String historia;
     private Boolean esta_habilitada;
+    private Integer cantidadAcertijos;
+    private Duration duracion;
 
     public Sala() {
     }
 
-    public Sala(Integer id, String nombre, String dificultad, String escenario, String historia, Boolean esta_habilitada) {
+    public Sala(Integer id, String nombre, String dificultad, String escenario, String historia,
+                Boolean esta_habilitada, Integer cantidadAcertijos, Duration duracion) {
         this.id = id;
         this.nombre = nombre;
         this.dificultad = dificultad;
         this.escenario = escenario;
         this.historia = historia;
         this.esta_habilitada = esta_habilitada;
+        this.cantidadAcertijos = cantidadAcertijos;
+        this.duracion = duracion;
     }
 
     public Integer getId() {
@@ -67,5 +74,21 @@ public class Sala {
 
     public void setEsta_habilitada(Boolean esta_habilitada) {
         this.esta_habilitada = esta_habilitada;
+    }
+
+    public Integer getCantidadAcertijos() {
+        return cantidadAcertijos;
+    }
+
+    public void setCantidadAcertijos(Integer cantidadAcertijos) {
+        this.cantidadAcertijos = cantidadAcertijos;
+    }
+
+    public Duration getDuracion() {
+        return duracion;
+    }
+
+    public void setDuracion(Duration duracion) {
+        this.duracion = duracion;
     }
 }

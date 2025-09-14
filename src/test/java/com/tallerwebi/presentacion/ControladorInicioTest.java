@@ -2,18 +2,20 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.Sala;
 import com.tallerwebi.dominio.ServicioSala;
+import com.tallerwebi.dominio.excepcion.NoHaySalasExistentes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ControladorInicioTest {
 
@@ -105,7 +107,6 @@ public class ControladorInicioTest {
 
     @Test
     public void dadoQueExistenSalasCuandoQuieroVerUnaQueNoExisteDevuelveMensajeDeError_SalaNoEncontrada() {
-
         //preparacion
         Sala sala1 = new Sala();
         Sala sala2 = new Sala();
@@ -128,7 +129,48 @@ public class ControladorInicioTest {
 
         assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Sala no encontrada"));
 
+    }
 
+    @Test
+    public void dadoQueNOExisteUnaListaDeSalasCuandoPidoQueLasMuestreDevuelveUnMensajeDeError_NoHaySalasExistentes() {
+
+        //preparacion
+        doThrow(NoHaySalasExistentes.class).when(servicioSala).getSalas();
+
+        //ejecucion
+        ModelAndView modelAndView = controladorInicio.verInicio();
+
+        //verificacion
+        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("No hay salas existentes."));
+
+    }
+
+    @Test
+    public void dadoQueExisteUnaListaDeSalasCuandoPidoQueMuestreUnaSalaPrincipianteEstaCuentaCon6AcertijosY10Minutos() {
+        //preparacion
+        Sala sala1 = new Sala();
+        sala1.setId(1);
+        sala1.setCantidadAcertijos(6);
+        sala1.setDuracion(Duration.ofMinutes(10));
+        Sala sala2 = new Sala();
+        Sala sala3 = new Sala();
+
+        List<Sala> salas = new ArrayList<Sala>();
+        salas.add(sala1);
+        salas.add(sala2);
+        salas.add(sala3);
+
+        when(servicioSala.getSalas()).thenReturn((ArrayList<Sala>) salas);
+        when(servicioSala.obtenerSalaPorId(1)).thenReturn(sala1);
+
+        //ejecucion
+        ModelAndView modelAndView = controladorInicio.verSala(sala1.getId());
+
+        Sala salaObtenida = (Sala) modelAndView.getModel().get("SalaObtenida");
+
+        //verificacion
+        assertThat(salaObtenida.getCantidadAcertijos(), equalTo(6));
+        assertThat(salaObtenida.getDuracion(), equalTo(Duration.ofMinutes(10)));
 
     }
 }
