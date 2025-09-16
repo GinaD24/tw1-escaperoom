@@ -1,0 +1,64 @@
+body {
+    background: linear-gradient(to right, #2c0d5a, #0d1a4f);
+    background-repeat: no-repeat;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.ranking-card {
+    background-color: rgba(0,0,0,0.5);
+    border: none;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.ranking-card h2 {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: bold;
+    font-size: 2.5rem;
+    color: #ffeb3b;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    letter-spacing: 2px;
+}
+
+
+.table {
+    color: #fff; 
+    background-color: rgba(255, 255, 255, 0.1); 
+    border-radius: 10px;
+    overflow: hidden; 
+}
+
+.table thead th {
+    background-color: rgba(255, 235, 59, 0.2);
+    border-bottom: 2px solid #ffeb3b;
+    text-align: center;
+}
+
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+
+.table tbody td, .table tbody th {
+    vertical-align: middle;
+    text-align: center;
+    font-size: 1rem;
+    padding: 1rem 0.5rem;
+}
+
+
+.table tbody th {
+    font-weight: bold;
+    color: #ffeb3b;
+}
+
+
+.table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
