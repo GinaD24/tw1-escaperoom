@@ -1,6 +1,8 @@
 package com.tallerwebi.presentacion;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -12,6 +14,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.cglib.core.Local;
 
 import com.tallerwebi.dominio.Ranking;
 import com.tallerwebi.dominio.RankingRepository;
@@ -29,7 +33,22 @@ public class ServicioRankingTest {
     }
 
     @Test
-    public void obtenerRankingPorSalaDebeDevolverUnaListaDeRankingsOrdenados() {
+    public void dadoQueExisteUnRankingPuedoAgregarNuevosRankingsDeJugadores(){
+        
+       Integer idSala = 1;
+       when(rankingRepository.buscarPorIdDeSalaYNombreDeUsuario(idSala, "Ruben")).thenReturn(null);
+
+       Ranking nuevoRanking = new Ranking(idSala, 600L, "Ruben", 35.0, 2, LocalDate.now(), new ArrayList<>());
+
+       servicioRanking.agregarRanking(nuevoRanking);
+
+       verify(rankingRepository, times(1)).guardar(nuevoRanking);
+    }
+
+
+
+    @Test
+    public void dadoQueExisteUnRankingPuedoObtenerRankingPorSalaQueDevuelveUnaListaDeRankingsOrdenados() {
         Integer idSala = 1;
         List<Ranking> rankingsDesordenados = new ArrayList<>();
         
@@ -46,6 +65,67 @@ public class ServicioRankingTest {
         assertThat(rankingsObtenidos.get(0).getPuntaje(), is(1200L));
         assertThat(rankingsObtenidos.get(1).getPuntaje(), is(1000L));
         assertThat(rankingsObtenidos.get(2).getPuntaje(), is(800L));
+    }
+
+
+    @Test
+    public void dadoQueExisteUnRankingSiTengoUnPuntajeMejorDeUnJugadorElRankingSeActualiza(){
+        Integer idSala = 2;
+
+        Ranking antiguoRanking = new Ranking(idSala, 700L, "Martina", 25.0, 3, LocalDate.now(), new ArrayList<>());
+
+        when(rankingRepository.buscarPorIdDeSalaYNombreDeUsuario(idSala, "Martina")).thenReturn(antiguoRanking);
+
+        Ranking nuevoRanking = new Ranking(idSala, 1000L, "Martina", 10.0, 1, LocalDate.now(), new ArrayList<>());
+
+        servicioRanking.actualizarRanking(nuevoRanking);
+        verify(rankingRepository, times(1)).guardar(nuevoRanking);
+    }
+
+    @Test
+    public void dadoQueExisteUnRankingSiUnJugadorObtieneUnPuntajePeorQueAntesElRankingNoSeActualiza(){
+        Integer idSala = 2;
+
+        Ranking primerRanking = new Ranking(idSala, 700L, "Juan", 30.0, 2, LocalDate.now(), new ArrayList<>());
+
+        when(rankingRepository.buscarPorIdDeSalaYNombreDeUsuario(idSala, "Juan")).thenReturn(primerRanking);
+
+        Ranking segundoRanking = new Ranking(idSala, 500L, "Juan", 40.0, 3, LocalDate.now(), new ArrayList<>());
+
+        servicioRanking.actualizarRanking(segundoRanking);
+        verify(rankingRepository, times(0)).guardar(segundoRanking);
+
+    }
+
+    @Test
+    public void dadoQueExisteUnRankingSiNoExistenPuntajesSeDevuelveUnaListaVacia(){
+        Integer idSala = 1;
+        List<Ranking> rankingVacio = new ArrayList<>();
+
+        when(rankingRepository.obtenerRankingPorSala(idSala)).thenReturn(rankingVacio);
+
+        servicioRanking.obtenerRankingPorSala(idSala);
+
+        assertThat(rankingVacio, is(empty()));
+    }
+
+    @Test
+    public void dadoQueExisteUnRankingSi2JugadoresTienenElMismoPuntajeSeDecidePorTiempoFinalizacionYPistasUtilizadas(){
+        Integer idSala = 1;
+        List<Ranking> rankingsDesordenados = new ArrayList<>();
+
+        Ranking puntaje1 = new Ranking(idSala, 800L,"Clara", 25.0, 3, LocalDate.now(), new ArrayList<>());
+        Ranking puntaje2 = new Ranking(idSala, 800L, "Mauro", 24.0, 2, LocalDate.now(), new ArrayList<>());
+
+        rankingsDesordenados.add(puntaje1);
+        rankingsDesordenados.add(puntaje2);
+        
+        when(rankingRepository.obtenerRankingPorSala(idSala)).thenReturn(rankingsDesordenados);
+
+        List<Ranking> rankingsOrdenados = servicioRanking.obtenerRankingPorSala(idSala);
+
+        assertThat(rankingsOrdenados.get(0).getNombreUsuario(), is("Mauro"));
+        assertThat(rankingsOrdenados.get(1).getNombreUsuario(), is("Clara"));
     }
 
 }
