@@ -11,4 +11,8 @@ public interface ServicioSala {
     Sala obtenerSalaPorId(Integer id);
 
     List<Sala> obtenerSalaPorDificultad(String dificultad);
+
+    void habilitarSalaPorId(Integer id);
+
+    void descontarAcertijo(Sala salaConCincoAcertijos);
 }
