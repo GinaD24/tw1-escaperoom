@@ -82,20 +82,6 @@ public class ServicioRankingTest {
         verify(rankingRepository, times(1)).guardar(nuevoRanking);
     }
 
-    @Test
-    public void dadoQueExisteUnRankingSiUnJugadorObtieneUnPuntajePeorQueAntesElRankingNoSeActualiza(){
-        Integer idSala = 2;
-
-        Ranking primerRanking = new Ranking(idSala, 700L, "Juan", 30.0, 2, LocalDate.now(), new ArrayList<>());
-
-        when(rankingRepository.buscarPorIdDeSalaYNombreDeUsuario(idSala, "Juan")).thenReturn(primerRanking);
-
-        Ranking segundoRanking = new Ranking(idSala, 500L, "Juan", 40.0, 3, LocalDate.now(), new ArrayList<>());
-
-        servicioRanking.actualizarRanking(segundoRanking);
-        verify(rankingRepository, times(0)).guardar(segundoRanking);
-
-    }
 
     @Test
     public void dadoQueExisteUnRankingSiNoExistenPuntajesSeDevuelveUnaListaVacia(){

@@ -24,8 +24,8 @@ public class ControladorRanking {
         this.servicioRanking = servicioRanking;
     }
 
-    @GetMapping("/sala/{id}")
-    public ModelAndView verRankings(@PathVariable("id") Integer idSala){
+    @GetMapping("/")
+    public ModelAndView verRankings(Integer idSala){
         ModelMap modelo = new ModelMap();
         List<Ranking> rankings = servicioRanking.obtenerRankingPorSala(idSala);
 
