@@ -29,7 +29,7 @@ public class ControladorInicio {
         ModelMap modelo = new ModelMap();
 
         try{
-            modelo.put("salas", servicioSala.getSalas());
+            modelo.put("salas", servicioSala.traerSalas());
         }catch(NoHaySalasExistentes e){
             modelo.put("error", "No hay salas existentes.");
         }
@@ -39,7 +39,7 @@ public class ControladorInicio {
     @GetMapping("/sala/{id}")
     public ModelAndView verSala(@PathVariable Integer id) {
         ModelMap modelo = new ModelMap();
-        List<Sala> salasObtenidas = servicioSala.getSalas();
+        List<Sala> salasObtenidas = servicioSala.traerSalas();
         
         Sala sala = servicioSala.obtenerSalaPorId(id);
        

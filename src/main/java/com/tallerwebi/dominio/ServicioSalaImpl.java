@@ -1,5 +1,8 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.excepcion.SalaInexistente;
+import javassist.expr.NewArray;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -8,66 +11,72 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class ServicioSalaImpl implements ServicioSala{
+public class ServicioSalaImpl implements ServicioSala {
+
+    private RepositorioSala repositorioSala;
+
+    @Autowired
+    public ServicioSalaImpl(RepositorioSala repositorioSala) {
+
+        this.repositorioSala = repositorioSala;
+    }
 
     private List<Sala> salas;
 
     @Override
-    public ArrayList<Sala> getSalas() {
-        ArrayList<Sala> salas = new ArrayList<>();
+    public ArrayList<Sala> traerSalas() {
 
-        Sala sala1 = new Sala(
-                1,
-                "La Mansión Misteriosa",
-                "Principiante",
-                "Mansión",
-                "Una noche tormentosa te encuentras atrapado en una vieja mansión llena de acertijos.",
-                true,
-                null,
-                null
-        );
-
-        Sala sala2 = new Sala(
-                2,
-                "El Laboratorio Secreto",
-                "Intermedio",
-                "Laboratorio",
-                "Un científico desaparecido dejó pistas en su laboratorio. ¿Podrás descubrir qué tramaba?",
-                true,
-                null,
-                null
-        );
-
-
-                Sala sala3 = new Sala(
-                3,
-                "La Cárcel Abandonada",
-                "Avanzado",
-                "Prisión",
-                "Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podrás escapar.",
-                false,
-                        null,
-                        null
-        );
-
-        salas.add(sala1);
-        salas.add(sala2);
-        salas.add(sala3);
-
-        return salas;
+        return (ArrayList<Sala>) repositorioSala.obtenerSalas();
     }
 
-
-    @Override
-    public Sala obtenerSalaPorId(Integer id) {
+    public Sala obtenerSalaPorId(Integer id){
         Sala sala = null;
-        List<Sala> salas = getSalas();
+        List<Sala> salas = repositorioSala.obtenerSalas();
 
-        for (Sala s : salas) {
-            if(s.getId().equals(id)){
-                sala = s;
+        if(salas != null) {
+            for (Sala s : salas) {
+                if (s.getId().equals(id)) {
+                    sala = s;
+                    break;
+                }
             }
         }
+
+        if(sala == null){
+            throw new SalaInexistente();
+        }
+
         return sala;
     }
+
+    @Override
+    public List<Sala> obtenerSalaPorDificultad(String dificultad) {
+        List<Sala> salasPorDificultad = new ArrayList<>();
+        List<Sala> salas = repositorioSala.obtenerSalas();
+
+        if(salas != null) {
+            for (Sala s : salas) {
+                if (s.getDificultad().equalsIgnoreCase(dificultad)) {
+                    salasPorDificultad.add(s);
+                }
+            }
+        }
+        return salasPorDificultad;
+    }
+
+    @Override
+    public void habilitarSalaPorId(Integer idRecibido) {
+        Sala salaParaHabilitar = this.obtenerSalaPorId(idRecibido);
+
+        salaParaHabilitar.setEsta_habilitada(true);
+    }
+
+    @Override
+    public void descontarAcertijo(Sala salaConCincoAcertijos) {
+        salaConCincoAcertijos.setCantidadAcertijos(salaConCincoAcertijos.getCantidadAcertijos() - 1);
+        salaConCincoAcertijos.descontarTiempo();
+
+    }
 }
+
+

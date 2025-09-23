@@ -27,7 +27,6 @@ public class ControladorInicioTest {
         this.servicioSala = mock(ServicioSala.class);
         this.controladorInicio = new ControladorInicio(servicioSala);
 
-
     }
 
 @Test
@@ -64,7 +63,7 @@ public class ControladorInicioTest {
         salas.add(sala2);
         salas.add(sala3);
 
-        when(servicioSala.getSalas()).thenReturn((ArrayList<Sala>) salas);
+        when(servicioSala.traerSalas()).thenReturn((ArrayList<Sala>) salas);
 
         ModelAndView modelAndView = controladorInicio.verInicio();
 
@@ -89,7 +88,7 @@ public class ControladorInicioTest {
         salas.add(sala2);
         salas.add(sala3);
 
-        when(servicioSala.getSalas()).thenReturn((ArrayList<Sala>) salas);
+        when(servicioSala.traerSalas()).thenReturn((ArrayList<Sala>) salas);
         when(servicioSala.obtenerSalaPorId(1)).thenReturn(sala1);
 
         //ejecucion
@@ -117,7 +116,7 @@ public class ControladorInicioTest {
         salas.add(sala2);
         salas.add(sala3);
 
-        when(servicioSala.getSalas()).thenReturn((ArrayList<Sala>) salas);
+        when(servicioSala.traerSalas()).thenReturn((ArrayList<Sala>) salas);
         when(servicioSala.obtenerSalaPorId(5)).thenReturn(sala1);
 
         //ejecucion
@@ -135,7 +134,7 @@ public class ControladorInicioTest {
     public void dadoQueNOExisteUnaListaDeSalasCuandoPidoQueLasMuestreDevuelveUnMensajeDeError_NoHaySalasExistentes() {
 
         //preparacion
-        doThrow(NoHaySalasExistentes.class).when(servicioSala).getSalas();
+        doThrow(NoHaySalasExistentes.class).when(servicioSala).traerSalas();
 
         //ejecucion
         ModelAndView modelAndView = controladorInicio.verInicio();
@@ -160,7 +159,7 @@ public class ControladorInicioTest {
         salas.add(sala2);
         salas.add(sala3);
 
-        when(servicioSala.getSalas()).thenReturn((ArrayList<Sala>) salas);
+        when(servicioSala.traerSalas()).thenReturn((ArrayList<Sala>) salas);
         when(servicioSala.obtenerSalaPorId(1)).thenReturn(sala1);
 
         //ejecucion
