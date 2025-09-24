@@ -33,10 +33,5 @@ public class ControladorRanking {
         modelo.put("idSala", idSala);
 
         return new ModelAndView("ranking-sala", modelo);
-
-
     }
-
-
-
 }

@@ -43,7 +43,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="ranking, i : ${rankings}">
-                            <th scope="row" th:text="${i.index + 1}"></th>
+                            <td scope="row" th:text="${i.index + 1}"></td>
                             <td th:text="${ranking.nombreUsuario}"></td>
                             <td th:text="${ranking.tiempoFinalizacion}"></td>
                             <td th:text="${ranking.cantidadPistas}"></td>
