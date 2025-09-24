@@ -4,11 +4,13 @@ import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import javax.transaction.Transactional;
 
 @Service
 public class ServicioRankingImpl implements ServicioRanking {
 
     private final RankingRepository rankingRepository;
+
 
     @Autowired
     public ServicioRankingImpl(RankingRepository rankingRepository) {
@@ -16,11 +18,13 @@ public class ServicioRankingImpl implements ServicioRanking {
     }
 
     @Override
+    @Transactional
     public void agregarRanking(Ranking nuevoRanking) {
         this.rankingRepository.guardar(nuevoRanking);
     }
 
     @Override
+    @Transactional
     public void actualizarRanking(Ranking nuevoRanking) {
         Ranking rankingExistente = this.rankingRepository.buscarPorIdDeSalaYNombreDeUsuario(nuevoRanking.getIdSala(), nuevoRanking.getNombreUsuario());
 
@@ -34,6 +38,7 @@ public class ServicioRankingImpl implements ServicioRanking {
     }
 
     @Override
+    @Transactional
     public List<Ranking> obtenerRankingPorSala(Integer idSala) {
         List<Ranking> rankingsDeSala = this.rankingRepository.obtenerRankingPorSala(idSala);
 
