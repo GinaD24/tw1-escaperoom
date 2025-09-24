@@ -25,7 +25,7 @@ public class HibernateConfig {
         String dbPassword = System.getenv("DB_PASSWORD");
 
         if (dbHost == null) dbHost = "localhost";
-        if (dbPort == null) dbPort = "3310";
+        if (dbPort == null) dbPort = "3306";
         if (dbName == null) dbName = "tallerwebi";
         if (dbUser == null) dbUser = "root";
         if (dbPassword == null) dbPassword = "rootpassword";

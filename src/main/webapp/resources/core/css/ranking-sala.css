@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Rajdhani', sans-serif;
 }
 
 body {
@@ -38,7 +39,6 @@ body::before {
 }
 
 .navbar-brand {
-    font-family: 'Rajdhani', sans-serif;
     font-weight: 700;
     font-size: 2rem;
     color: #ffeb3b !important;
@@ -106,7 +106,6 @@ body::before {
 
 /* Title */
 .card-title {
-    font-family: 'Rajdhani', sans-serif !important;
     font-weight: 700 !important;
     font-size: 2.8rem !important;
     color: #ffeb3b !important;
@@ -151,7 +150,7 @@ body::before {
 .table thead th {
     padding: 1.2rem 1rem;
     text-align: center;
-    font-family: 'Rajdhani', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     font-size: 1.1rem;
     color: #ffeb3b !important;
@@ -171,9 +170,6 @@ body::before {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(255, 255, 255, 0.03);
-}
 
 .table tbody td,
 .table tbody th {
@@ -187,7 +183,6 @@ body::before {
 
 /* Position Column (first column) */
 .table tbody th[scope="row"] {
-    font-family: 'Rajdhani', sans-serif;
     font-weight: 700;
     font-size: 1.3rem;
     color: #ffeb3b;
@@ -223,13 +218,11 @@ body::before {
 .table tbody td:nth-child(3),
 .table tbody td:nth-child(4) {
     color: #b0b0b0;
-    font-family: 'Rajdhani', sans-serif;
     font-weight: 500;
 }
 
 /* Score Column (last column) */
 .table tbody td:last-child {
-    font-family: 'Rajdhani', sans-serif;
     font-weight: 600;
     font-size: 1.1rem;
     color: #ffeb3b;
@@ -290,4 +283,8 @@ body::before {
     .table thead th:nth-child(3) { width: 20%; }
     .table thead th:nth-child(4) { width: 15%; }
     .table thead th:nth-child(5) { width: 20%; }
+}
+
+td{
+    color:white !important;
 }
