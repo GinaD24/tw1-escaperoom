@@ -18,21 +18,38 @@ body {
 .logo-escape{
     width: 60px;
 }
-.card {
+
+.sala-card a {
+    text-decoration: none;
+    color: #a882d0;
+}
+
+.sala-card {
     background-color: rgba(0,0,0,0.5);
     border: none;
-    border-radius: 15px;
-    text-align: center;
-    padding: 20px;
+    border-radius: 20px;
+    padding: 40px;
     position: relative;
     transition: transform 0.2s;
+    min-width: 200px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
 }
+
+.sala-card img {
+    width: 120px;
+    margin-bottom: 20px;
+}
+.sala-card h5{
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
 .card:hover {
-    transform: scale(1.05);
-}
-.card img {
-    width: 80px;
-    margin-bottom: 15px;
+    transform: scale(1.0);
 }
 .lock-icon {
     position: absolute;
