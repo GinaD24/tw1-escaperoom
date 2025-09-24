@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import javassist.expr.NewArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ public class ServicioSalaImpl implements ServicioSala {
 
     @Autowired
     public ServicioSalaImpl(RepositorioSala repositorioSala) {
+
         this.repositorioSala = repositorioSala;
     }
 
@@ -27,7 +29,7 @@ public class ServicioSalaImpl implements ServicioSala {
         return (ArrayList<Sala>) repositorioSala.obtenerSalas();
     }
 
-    public Sala obtenerSalaPorId(Integer id) {
+    public Sala obtenerSalaPorId(Integer id){
         Sala sala = null;
         List<Sala> salas = repositorioSala.obtenerSalas();
 
@@ -35,9 +37,15 @@ public class ServicioSalaImpl implements ServicioSala {
             for (Sala s : salas) {
                 if (s.getId().equals(id)) {
                     sala = s;
+                    break;
                 }
             }
         }
+
+        if(sala == null){
+            throw new SalaInexistente();
+        }
+
         return sala;
     }
 
@@ -56,6 +64,19 @@ public class ServicioSalaImpl implements ServicioSala {
         return salasPorDificultad;
     }
 
+    @Override
+    public void habilitarSalaPorId(Integer idRecibido) {
+        Sala salaParaHabilitar = this.obtenerSalaPorId(idRecibido);
+
+        salaParaHabilitar.setEsta_habilitada(true);
+    }
+
+    @Override
+    public void descontarAcertijo(Sala salaConCincoAcertijos) {
+        salaConCincoAcertijos.setCantidadAcertijos(salaConCincoAcertijos.getCantidadAcertijos() - 1);
+        salaConCincoAcertijos.descontarTiempo();
+
+    }
 }
 
 

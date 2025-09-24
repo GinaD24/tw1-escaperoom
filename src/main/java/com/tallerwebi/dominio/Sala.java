@@ -91,4 +91,8 @@ public class Sala {
     public void setDuracion(Duration duracion) {
         this.duracion = duracion;
     }
+
+    public void descontarTiempo() {
+        this.setDuracion(this.getDuracion().minusMinutes(3));
+    }
 }
