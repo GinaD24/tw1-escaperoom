@@ -1,0 +1,63 @@
+body {
+    background: linear-gradient(to right, #2c0d5a, #0d1a4f);
+    background-repeat: no-repeat;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+}
+.navbar {
+    background-color: #1a1a3b;
+}
+.navbar-brand {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: bold;
+    font-size: 4rem;
+    color: #fafb63;
+}
+.logo-escape{
+    width: 60px;
+}
+
+.sala-card a {
+    text-decoration: none;
+    color: #a882d0;
+}
+
+.sala-card {
+    background-color: rgba(0,0,0,0.5);
+    border: none;
+    border-radius: 20px;
+    padding: 40px;
+    position: relative;
+    transition: transform 0.2s;
+    min-width: 200px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.sala-card img {
+    width: 120px;
+    margin-bottom: 20px;
+}
+.sala-card h5{
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.card:hover {
+    transform: scale(1.0);
+}
+.lock-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+}
+.disabled-card {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
