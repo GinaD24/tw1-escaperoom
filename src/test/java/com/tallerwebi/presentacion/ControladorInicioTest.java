@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,25 +28,16 @@ public class ControladorInicioTest {
 
     }
 
-@Test
+    @Test
     public void dadoQueExisteUnaVistaDeInicioCuandoPidoQueLaMuestreLaDevuelve() {
 
-    //preparacion
+        //preparacion
 
-    Sala sala1 = new Sala();
-    Sala sala2 = new Sala();
-    Sala sala3 = new Sala();
-    //ejecucion
-    List<Sala> salas = new ArrayList<Sala>();
-    salas.add(sala1);
-    salas.add(sala2);
-    salas.add(sala3);
-    ModelAndView modelAndView = controladorInicio.verInicio();
-
-    //verificacion
-
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("inicio"));
-}
+        //ejecucion
+        ModelAndView modelAndView = controladorInicio.verInicio();
+        //verificacion
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("inicio"));
+    }
 
     @Test
     public void dadoQueExisteUnaListaDeSalasCuandoPidoQueLasMuestreDevuelveLaVistaDeInicioCon3Salas() {
@@ -67,12 +57,14 @@ public class ControladorInicioTest {
 
         ModelAndView modelAndView = controladorInicio.verInicio();
 
-       List<Sala> salasObtenidas = (List<Sala>) modelAndView.getModel().get("salas");
+        List<Sala> salasObtenidas = (List<Sala>) modelAndView.getModel().get("salas");
 
         //verificacion
 
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("inicio"));
         assertThat(salasObtenidas.size(), equalTo(3));
+
+        verify(servicioSala).traerSalas();
     }
 
     @Test
@@ -81,24 +73,15 @@ public class ControladorInicioTest {
         //preparacion
         Sala sala1 = new Sala();
         sala1.setId(1);
-        Sala sala2 = new Sala();
-        Sala sala3 = new Sala();
-        List<Sala> salas = new ArrayList<Sala>();
-        salas.add(sala1);
-        salas.add(sala2);
-        salas.add(sala3);
 
-        when(servicioSala.traerSalas()).thenReturn((ArrayList<Sala>) salas);
         when(servicioSala.obtenerSalaPorId(1)).thenReturn(sala1);
 
         //ejecucion
-
         ModelAndView modelAndView = controladorInicio.verSala(sala1.getId());
 
-        List<Sala> salasObtenidas = (List<Sala>) modelAndView.getModel().get("salas");
         //verificacion
-
         assertThat(modelAndView.getModel().get("SalaObtenida"), equalTo(sala1));
+        verify(servicioSala).obtenerSalaPorId(1);
 
 
     }
@@ -106,28 +89,16 @@ public class ControladorInicioTest {
 
     @Test
     public void dadoQueExistenSalasCuandoQuieroVerUnaQueNoExisteDevuelveMensajeDeError_SalaNoEncontrada() {
+
         //preparacion
-        Sala sala1 = new Sala();
-        Sala sala2 = new Sala();
-        Sala sala3 = new Sala();
-
-        List<Sala> salas = new ArrayList<Sala>();
-        salas.add(sala1);
-        salas.add(sala2);
-        salas.add(sala3);
-
-        when(servicioSala.traerSalas()).thenReturn((ArrayList<Sala>) salas);
-        when(servicioSala.obtenerSalaPorId(5)).thenReturn(sala1);
+        when(servicioSala.obtenerSalaPorId(5)).thenReturn(null);
 
         //ejecucion
+        ModelAndView modelAndView = controladorInicio.verSala(5);
 
-        ModelAndView modelAndView = controladorInicio.verSala(sala1.getId());
-
-        List<Sala> salasObtenidas = (List<Sala>) modelAndView.getModel().get("salas");
         //verificacion
-
         assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Sala no encontrada"));
-
+        verify(servicioSala).obtenerSalaPorId(5);
     }
 
     @Test
@@ -141,7 +112,6 @@ public class ControladorInicioTest {
 
         //verificacion
         assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("No hay salas existentes."));
-
     }
 
     @Test
@@ -151,15 +121,7 @@ public class ControladorInicioTest {
         sala1.setId(1);
         sala1.setCantidadAcertijos(6);
         sala1.setDuracion(Duration.ofMinutes(10));
-        Sala sala2 = new Sala();
-        Sala sala3 = new Sala();
 
-        List<Sala> salas = new ArrayList<Sala>();
-        salas.add(sala1);
-        salas.add(sala2);
-        salas.add(sala3);
-
-        when(servicioSala.traerSalas()).thenReturn((ArrayList<Sala>) salas);
         when(servicioSala.obtenerSalaPorId(1)).thenReturn(sala1);
 
         //ejecucion
@@ -170,6 +132,50 @@ public class ControladorInicioTest {
         //verificacion
         assertThat(salaObtenida.getCantidadAcertijos(), equalTo(6));
         assertThat(salaObtenida.getDuracion(), equalTo(Duration.ofMinutes(10)));
+        verify(servicioSala).obtenerSalaPorId(1);
 
     }
+
+    @Test
+    public void deberiaDevolverLasSalasPrincipiantesCuandoLasFiltroPorDificultad(){
+
+        Sala sala1 = new  Sala(1, "SALA 1", "Principiante", "", "", null, null, null);
+        Sala sala2 = new  Sala(2, "SALA 2", "Intermedio", "", "", null, null, null);
+        Sala sala3 = new  Sala(3, "SALA 3", "Principiante", "", "", null, null, null);
+        Sala sala4 = new  Sala(4, "SALA 4", "Avanzado", "", "", null, null, null);
+
+        List<Sala> salas = new ArrayList<>();
+        salas.add(sala1);
+        salas.add(sala3);
+
+
+        when(servicioSala.obtenerSalaPorDificultad("Principiante")).thenReturn(salas);
+        List<Sala> salasObtenidas =  servicioSala.obtenerSalaPorDificultad("Principiante");
+
+        verify(servicioSala).obtenerSalaPorDificultad("Principiante");
+        assertThat(salasObtenidas, equalTo(salas));
+    }
+
+    @Test
+    public void deberiaDevolverTodasLasSalasCuandoLasFiltroPorTodasLasDificultades(){
+
+        Sala sala1 = new  Sala(1, "SALA 1", "Principiante", "", "", null, null, null);
+        Sala sala2 = new  Sala(2, "SALA 2", "Intermedio", "", "", null, null, null);
+        Sala sala3 = new  Sala(3, "SALA 3", "Principiante", "", "", null, null, null);
+        Sala sala4 = new  Sala(4, "SALA 4", "Avanzado", "", "", null, null, null);
+
+        List<Sala> salas = new ArrayList<>();
+        salas.add(sala1);
+        salas.add(sala2);
+        salas.add(sala3);
+        salas.add(sala4);
+
+
+        when(servicioSala.obtenerSalaPorDificultad("")).thenReturn(salas);
+        List<Sala> salasObtenidas =  servicioSala.obtenerSalaPorDificultad("");
+
+        verify(servicioSala).obtenerSalaPorDificultad("");
+        assertThat(salasObtenidas, equalTo(salas));
+    }
+
 }

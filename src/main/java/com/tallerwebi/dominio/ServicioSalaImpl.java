@@ -1,14 +1,11 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
-import javassist.expr.NewArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ServicioSalaImpl implements ServicioSala {
@@ -37,7 +34,6 @@ public class ServicioSalaImpl implements ServicioSala {
             for (Sala s : salas) {
                 if (s.getId().equals(id)) {
                     sala = s;
-                    break;
                 }
             }
         }

@@ -25,7 +25,7 @@
                 <img class="logo-escape" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
             </a>
         </div>
-        <a  class="navbar-brand" href="#">ESCAPE ROOM</a>
+        <a class="navbar-brand">ESCAPE ROOM</a>
         <div class="d-flex">
             <button class="btn btn-outline-light rounded-circle me-2"><i class="bi bi-person"></i></button>
             <button class="btn btn-outline-light"><i class="bi bi-list"></i></button>
@@ -34,7 +34,27 @@
 </nav>
 
 <main>
+
     <div class="container my-5">
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-6">
+                <form th:action="@{/inicio/filtrar-salas}" method="get">
+                    <div class="input-group">
+                        <select class="form-select rounded-pill me-2" name="filtroDificultad" id="filtroDificultad">
+                            <option value="">Todas las dificultades</option>
+                            <option value="Principiante">Principiante</option>
+                            <option value="Intermedio">Intermedio</option>
+                            <option value="Avanzado">Avanzado</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4">
+                            Filtrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div class="row justify-content-center g-4">
 
             <div class="col-md-5" th:each="sala : ${salas}" >

@@ -1,4 +1,4 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.dominio;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -14,12 +14,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.cglib.core.Local;
-
-import com.tallerwebi.dominio.Ranking;
-import com.tallerwebi.dominio.RankingRepository;
-import com.tallerwebi.dominio.ServicioRankingImpl;
 
 public class ServicioRankingTest {
     

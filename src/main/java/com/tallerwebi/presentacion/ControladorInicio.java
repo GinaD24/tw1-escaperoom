@@ -6,12 +6,11 @@ import com.tallerwebi.dominio.excepcion.NoHaySalasExistentes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+
 
 @Controller
 @RequestMapping("/inicio")
@@ -39,8 +38,7 @@ public class ControladorInicio {
     @GetMapping("/sala/{id}")
     public ModelAndView verSala(@PathVariable Integer id) {
         ModelMap modelo = new ModelMap();
-        List<Sala> salasObtenidas = servicioSala.traerSalas();
-        
+
         Sala sala = servicioSala.obtenerSalaPorId(id);
        
         if(sala != null){
@@ -53,5 +51,19 @@ public class ControladorInicio {
         return new ModelAndView("sala", modelo);
     }
 
+    @GetMapping("/filtrar-salas")
+    public ModelAndView filtrarSalas(@RequestParam(value = "filtroDificultad", required = false) String dificultad) {
+        ModelMap modelo = new ModelMap();
+
+        List<Sala> salasPorDificultad = servicioSala.obtenerSalaPorDificultad(dificultad);
+
+        if(salasPorDificultad.isEmpty()){
+            return new ModelAndView("redirect:/inicio/");
+        }else{
+            modelo.put("salas", salasPorDificultad);
+        }
+
+        return new ModelAndView("inicio", modelo);
+    }
 
 }

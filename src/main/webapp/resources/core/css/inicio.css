@@ -15,6 +15,10 @@ body {
     font-size: 4rem;
     color: #fafb63;
 }
+
+.navbar-brand a:hover {
+   color: yellow;
+}
 .logo-escape{
     width: 60px;
 }
@@ -60,4 +64,29 @@ body {
 .disabled-card {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.form-select.rounded-pill {
+    background-color: #1a1a3b;
+    color: #fff;
+    border: 2px solid #a882d0;
+    font-weight: bold;
+}
+
+.form-select.rounded-pill option {
+    background-color: #1a1a3b;
+    color: #fff;
+}
+
+.btn-primary.rounded-pill {
+    background: #fafb63;
+    border: none;
+    color: #1a1a3b;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.btn-primary.rounded-pill:hover {
+    transform: scale(1.05);
+
 }
