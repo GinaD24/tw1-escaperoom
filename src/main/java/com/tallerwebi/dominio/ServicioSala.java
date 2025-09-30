@@ -12,7 +12,7 @@ public interface ServicioSala {
 
     List<Sala> obtenerSalaPorDificultad(String dificultad);
 
-    void habilitarSalaPorId(Integer id);
+    void habilitarSala(Sala sala);
 
     void descontarAcertijo(Sala salaConCincoAcertijos);
 }

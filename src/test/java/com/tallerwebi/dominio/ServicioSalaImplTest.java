@@ -175,7 +175,7 @@ public class ServicioSalaImplTest {
         Sala salaDeshabilitada = this.servicioSala.obtenerSalaPorId(3);
         Boolean estadoInicial = salaDeshabilitada.getEsta_habilitada();
 
-        this.servicioSala.habilitarSalaPorId(3);
+        this.servicioSala.habilitarSala(salaDeshabilitada);
 
         Boolean estadoFinal = salaDeshabilitada.getEsta_habilitada();
 
@@ -186,24 +186,6 @@ public class ServicioSalaImplTest {
 
     }
 
-//    @Test
-//    public void dadoQueExistenSalasDeTodosLosNivelesCuandoSolicitoLasSalasDeNivelExpertoObtengoUnaListaVacia(){
-//        Sala sala1 = new  Sala(1, "SALA 1", "Principiante", "", "", null, null, null);
-//        Sala sala2 = new  Sala(2, "SALA 2", "Intermedio", "", "", null, null, null);
-//        Sala sala3 = new  Sala(4, "SALA 4", "Avanzado", "", "", null, null, null);
-//
-//        List<Sala> salas = new ArrayList<>();
-//        salas.add(sala1);
-//        salas.add(sala2);
-//        salas.add(sala3);
-//
-//        when(repositorioSala.obtenerSalas()).thenReturn(salas);
-//
-//        List<Sala> salasDeNivelAvanzado = this.servicioSala.obtenerSalaPorDificultad("Experto");
-//
-//        assertThat(salasDeNivelAvanzado.size(), is(0));
-//
-//    }
 
     @Test
     public void dadoQueExistenCuatroSalasHabilitadasCuandoAUnaSalaLeSolicitoDescontarUnAcertijoObtengoUnResultadoExitoso() {

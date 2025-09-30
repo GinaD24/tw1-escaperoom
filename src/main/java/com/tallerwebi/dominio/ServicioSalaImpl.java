@@ -61,10 +61,8 @@ public class ServicioSalaImpl implements ServicioSala {
     }
 
     @Override
-    public void habilitarSalaPorId(Integer idRecibido) {
-        Sala salaParaHabilitar = this.obtenerSalaPorId(idRecibido);
-
-        salaParaHabilitar.setEsta_habilitada(true);
+    public void habilitarSala(Sala sala) {
+        sala.setEsta_habilitada(true);
     }
 
     @Override
