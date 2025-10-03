@@ -1,16 +1,34 @@
 package com.tallerwebi.dominio;
 
+import javax.persistence.*;
 import java.time.Duration;
 
+@Entity
 public class Sala {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(nullable = false)
     private String nombre;
+
+    @Column(nullable = false)
     private String dificultad;
+
+    @Column(nullable = false)
     private String escenario;
+
+    @Column(nullable = false)
     private String historia;
+
+    @Column(nullable = false)
     private Boolean esta_habilitada;
+
+    @Column(nullable = false)
     private Integer cantidadAcertijos;
+
+    @Column(nullable = false)
     private Duration duracion;
 
     public Sala() {
