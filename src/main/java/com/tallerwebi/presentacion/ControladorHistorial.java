@@ -6,11 +6,11 @@ import com.tallerwebi.dominio.ServicioHistorial;
 
 import java.util.List;
 
-public class ControladorPartida {
+public class ControladorHistorial {
 
     private final ServicioHistorial servicio;
 
-    public ControladorPartida(ServicioHistorial servicio) {
+    public ControladorHistorial(ServicioHistorial servicio) {
         this.servicio = servicio;
     }
 

@@ -17,12 +17,12 @@ import java.util.List;
 public class ControladorHistorialTest {
 
     ServicioHistorial servicio;
-    ControladorPartida controlador;
+    ControladorHistorial controlador;
 
     @BeforeEach
     public void init() {
         servicio = mock(ServicioHistorial.class);
-        controlador = new ControladorPartida(servicio);
+        controlador = new ControladorHistorial(servicio);
     }
 
     @Test
