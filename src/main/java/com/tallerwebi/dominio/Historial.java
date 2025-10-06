@@ -2,7 +2,7 @@ package com.tallerwebi.dominio;
 
 import java.time.LocalDateTime;
 
-public class Partida {
+public class Historial {
 
     private Integer id;
     private String jugador;
@@ -10,10 +10,10 @@ public class Partida {
     private LocalDateTime fecha;
     private Boolean gano;
 
-    public Partida() {
+    public Historial() {
     }
 
-    public Partida(Integer id, String jugador, String sala, LocalDateTime fecha, Boolean gano) {
+    public Historial(Integer id, String jugador, String sala, LocalDateTime fecha, Boolean gano) {
         this.id = id;
         this.jugador = jugador;
         this.sala = sala;
