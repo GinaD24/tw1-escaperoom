@@ -1,7 +1,9 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.enums.Dificultad;
+
 import javax.persistence.*;
-import java.time.Duration;
+import java.util.List;
 
 @Entity
 public class Sala {
@@ -13,8 +15,9 @@ public class Sala {
     @Column(nullable = false)
     private String nombre;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String dificultad;
+    private Dificultad dificultad;
 
     @Column(nullable = false)
     private String escenario;
@@ -26,24 +29,27 @@ public class Sala {
     private Boolean esta_habilitada;
 
     @Column(nullable = false)
-    private Integer cantidadAcertijos;
+    private Integer duracion;
 
-    @Column(nullable = false)
-    private Duration duracion;
+    @Column
+    private String imagen;
+
+    @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Etapa> etapas;
 
     public Sala() {
     }
 
-    public Sala(Integer id, String nombre, String dificultad, String escenario, String historia,
-                Boolean esta_habilitada, Integer cantidadAcertijos, Duration duracion) {
+    public Sala(Integer id, String nombre, Dificultad dificultad, String escenario, String historia,
+                Boolean esta_habilitada, Integer duracion, String imagen) {
         this.id = id;
         this.nombre = nombre;
         this.dificultad = dificultad;
         this.escenario = escenario;
         this.historia = historia;
         this.esta_habilitada = esta_habilitada;
-        this.cantidadAcertijos = cantidadAcertijos;
         this.duracion = duracion;
+        this.imagen = imagen;
     }
 
     public Integer getId() {
@@ -62,11 +68,11 @@ public class Sala {
         this.nombre = nombre;
     }
 
-    public String getDificultad() {
+    public Dificultad getDificultad() {
         return dificultad;
     }
 
-    public void setDificultad(String dificultad) {
+    public void setDificultad(Dificultad dificultad) {
         this.dificultad = dificultad;
     }
 
@@ -94,23 +100,19 @@ public class Sala {
         this.esta_habilitada = esta_habilitada;
     }
 
-    public Integer getCantidadAcertijos() {
-        return cantidadAcertijos;
-    }
-
-    public void setCantidadAcertijos(Integer cantidadAcertijos) {
-        this.cantidadAcertijos = cantidadAcertijos;
-    }
-
-    public Duration getDuracion() {
+    public Integer getDuracion() {
         return duracion;
     }
 
-    public void setDuracion(Duration duracion) {
+    public void setDuracion(Integer duracion) {
         this.duracion = duracion;
     }
 
-    public void descontarTiempo() {
-        this.setDuracion(this.getDuracion().minusMinutes(3));
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 }

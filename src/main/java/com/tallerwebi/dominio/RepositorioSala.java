@@ -1,5 +1,7 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.enums.Dificultad;
+
 import java.util.List;
 
 public interface RepositorioSala {
@@ -8,5 +10,5 @@ public interface RepositorioSala {
 
     Sala obtenerSalaPorId(Integer id);
 
-    List<Sala> obtenerSalasPorDificultad(String dificultad);
+    List<Sala> obtenerSalasPorDificultad(Dificultad dificultad);
 }

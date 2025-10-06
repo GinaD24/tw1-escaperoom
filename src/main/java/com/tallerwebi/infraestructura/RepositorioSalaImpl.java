@@ -1,14 +1,18 @@
 package com.tallerwebi.infraestructura;
+
 import com.tallerwebi.dominio.RepositorioSala;
 import com.tallerwebi.dominio.Sala;
+import com.tallerwebi.dominio.enums.Dificultad;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.hibernate.query.Query;
+
 import java.util.List;
 
 @Repository
 public class RepositorioSalaImpl implements RepositorioSala {
+
 
     private final SessionFactory sessionFactory;
 
@@ -33,7 +37,7 @@ public class RepositorioSalaImpl implements RepositorioSala {
     }
 
     @Override
-    public List<Sala> obtenerSalasPorDificultad(String dificultad) {
+    public List<Sala> obtenerSalasPorDificultad(Dificultad dificultad) {
         String hql = "SELECT s FROM Sala s WHERE s.dificultad = :dificultad";
         Query<Sala> query = this.sessionFactory.getCurrentSession().createQuery(hql, Sala.class);
         query.setParameter("dificultad", dificultad);

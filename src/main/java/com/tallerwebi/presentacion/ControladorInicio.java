@@ -2,6 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.Sala;
 import com.tallerwebi.dominio.ServicioSala;
+import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.excepcion.NoHaySalasExistentes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -52,17 +54,20 @@ public class ControladorInicio {
     }
 
     @GetMapping("/filtrar-salas")
-    public ModelAndView filtrarSalas(@RequestParam(value = "filtroDificultad", required = false) String dificultad) {
+    public ModelAndView filtrarSalas(@RequestParam(value = "filtroDificultad", required = false) String dificultadStr) {
         ModelMap modelo = new ModelMap();
+
+        Dificultad dificultad = null;
+
+        if (!dificultadStr.isEmpty()) {
+            dificultad = Dificultad.valueOf(dificultadStr);
+        }else{
+            return new ModelAndView("redirect:/inicio/");
+        }
 
         List<Sala> salasPorDificultad = servicioSala.obtenerSalaPorDificultad(dificultad);
 
-        if(salasPorDificultad.isEmpty()){
-            return new ModelAndView("redirect:/inicio/");
-        }else{
-            modelo.put("salas", salasPorDificultad);
-        }
-
+        modelo.put("salas", salasPorDificultad);
         return new ModelAndView("inicio", modelo);
     }
 

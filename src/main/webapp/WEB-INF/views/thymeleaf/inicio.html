@@ -43,9 +43,9 @@
                     <div class="input-group">
                         <select class="form-select rounded-pill me-2" name="filtroDificultad" id="filtroDificultad">
                             <option value="">Todas las dificultades</option>
-                            <option value="Principiante">Principiante</option>
-                            <option value="Intermedio">Intermedio</option>
-                            <option value="Avanzado">Avanzado</option>
+                            <option value="PRINCIPIANTE">Principiante</option>
+                            <option value="INTERMEDIO">Intermedio</option>
+                            <option value="AVANZADO">Avanzado</option>
                         </select>
                         <button type="submit" class="btn btn-primary rounded-pill px-4">
                             Filtrar
@@ -61,7 +61,7 @@
                 <a th:href="@{/inicio/sala/{id}(id=${sala.id})}" style="text-decoration: none; color: #a882d0;">
                     <div class="card text-center shadow sala-card">
                         <span class="lock-icon"><i class="bi bi-unlock"></i></span>
-                        <img class="mx-auto d-block" style="width: 70px" alt="puerta" th:src="@{'/img/puerta-' + ${sala.id} + '.png'}">
+                        <img class="mx-auto d-block" style="width: 70px" alt="puerta" th:src="@{'/img/' + ${sala.imagen}}">
                         <h5 class="mt-1" th:text="${sala.nombre}"></h5>
                         <p th:text="'Dificultad: ' + ${sala.dificultad}"></p>
                         <p th:text="'Escenario: ' + ${sala.escenario}"></p>

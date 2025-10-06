@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.RepositorioSala;
 import com.tallerwebi.dominio.Sala;
+import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.infraestructura.config.HibernateTestInfraestructuraConfig;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.transaction.Transactional;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
@@ -37,12 +37,12 @@ public class RepositorioSalaImplTest {
     @Transactional
     public void deberiaDevolverTodasLasSalas() {
 
-        Sala sala1 = new Sala(null, "La Mansión Misteriosa", "Principiante", "Mansión",
-                "Una noche tormentosa te encuentras atrapado en una vieja mansión llena de acertijos.", true, 5, Duration.ofMinutes(10));
-        Sala sala2 =new Sala(null, "El Laboratorio Secreto", "Intermedio", "Laboratorio",
-                "Un científico desaparecido dejó pistas en su laboratorio. ¿Podrás descubrir qué tramaba?", true, 10, Duration.ofMinutes(15));
-        Sala sala3 =new Sala(null, "La Cárcel Abandonada", "Avanzado", "Prisión",
-                "Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podrás escapar.", false, 15, Duration.ofMinutes(20));
+        Sala sala1 = new Sala(null, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansión",
+                "Una noche tormentosa te encuentras atrapado en una vieja mansión llena de acertijos.", true, 10, null);
+        Sala sala2 =new Sala(null, "El Laboratorio Secreto", Dificultad.INTERMEDIO, "Laboratorio",
+                "Un científico desaparecido dejó pistas en su laboratorio. ¿Podrás descubrir qué tramaba?", true, 15, null);
+        Sala sala3 =new Sala(null, "La Cárcel Abandonada", Dificultad.AVANZADO, "Prisión",
+                "Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podrás escapar.", false, 20, null);
 
         this.sessionFactory.getCurrentSession().save(sala1);
         this.sessionFactory.getCurrentSession().save(sala2);
@@ -60,12 +60,12 @@ public class RepositorioSalaImplTest {
     @Transactional
     public void deberiaDevolverLaSalaSolicitadaPorID() {
 
-        Sala sala1 = new Sala(null, "La Mansión Misteriosa", "Principiante", "Mansión",
-                "Una noche tormentosa te encuentras atrapado en una vieja mansión llena de acertijos.", true, 5, Duration.ofMinutes(10));
-        Sala sala2 =new Sala(null, "El Laboratorio Secreto", "Intermedio", "Laboratorio",
-                "Un científico desaparecido dejó pistas en su laboratorio. ¿Podrás descubrir qué tramaba?", true, 10, Duration.ofMinutes(15));
-        Sala sala3 =new Sala(null, "La Cárcel Abandonada", "Avanzado", "Prisión",
-                "Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podrás escapar.", false, 15, Duration.ofMinutes(20));
+        Sala sala1 = new Sala(null, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansión",
+                "Una noche tormentosa te encuentras atrapado en una vieja mansión llena de acertijos.", true, 10, null);
+        Sala sala2 =new Sala(null, "El Laboratorio Secreto", Dificultad.INTERMEDIO, "Laboratorio",
+                "Un científico desaparecido dejó pistas en su laboratorio. ¿Podrás descubrir qué tramaba?", true, 15, null);
+        Sala sala3 =new Sala(null, "La Cárcel Abandonada", Dificultad.AVANZADO, "Prisión",
+                "Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podrás escapar.", false, 20, null);
 
         this.sessionFactory.getCurrentSession().save(sala1);
         this.sessionFactory.getCurrentSession().save(sala2);
@@ -80,15 +80,15 @@ public class RepositorioSalaImplTest {
     @Transactional
     public void deberiaDevolverUnaListaDeSalasSolicitadasPorDificultad() {
 
-        Sala sala1 = new Sala(null, "La Mansión Misteriosa", "Principiante", "Mansión",
-                "Una noche tormentosa te encuentras atrapado en una vieja mansión llena de acertijos.", true, 5, Duration.ofMinutes(10));
-        Sala sala2 =new Sala(null, "El Laboratorio Secreto", "Intermedio", "Laboratorio",
-                "Un científico desaparecido dejó pistas en su laboratorio. ¿Podrás descubrir qué tramaba?", true, 10, Duration.ofMinutes(15));
-        Sala sala3 =new Sala(null, "La Cárcel Abandonada", "Avanzado", "Prisión",
-                "Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podrás escapar.", false, 15, Duration.ofMinutes(20));
+        Sala sala1 = new Sala(null, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansión",
+                "Una noche tormentosa te encuentras atrapado en una vieja mansión llena de acertijos.", true, 10, null);
+        Sala sala2 =new Sala(null, "El Laboratorio Secreto", Dificultad.INTERMEDIO, "Laboratorio",
+                "Un científico desaparecido dejó pistas en su laboratorio. ¿Podrás descubrir qué tramaba?", true, 15, null);
+        Sala sala3 =new Sala(null, "La Cárcel Abandonada", Dificultad.AVANZADO, "Prisión",
+                "Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podrás escapar.", false, 20, null);
 
-        Sala sala4 = new Sala(null, "La casa Misteriosa", "Principiante", "Casa",
-                "Una noche tormentosa te encuentras atrapado en una vieja mansión llena de acertijos.", true, 5, Duration.ofMinutes(10));
+        Sala sala4 = new Sala(null, "La casa Misteriosa", Dificultad.PRINCIPIANTE, "Casa",
+                "Una noche tormentosa te encuentras atrapado en una vieja mansión llena de acertijos.", true, 10, null);
 
         this.sessionFactory.getCurrentSession().save(sala1);
         this.sessionFactory.getCurrentSession().save(sala2);
@@ -96,7 +96,7 @@ public class RepositorioSalaImplTest {
         this.sessionFactory.getCurrentSession().save(sala4);
 
 
-        List<Sala> salasObtenida = this.repositorioSala.obtenerSalasPorDificultad("Principiante");
+        List<Sala> salasObtenida = this.repositorioSala.obtenerSalasPorDificultad(Dificultad.PRINCIPIANTE);
 
         assertThat(salasObtenida.size(), equalTo(2));
         assertThat(salasObtenida.get(0), equalTo(sala1));

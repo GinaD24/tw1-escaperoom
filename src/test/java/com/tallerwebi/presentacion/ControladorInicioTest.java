@@ -2,12 +2,12 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.Sala;
 import com.tallerwebi.dominio.ServicioSala;
+import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.excepcion.NoHaySalasExistentes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,12 +115,11 @@ public class ControladorInicioTest {
     }
 
     @Test
-    public void dadoQueExisteUnaListaDeSalasCuandoPidoQueMuestreUnaSalaPrincipianteEstaCuentaCon6AcertijosY10Minutos() {
+    public void dadoQueExisteUnaListaDeSalasCuandoPidoQueMuestreUnaSalaPrincipianteEstaTieneUnaDuracionDe10Minutos() {
         //preparacion
         Sala sala1 = new Sala();
         sala1.setId(1);
-        sala1.setCantidadAcertijos(6);
-        sala1.setDuracion(Duration.ofMinutes(10));
+        sala1.setDuracion(10);
 
         when(servicioSala.obtenerSalaPorId(1)).thenReturn(sala1);
 
@@ -130,8 +129,7 @@ public class ControladorInicioTest {
         Sala salaObtenida = (Sala) modelAndView.getModel().get("SalaObtenida");
 
         //verificacion
-        assertThat(salaObtenida.getCantidadAcertijos(), equalTo(6));
-        assertThat(salaObtenida.getDuracion(), equalTo(Duration.ofMinutes(10)));
+        assertThat(salaObtenida.getDuracion(), equalTo(10));
         verify(servicioSala).obtenerSalaPorId(1);
 
     }
@@ -139,30 +137,30 @@ public class ControladorInicioTest {
     @Test
     public void deberiaDevolverLasSalasPrincipiantesCuandoLasFiltroPorDificultad(){
 
-        Sala sala1 = new  Sala(1, "SALA 1", "Principiante", "", "", null, null, null);
-        Sala sala2 = new  Sala(2, "SALA 2", "Intermedio", "", "", null, null, null);
-        Sala sala3 = new  Sala(3, "SALA 3", "Principiante", "", "", null, null, null);
-        Sala sala4 = new  Sala(4, "SALA 4", "Avanzado", "", "", null, null, null);
+        Sala sala1 = new  Sala(1, "SALA 1", Dificultad.PRINCIPIANTE, "", "", null, null, null);
+        Sala sala2 = new  Sala(2, "SALA 2", Dificultad.INTERMEDIO, "", "", null, null, null);
+        Sala sala3 = new  Sala(3, "SALA 3", Dificultad.PRINCIPIANTE, "", "", null, null, null);
+        Sala sala4 = new  Sala(4, "SALA 4", Dificultad.AVANZADO, "", "", null, null, null);
 
         List<Sala> salas = new ArrayList<>();
         salas.add(sala1);
         salas.add(sala3);
 
 
-        when(servicioSala.obtenerSalaPorDificultad("Principiante")).thenReturn(salas);
-        List<Sala> salasObtenidas =  servicioSala.obtenerSalaPorDificultad("Principiante");
+        when(servicioSala.obtenerSalaPorDificultad(Dificultad.PRINCIPIANTE)).thenReturn(salas);
+        List<Sala> salasObtenidas =  servicioSala.obtenerSalaPorDificultad(Dificultad.PRINCIPIANTE);
 
-        verify(servicioSala).obtenerSalaPorDificultad("Principiante");
+        verify(servicioSala).obtenerSalaPorDificultad(Dificultad.PRINCIPIANTE);
         assertThat(salasObtenidas, equalTo(salas));
     }
 
     @Test
     public void deberiaDevolverTodasLasSalasCuandoLasFiltroPorTodasLasDificultades(){
 
-        Sala sala1 = new  Sala(1, "SALA 1", "Principiante", "", "", null, null, null);
-        Sala sala2 = new  Sala(2, "SALA 2", "Intermedio", "", "", null, null, null);
-        Sala sala3 = new  Sala(3, "SALA 3", "Principiante", "", "", null, null, null);
-        Sala sala4 = new  Sala(4, "SALA 4", "Avanzado", "", "", null, null, null);
+        Sala sala1 = new  Sala(1, "SALA 1", Dificultad.PRINCIPIANTE, "", "", null, null, null);
+        Sala sala2 = new  Sala(2, "SALA 2", Dificultad.INTERMEDIO, "", "", null, null, null);
+        Sala sala3 = new  Sala(3, "SALA 3", Dificultad.PRINCIPIANTE, "", "", null, null, null);
+        Sala sala4 = new  Sala(4, "SALA 4", Dificultad.AVANZADO, "", "", null, null, null);
 
         List<Sala> salas = new ArrayList<>();
         salas.add(sala1);
@@ -171,10 +169,10 @@ public class ControladorInicioTest {
         salas.add(sala4);
 
 
-        when(servicioSala.obtenerSalaPorDificultad("")).thenReturn(salas);
-        List<Sala> salasObtenidas =  servicioSala.obtenerSalaPorDificultad("");
+        when(servicioSala.obtenerSalaPorDificultad(null)).thenReturn(salas);
+        List<Sala> salasObtenidas =  servicioSala.obtenerSalaPorDificultad(null);
 
-        verify(servicioSala).obtenerSalaPorDificultad("");
+        verify(servicioSala).obtenerSalaPorDificultad(null);
         assertThat(salasObtenidas, equalTo(salas));
     }
 
