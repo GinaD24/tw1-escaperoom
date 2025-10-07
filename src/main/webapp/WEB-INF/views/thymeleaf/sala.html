@@ -36,7 +36,7 @@
         <img class="mx-auto d-block mb-3" style="width: 100px" alt="puerta" th:src="@{'/img/' + ${SalaObtenida.imagen}}">
 
         <div>
-            <button class="btn btn-primary">ESTOY LISTO</button>
+            <a class="btn btn-primary" th:href="@{/partida/sala_{idSala}(idSala=${SalaObtenida.id})}">ESTOY LISTO</a>
             <a class="btn btn-danger" th:href="@{/inicio/}">ELEGIR OTRA SALA</a>
         </div>
 
