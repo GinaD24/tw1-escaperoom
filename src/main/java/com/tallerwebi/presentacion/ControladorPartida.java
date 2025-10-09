@@ -5,10 +5,7 @@ import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -36,32 +33,6 @@ public class ControladorPartida {
         }
     }
 
-//    @GetMapping("/sala_{id}")
-//    public ModelAndView iniciarPartida(@PathVariable Integer id) {
-//        ModelMap modelo = new ModelMap();
-//
-//        Sala sala = null;
-//        Etapa etapa = null;
-//        Acertijo acertijo = null;
-//        this.servicioPartida.guardarPartida();
-//
-//        try {
-//            sala = this.servicioSala.obtenerSalaPorId(id);
-//            etapa = this.servicioPartida.obtenerEtapa(id);
-//            if(etapa!=null){
-//                acertijo = this.servicioPartida.obtenerAcertijo(etapa.getId());
-//            }
-//
-//        } catch(SalaInexistente e){
-//            return new ModelAndView("redirect:/inicio/");
-//        }
-//
-//        modelo.put("salaElegida", sala);
-//        modelo.put("etapa", etapa);
-//        modelo.put("Acertijo", acertijo);
-//
-//        return new ModelAndView("partida", modelo);
-//    }
 
     @GetMapping("/sala{idSala}/etapa{numeroEtapa}")
     public ModelAndView mostrarPartida(@PathVariable Integer idSala, @PathVariable Integer numeroEtapa) {
@@ -89,26 +60,26 @@ public class ControladorPartida {
         return pista.getDescripcion();
     }
 
-//    @PostMapping("/validar/{idSala}/{numeroEtapa}")
-//    public ModelAndView validarRespuesta(
-//            @PathVariable Integer idSala,
-//            @PathVariable Integer numeroEtapa,
-//            @RequestParam String respuesta) {
-//
-//        boolean esCorrecta = this.servicioPartida.validarRespuesta(numeroEtapa, respuesta);
-//
-//        if (esCorrecta) {
-//            // Pasar a la siguiente etapa
-//            return new ModelAndView("redirect:/partida/etapa/" + idSala + "/" + (numeroEtapa + 1));
-//        } else {
-//            ModelMap modelo = new ModelMap();
-//            modelo.put("error", "Respuesta incorrecta. Intenta nuevamente.");
-//            return mostrarEtapa(idSala, numeroEtapa);
-//        }
-//    }
 
+   @PostMapping("/validar/{idSala}/{numeroEtapa}/{idAcertijo}")
+  public ModelAndView validarRespuesta(
+           @PathVariable Integer idSala,
+           @PathVariable Integer numeroEtapa,
+           @PathVariable Long idAcertijo,
+           @RequestParam String respuesta
+           ) {
 
+       boolean esCorrecta = this.servicioPartida.validarRespuesta(idAcertijo, respuesta);
 
+       if (esCorrecta) {
+           //Pasar a la siguiente etapa
+           return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa" + (numeroEtapa + 1));
+       } else {
+           ModelAndView modelAndView = mostrarPartida(idSala, numeroEtapa);
+           modelAndView.addObject("error", "Respuesta incorrecta. Intenta nuevamente.");
+           return modelAndView;
+       }
+    }
 
 
 }

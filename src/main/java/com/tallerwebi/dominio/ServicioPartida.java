@@ -9,4 +9,6 @@ public interface ServicioPartida {
     Etapa obtenerEtapaPorNumero(Integer idSala, Integer numeroEtapa);
 
     Pista obtenerSiguientePista(Long idAcertijo);
+
+    Boolean validarRespuesta(Long idAcertijo , String respuesta);
 }

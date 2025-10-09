@@ -1,0 +1,116 @@
+package com.tallerwebi.dominio;
+
+import com.tallerwebi.dominio.enums.Dificultad;
+import com.tallerwebi.infraestructura.RepositorioPartidaImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+
+public class ServicioPartidaImplTest {
+
+    private RepositorioPartida repositorioPartida;
+    private ServicioPartida servicioPartida;
+    private ServicioSala servicioSala;
+
+    @BeforeEach
+    public void init() {
+        this.repositorioPartida = mock(RepositorioPartidaImpl.class);
+        this.servicioPartida = new ServicioPartidaImpl(servicioSala,repositorioPartida);
+
+    }
+
+    @Test
+    public void deberiaSolicitarAlRepositorioPartidaQueGuardeLaPartida() {
+        Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
+                true, 10,"puerta-mansion.png");
+
+        this.servicioPartida.guardarPartida(sala.getId());
+
+        verify(repositorioPartida).guardarPartida(sala.getId());
+    }
+
+    @Test
+    public void deberiaDevolverLaPrimeraEtapaDeLaSalaEnLaPartida(){
+        Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
+                true, 10,"puerta-mansion.png");
+        Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
+        etapa.setId(1L);
+
+        when(repositorioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
+
+        this.servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
+        verify(repositorioPartida).obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
+    }
+
+    @Test
+    public void deberiaDevolverElAcertijoDeLaEtapaEnLaPartida(){
+        Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
+                true, 10,"puerta-mansion.png");
+        Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
+        etapa.setId(1L);
+        Acertijo acertijo1 = new Acertijo( "lalalal");
+        Acertijo acertijo2 = new Acertijo( "lelele");
+        Acertijo acertijo3 = new Acertijo( "lilili");
+
+        List<Acertijo> listaDeAcertijos = new ArrayList<>();
+
+        listaDeAcertijos.add(acertijo1);
+        listaDeAcertijos.add(acertijo2);
+        listaDeAcertijos.add(acertijo3);
+
+        when(repositorioPartida.obtenerListaDeAcertijos(etapa.getId())).thenReturn(listaDeAcertijos);
+
+        Acertijo acertijoElegido = this.servicioPartida.obtenerAcertijo(etapa.getId());
+
+        assertTrue(
+                acertijoElegido.equals(acertijo1) || acertijoElegido.equals(acertijo2) || acertijoElegido.equals(acertijo3),
+                "El acertijo elegido debe ser uno de los permitidos"
+        );
+        verify(repositorioPartida).obtenerListaDeAcertijos(etapa.getId());
+    }
+
+    @Test
+    public void deberiaDevolverLaPrimeraPistaDelAcertijo(){
+        Acertijo acertijo = new Acertijo( "lalalal");
+        acertijo.setId(1L);
+        Pista pista1 = new Pista("pista", 1);
+        Pista pista2 = new Pista("pista", 2);
+        Pista pista3 = new Pista("pista", 3);
+
+        List<Pista> listaDePistas = new ArrayList<>();
+
+        listaDePistas.add(pista1);
+        listaDePistas.add(pista2);
+        listaDePistas.add(pista3);
+
+        when(repositorioPartida.obtenerListaDePistas(acertijo.getId())).thenReturn(listaDePistas);
+
+        Pista pista = this.servicioPartida.obtenerSiguientePista(acertijo.getId());
+
+        verify(repositorioPartida).obtenerListaDePistas(acertijo.getId());
+        assertThat(pista, equalTo(listaDePistas.get(0)));
+    }
+
+    @Test
+    public void deberiaObtenerUnMensajeSiNoSeRespondioCorrectamenteElAcertijo(){
+        Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
+                true, 10,"puerta-mansion.png");
+        Acertijo acertijo = new Acertijo( "lalalal");
+        Respuesta respuesta = new Respuesta("Respuesta");
+
+        when(repositorioPartida.obtenerRespuesta(acertijo.getId(),respuesta.getRespuesta())).thenReturn(false);
+
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta());
+
+        verify(repositorioPartida).obtenerRespuesta(acertijo.getId(),respuesta.getRespuesta());
+        assertFalse(validacionDeRespuesta);
+    }
+}
