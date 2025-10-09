@@ -28,16 +28,12 @@ public class ServicioLoginTest {
     }
 
     @Test
-    public void dadoQueTengoUnServicioLoginPuedoCrearUnRegistroExitoso() throws UsuarioExistente, EdadInvalidaException, DatosIncompletosException {
+    public void dadoQueTengoUnServicioLoginPuedoCrearUnRegistroExitoso() throws UsuarioExistente, EdadInvalidaException, DatosIncompletosException, CredencialesInvalidasException {
         Usuario nuevoUsuario = new Usuario();
         nuevoUsuario.setId(1L);
         nuevoUsuario.setEmail("franco@gmail.com");
-        nuevoUsuario.setPassword("1234");
+        nuevoUsuario.setPassword("123456789");
         nuevoUsuario.setFechaNacimiento(LocalDate.of(2003, 9, 13));
-        nuevoUsuario.setNombre("Franco");
-        nuevoUsuario.setApellido("T");
-        nuevoUsuario.setActivo(true);
-        nuevoUsuario.setRol("USUARIO");
 
         when(repositorioUsuarioMock.buscar("franco@gmail.com")).thenReturn(null);
 
@@ -103,6 +99,45 @@ public class ServicioLoginTest {
 
         assertThrows(EdadInvalidaException.class, () -> {
             servicioLogin.registrar(usuarioMenor);
+        });
+
+        verify(repositorioUsuarioMock, never()).guardar(any(Usuario.class));
+    }
+
+    @Test
+    public void dadoQueTengoUnServicioLoginSiEscriboUnaContraseniaMenorA8LetrasObtengoUnaException(){
+        Usuario nuevoUsuario = new Usuario();
+        nuevoUsuario.setPassword("1234");
+
+        assertThrows(DatosIncompletosException.class, () -> {
+            servicioLogin.registrar(nuevoUsuario);
+        });
+
+        verify(repositorioUsuarioMock, never()).guardar(any(Usuario.class));
+    }
+
+    @Test
+    public void dadoQueTengoUnServicioLoginElEmailRegistradoDebeTenerUnFormatoValido(){
+        Usuario nuevoUsuario  = new Usuario();
+        nuevoUsuario.setPassword("martinarrobagmailcom");
+
+        assertThrows(DatosIncompletosException.class, () -> {
+            servicioLogin.registrar(nuevoUsuario);
+        });
+
+        verify(repositorioUsuarioMock, never()).guardar(any(Usuario.class));
+    }
+
+    @Test
+    public void dadoQueTengoUnServicioLoginNoPuedoIniciarSesionSiLasCredencialesEstanVacias(){
+        Usuario usuarioExistente = new Usuario();
+        usuarioExistente.setEmail(null);
+        usuarioExistente.setPassword(null);
+
+        when(repositorioUsuarioMock.buscarUsuario(null,  null)).thenReturn(usuarioExistente);
+
+        assertThrows(CredencialesInvalidasException.class, () -> {
+            servicioLogin.consultarUsuario(usuarioExistente.getEmail(), usuarioExistente.getPassword());
         });
 
         verify(repositorioUsuarioMock, never()).guardar(any(Usuario.class));

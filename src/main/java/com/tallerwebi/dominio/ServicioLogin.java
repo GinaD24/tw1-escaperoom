@@ -8,6 +8,6 @@ import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 public interface ServicioLogin {
 
     Usuario consultarUsuario(String email, String password) throws CredencialesInvalidasException;
-    void registrar(Usuario usuario) throws UsuarioExistente, EdadInvalidaException, DatosIncompletosException;
+    void registrar(Usuario usuario) throws UsuarioExistente, EdadInvalidaException, DatosIncompletosException, CredencialesInvalidasException;
 
 }

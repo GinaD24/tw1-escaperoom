@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.regex.Pattern;
 
 @Service("servicioLogin")
 @Transactional
@@ -31,16 +32,26 @@ public class ServicioLoginImpl implements ServicioLogin {
             throw new CredencialesInvalidasException();
         }
 
+        // VERIFICACION CREDENCIALES VACIAS
+        String emailUsuario = usuarioBuscado.getEmail();
+        String passwordUsuario = usuarioBuscado.getPassword();
+
+        if((passwordUsuario == null || passwordUsuario.isEmpty()) || (emailUsuario == null || emailUsuario.isEmpty())){
+            throw new CredencialesInvalidasException("Se debe completar las credenciales");
+        }
+
         return usuarioBuscado;
     }
 
     @Override
-    public void registrar(Usuario usuario) throws UsuarioExistente, EdadInvalidaException, DatosIncompletosException {
+    public void registrar(Usuario usuario) throws UsuarioExistente, EdadInvalidaException, DatosIncompletosException, CredencialesInvalidasException {
 //        Usuario usuarioEncontrado = repositorioUsuario.buscarUsuario(usuario.getEmail(), usuario.getPassword());
         Usuario usuarioEncontrado = repositorioUsuario.buscar(usuario.getEmail());
         if(usuarioEncontrado != null){
             throw new UsuarioExistente();
         }
+
+        // VERIFICACION EDAD
 
         LocalDate fechaNacimiento = usuario.getFechaNacimiento();
 
@@ -52,6 +63,24 @@ public class ServicioLoginImpl implements ServicioLogin {
 
         if(edad < 7){
             throw new EdadInvalidaException();
+        }
+
+        // VERIFICACION CONTRASENIA
+
+        String contraseniaUsuario = usuario.getPassword();
+
+        if(contraseniaUsuario == null || contraseniaUsuario.isEmpty() || contraseniaUsuario.length() < 8){
+            throw new DatosIncompletosException("La contraseña debe tener al menos 8 caracteres");
+        }
+
+        // VERIFICACION FORMATO EMAIL
+
+        String emailUsuario = usuario.getEmail();
+        String regexPattern = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+
+
+        if(emailUsuario == null || !Pattern.matches(regexPattern, emailUsuario)){
+            throw new DatosIncompletosException("El email ingresado no es valido");
         }
 
 
