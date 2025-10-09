@@ -67,11 +67,12 @@ public class ServicioPartidaImpl implements ServicioPartida {
     @Override
     public Acertijo obtenerAcertijo(Long idEtapa) {
         Acertijo acertijoSeleccionado = null;
-
         List<Acertijo> listaDeAcertijosObtenida = this.repositorioPartida.obtenerListaDeAcertijos(idEtapa);
 
-        Random random = new Random();
-        acertijoSeleccionado = listaDeAcertijosObtenida.get(random.nextInt(listaDeAcertijosObtenida.size()));
+        if(!listaDeAcertijosObtenida.isEmpty()) {
+            Random random = new Random();
+            acertijoSeleccionado = listaDeAcertijosObtenida.get(random.nextInt(listaDeAcertijosObtenida.size()));
+        }
 
         return acertijoSeleccionado;
     }

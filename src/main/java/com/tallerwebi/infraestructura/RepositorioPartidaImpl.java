@@ -19,7 +19,9 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
 
     @Override
     public Etapa obtenerEtapaPorNumero(Integer idSala, Integer numero) {
-        return null;
+        Etapa etapaHardcodeada = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "candado.png");
+        etapaHardcodeada.setId(1L);
+        return etapaHardcodeada;
     }
 
     @Override

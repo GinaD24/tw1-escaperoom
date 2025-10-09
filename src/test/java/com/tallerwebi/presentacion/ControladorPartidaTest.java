@@ -115,7 +115,7 @@ public class ControladorPartidaTest {
 
        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta());
 
-       assertThat(modelAndView.getViewName(), equalTo("redirect:/partida/etapa/" + sala.getId() + "/" + (etapa.getNumero() + 1)));
+       assertThat(modelAndView.getViewName(), equalTo("redirect:/partida/sala" + sala.getId() + "/etapa" + (etapa.getNumero() + 1)));
        verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta());
     }
 

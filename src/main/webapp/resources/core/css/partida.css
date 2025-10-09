@@ -36,12 +36,18 @@ h3 {
     font-weight: 700;
 }
 
+.nombre-etapa{
+    color: #bfb6e5;
+    font-size: 1.7rem;
+}
+
 .text-muted {
     color: #bfb6e5 !important;
 }
 .texto-etapa{
-    color: #f5f5f5;
-    font-size: 1.7rem;
+    color: #ab9dff;
+    font-size: 1.4rem;
+
 }
 
 .texto-acertijo {
@@ -66,6 +72,7 @@ h3 {
     font-size: 1.2rem;
     text-align: left;
     margin-left: 20px;
+
 }
 .acertijo-contenido .pregunta {
 
@@ -73,9 +80,10 @@ h3 {
     color:#ffeb3b;
     text-align: left;
     margin-left: 20px;
+
 }
 
-.img-candado {
+.img-etapa {
     width: 180px;
     margin-left: 20px;
 }
@@ -86,7 +94,7 @@ h3 {
     padding: 12px 25px;
     border: none;
     outline: none;
-    width: 30%;
+    width: 10%;
     font-size: 1rem;
     text-align: center;
     background-color: #f5f5f5;
@@ -100,6 +108,49 @@ h3 {
     font-size: 1.7rem;
     cursor: pointer;
 }
+
+.btn-enviar {
+    background-color: #9f92fc;
+    color: #3c247b;
+    font-weight: bold;
+    border-radius: 50px;
+    padding: 6px 15px;
+    border: none;             /* Fijo */
+    outline: none;            /* Fijo */
+    box-shadow: none;         /* Fijo */
+}
+
+.btn-enviar:hover,
+.btn-enviar:focus,
+.btn-enviar:active {
+    border-radius: 50px;
+    background-color: #ded8f6;
+    color: #7f23f4;
+    font-weight: bold;
+    border: none;
+
+}
+
+.btn-pista {
+    background: linear-gradient(45deg, #5b0e9e, #4b14b6);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+
+}
+
+.btn-pista:hover {
+    cursor: pointer;
+    color: #5007aa;
+    background: linear-gradient(45deg, #a355ea, #a484e4);
+    padding: 8px 16px;
+    font-weight: bold;
+    border: 4px solid #7127cc;
+}
+
 
 .boton-salir-container {
     position: absolute;
