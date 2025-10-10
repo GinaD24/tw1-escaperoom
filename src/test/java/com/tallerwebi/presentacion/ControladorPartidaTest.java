@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDateTime;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.*;
@@ -29,12 +31,14 @@ public class ControladorPartidaTest {
 
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
+        Partida partida = new Partida(LocalDateTime.now());
+        partida.setSala(sala);
 //        Usuario usuario = new Usuario();
 //        usuario.setId(1L);
 
-        controladorPartida.iniciarPartida(sala.getId());
+        controladorPartida.iniciarPartida(sala.getId(), partida);
 
-        verify(servicioPartida).guardarPartida(sala.getId());
+        verify(servicioPartida).guardarPartida(partida);
     }
 
     @Test

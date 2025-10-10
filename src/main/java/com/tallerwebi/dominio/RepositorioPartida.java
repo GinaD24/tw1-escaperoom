@@ -3,13 +3,13 @@ package com.tallerwebi.dominio;
 import java.util.List;
 
 public interface RepositorioPartida {
-    void guardarPartida(Integer id);
+    void guardarPartida(Partida partida);
 
     Etapa obtenerEtapaPorNumero(Integer idSala, Integer numero);
 
-    List<Acertijo> obtenerListaDeAcertijos(Long id);
+    List<Acertijo> obtenerListaDeAcertijos(Long idEtapa);
 
-    List<Pista> obtenerListaDePistas(Long id);
+    List<Pista> obtenerListaDePistas(Long idAcertijo);
 
-    Boolean obtenerRespuesta(Long id, String respuesta);
+    Respuesta obtenerRespuestaCorrecta(Long idAcertijo);
 }

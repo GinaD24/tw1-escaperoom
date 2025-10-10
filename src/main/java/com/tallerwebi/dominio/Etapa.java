@@ -18,7 +18,7 @@ public class Etapa {
     @Column (nullable = false)
     private String descripcion;
 
-    @Column (nullable = false)
+    @Column
     private String imagen;
 
     @ManyToOne
@@ -72,5 +72,13 @@ public class Etapa {
 
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
     }
 }

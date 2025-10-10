@@ -22,10 +22,10 @@ public class ControladorPartida {
     }
 
     @GetMapping("/sala_{idSala}")
-    public ModelAndView iniciarPartida(@PathVariable Integer idSala) {
+    public ModelAndView iniciarPartida(@PathVariable Integer idSala, Partida partida) {
         try {
             Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
-            this.servicioPartida.guardarPartida(idSala);
+            this.servicioPartida.guardarPartida(partida);
 
             return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa1");
         } catch (SalaInexistente e) {

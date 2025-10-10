@@ -16,11 +16,14 @@ public class Respuesta {
     @JoinColumn(name = "id_acertijo")
     private Acertijo acertijo;
 
+    @Column(nullable = false)
+    private Boolean es_correcta;
+
     public Respuesta(){
 
     }
 
-    public Respuesta(String respuesta){
+    public Respuesta(String respuesta) {
         this.respuesta = respuesta;
     }
 
@@ -38,5 +41,21 @@ public class Respuesta {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Acertijo getAcertijo() {
+        return acertijo;
+    }
+
+    public void setAcertijo(Acertijo acertijo) {
+        this.acertijo = acertijo;
+    }
+
+    public Boolean getEs_correcta() {
+        return es_correcta;
+    }
+
+    public void setEs_correcta(Boolean es_correcta) {
+        this.es_correcta = es_correcta;
     }
 }

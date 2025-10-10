@@ -48,4 +48,12 @@ public class Pista {
     public void setNumero(Integer numero) {
         this.numero = numero;
     }
+
+    public Acertijo getAcertijo() {
+        return acertijo;
+    }
+
+    public void setAcertijo(Acertijo acertijo) {
+        this.acertijo = acertijo;
+    }
 }

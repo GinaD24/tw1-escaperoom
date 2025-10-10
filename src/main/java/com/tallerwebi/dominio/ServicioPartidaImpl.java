@@ -4,7 +4,9 @@ import com.tallerwebi.infraestructura.RepositorioPartidaImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 @Service
@@ -26,6 +28,8 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
     @Override
     public Pista obtenerSiguientePista(Long idAcertijo) {
+
+//        int pistasUsadas = this.repositorioPartida.obtenerPistasUsadas();
 
         int pistasUsadas = 0;
 
@@ -56,12 +60,20 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
     @Override
     public Boolean validarRespuesta(Long idAcertijo, String respuesta) {
-        return this.repositorioPartida.obtenerRespuesta(idAcertijo, respuesta);
+        boolean esCorrecta = false;
+        Respuesta correcta =this.repositorioPartida.obtenerRespuestaCorrecta(idAcertijo);
+        String[] palabrasIngresadas = respuesta.toLowerCase().split("\\s+");
+
+        if(Arrays.asList(palabrasIngresadas).contains(correcta.getRespuesta().toLowerCase())){
+            esCorrecta = true;
+        }
+
+        return esCorrecta;
     }
 
     @Override
-    public void guardarPartida(Integer idSala) {
-        this.repositorioPartida.guardarPartida(idSala);
+    public void guardarPartida(Partida partida) {
+        this.repositorioPartida.guardarPartida(partida);
     }
 
     @Override

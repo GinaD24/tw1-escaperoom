@@ -17,6 +17,9 @@ public class Acertijo {
     @JoinColumn(name = "id_etapa")
     private Etapa etapa;
 
+    @Column
+    private String imagen;
+
     public Acertijo( String descripcion) {
         this.descripcion = descripcion;
     }
@@ -39,5 +42,13 @@ public class Acertijo {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Etapa getEtapa() {
+        return etapa;
+    }
+
+    public void setEtapa(Etapa etapa) {
+        this.etapa = etapa;
     }
 }

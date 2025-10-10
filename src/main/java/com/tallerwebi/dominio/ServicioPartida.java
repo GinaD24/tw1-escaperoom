@@ -2,7 +2,7 @@ package com.tallerwebi.dominio;
 
 public interface ServicioPartida {
 
-    void guardarPartida(Integer idSala);
+    void guardarPartida(Partida partida);
 
     Acertijo obtenerAcertijo(Long id);
 
