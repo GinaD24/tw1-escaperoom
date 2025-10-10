@@ -1,4 +1,4 @@
-package com.tallerwebi.infraestructura;
+/*package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.Ranking;
 import com.tallerwebi.dominio.RankingRepository;
@@ -32,3 +32,4 @@ public class RankingRepositoryFake implements RankingRepository {
         );
     }
 }
+*/

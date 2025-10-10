@@ -1,11 +1,12 @@
 package com.tallerwebi.dominio;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
-
 @Entity
 public class Usuario {
 
@@ -16,6 +17,7 @@ public class Usuario {
     private String nombre;
     private String apellido;
     private String password;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaNacimiento;
     private String nombreUsuario;
     private String rol;
