@@ -32,13 +32,7 @@
         <div class="texto-acertijo">
             <div class="acertijo-contenido">
                 <div class="acertijo">
-                    <p>
-                        En este hall hablan retratos y susurran las paredes,<br>
-                        pero hay algo que todo importa: sin ruido no se revelan claves.<br><br>
-                        Soy lo que reina cuando nadie dice nada;<br>
-                        quien me nombra, se rompe.
-                    </p>
-                    <p class="pregunta">¿Qué soy?</p>
+                    <p th:if="${acertijo != null}" th:text=" ${acertijo.descripcion}"></p>
                 </div>
 
                 <div class="candado">
@@ -50,16 +44,30 @@
 
         <div class="d-flex justify-content-center align-items-center mb-4">
 
-            <div class="input-group rounded-pill w-25 overflow-hidden">
-                <input type="text" class="form-control input-respuesta border-0" placeholder="Escriba su respuesta aquí">
-                <button type="submit" class="btn btn-enviar">Enviar</button>
-            </div>
+            <form th:action="@{/partida/validar/{idSala}/{numeroEtapa}/{idAcertijo}(
+            idSala=${salaElegida.id},
+            numeroEtapa=${etapa.numero},
+            idAcertijo=${acertijo.id})}"
+                  method="post">
 
-            <button id="btnPista" class="btn btn-pista rounded-pill ms-4" data-acertijo="{{acertijo.id}}">
+                <div class="input-group rounded-pill w-150 overflow-hidden">
+                    <input type="text" name="respuesta" class="form-control input-respuesta border-0" placeholder="Escriba su respuesta aquí">
+                    <button type="submit" class="btn btn-enviar ">Enviar</button>
+                </div>
+            </form>
+
+            <div th:if="${error != null}" th:text="${error}" class="text-danger"> </div>
+
+
+
+            <button id="btnPista" class="btn btn-pista rounded-pill ms-4"
+                    th:if="${acertijo != null}"
+                    th:attr="data-acertijo=${acertijo.id}">
                 Mostrar pista
             </button>
 
-            <div id="pista" class="ms-2"></div>
+
+            <div id="pista" class="ms-2" ></div>
 
         </div>
 

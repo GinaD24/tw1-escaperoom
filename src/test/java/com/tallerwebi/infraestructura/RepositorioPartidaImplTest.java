@@ -139,4 +139,46 @@ public class RepositorioPartidaImplTest {
 
         assertThat(respuestaCorrecta, equalTo(respuesta));
     }
+
+    @Test
+    public void deberiaRegistrarUnAcertijoMostrado(){
+        Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
+        this.sessionFactory.getCurrentSession().save(etapa);
+
+        Acertijo acertijo = new Acertijo( "a1");
+        acertijo.setEtapa(etapa);
+        this.sessionFactory.getCurrentSession().save(acertijo);
+
+        Usuario usuario = new Usuario();
+        this.sessionFactory.getCurrentSession().save(usuario);
+        AcertijoUsuario acertijoUsuario = new AcertijoUsuario(acertijo, usuario);
+
+        this.repositorioPartida.registrarAcertijoMostrado(acertijoUsuario);
+
+        assertNotNull(acertijoUsuario.getId());
+    }
+
+    @Test
+    public void deberiaObtener1EnLaCantidadDePistasUsadasCuandoSePideUna(){
+        Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
+        this.sessionFactory.getCurrentSession().save(etapa);
+
+        Acertijo acertijo = new Acertijo( "a1");
+        acertijo.setEtapa(etapa);
+        this.sessionFactory.getCurrentSession().save(acertijo);
+
+        Usuario usuario = new Usuario();
+        this.sessionFactory.getCurrentSession().save(usuario);
+
+
+        AcertijoUsuario acertijoUsuario = new AcertijoUsuario(acertijo, usuario);
+
+        this.repositorioPartida.registrarAcertijoMostrado(acertijoUsuario);
+
+        this.repositorioPartida.sumarPistaUsada(acertijo.getId(), usuario.getId());
+
+        Integer pistasUsadas = this.repositorioPartida.obtenerPistasUsadas(acertijo.getId(), usuario.getId());
+
+        assertThat(pistasUsadas, equalTo(1));
+    }
 }

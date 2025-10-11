@@ -2,6 +2,7 @@ package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.infraestructura.RepositorioPartidaImpl;
+import com.tallerwebi.infraestructura.RepositorioUsuarioImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,11 +21,13 @@ public class ServicioPartidaImplTest {
     private RepositorioPartida repositorioPartida;
     private ServicioPartida servicioPartida;
     private ServicioSala servicioSala;
+    private RepositorioUsuario repositorioUsuario;
 
     @BeforeEach
     public void init() {
         this.repositorioPartida = mock(RepositorioPartidaImpl.class);
-        this.servicioPartida = new ServicioPartidaImpl(servicioSala,repositorioPartida);
+        this.repositorioUsuario = mock(RepositorioUsuarioImpl.class);
+        this.servicioPartida = new ServicioPartidaImpl(servicioSala,repositorioPartida, repositorioUsuario );
 
     }
 
@@ -68,8 +71,8 @@ public class ServicioPartidaImplTest {
         listaDeAcertijos.add(acertijo3);
 
         when(repositorioPartida.obtenerListaDeAcertijos(etapa.getId())).thenReturn(listaDeAcertijos);
-
-        Acertijo acertijoElegido = this.servicioPartida.obtenerAcertijo(etapa.getId());
+        Long idUsuario = 1L;
+        Acertijo acertijoElegido = this.servicioPartida.obtenerAcertijo(etapa.getId(),idUsuario );
 
         assertTrue(
                 acertijoElegido.equals(acertijo1) || acertijoElegido.equals(acertijo2) || acertijoElegido.equals(acertijo3),
@@ -93,8 +96,8 @@ public class ServicioPartidaImplTest {
         listaDePistas.add(pista3);
 
         when(repositorioPartida.obtenerListaDePistas(acertijo.getId())).thenReturn(listaDePistas);
-
-        Pista pista = this.servicioPartida.obtenerSiguientePista(acertijo.getId());
+        Long idUsuario = 1L;
+        Pista pista = this.servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario);
 
         verify(repositorioPartida).obtenerListaDePistas(acertijo.getId());
         assertThat(pista, equalTo(listaDePistas.get(0)));

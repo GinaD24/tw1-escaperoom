@@ -12,4 +12,10 @@ public interface RepositorioPartida {
     List<Pista> obtenerListaDePistas(Long idAcertijo);
 
     Respuesta obtenerRespuestaCorrecta(Long idAcertijo);
+
+    void registrarAcertijoMostrado(AcertijoUsuario  acertijoUsuario);
+
+    Integer obtenerPistasUsadas(Long idAcertijo, Long id_usuario);
+
+    void sumarPistaUsada(Long idAcertijo, Long idUsuario);
 }

@@ -13,7 +13,7 @@ public class Acertijo {
     @Column(nullable = false)
     private String descripcion;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "id_etapa")
     private Etapa etapa;
 

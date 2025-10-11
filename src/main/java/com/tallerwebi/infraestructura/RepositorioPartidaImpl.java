@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -54,6 +55,33 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         Query<Respuesta> query = this.sessionFactory.getCurrentSession().createQuery(hql, Respuesta.class);
         query.setParameter("idAcertijo", idAcertijo);
         return query.getSingleResult();
+    }
+
+    @Override
+    public void registrarAcertijoMostrado(AcertijoUsuario acertijoUsuario) {
+        this.sessionFactory.getCurrentSession().save(acertijoUsuario);
+    }
+
+    @Override
+    public Integer obtenerPistasUsadas(Long idAcertijo, Long  id_usuario) {
+        String hql = "SELECT au.pistasUsadas FROM AcertijoUsuario au WHERE au.acertijo.id = :idAcertijo AND au.usuario.id = :id_usuario";
+        Query<Integer> query = this.sessionFactory.getCurrentSession().createQuery(hql, Integer.class);
+        query.setParameter("idAcertijo", idAcertijo);
+        query.setParameter("id_usuario", id_usuario);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public void sumarPistaUsada(Long idAcertijo, Long idUsuario) {
+        String hql = "UPDATE AcertijoUsuario au " +
+                "SET au.pistasUsadas = au.pistasUsadas + 1 " +
+                "WHERE au.acertijo.id = :idAcertijo AND au.usuario.id = :idUsuario";
+
+         int updated = sessionFactory.getCurrentSession()
+                .createQuery(hql)
+                .setParameter("idAcertijo", idAcertijo)
+                .setParameter("idUsuario", idUsuario)
+                .executeUpdate();
     }
 
 

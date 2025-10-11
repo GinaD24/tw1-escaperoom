@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
         btnPista.addEventListener("click", function() {
             const idAcertijo = this.dataset.acertijo;
 
-            fetch(`/partida/acertijo/${idAcertijo}/pista`)
+            fetch(`/spring/partida/acertijo/${idAcertijo}/pista`)
                 .then(response => response.text())
                 .then(text => {
                     document.getElementById("pista").innerText = text;

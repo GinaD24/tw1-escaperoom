@@ -1,12 +1,12 @@
 package com.tallerwebi.dominio;
 
-import com.tallerwebi.infraestructura.RepositorioPartidaImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 @Service
@@ -14,24 +14,27 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
     private ServicioSala servicioSala;
     private RepositorioPartida repositorioPartida;
+    private RepositorioUsuario repositorioUsuario;
 
     @Autowired
-    public ServicioPartidaImpl(ServicioSala servicioSala, RepositorioPartida repositorioPartida) {
+    public ServicioPartidaImpl(ServicioSala servicioSala, RepositorioPartida repositorioPartida, RepositorioUsuario repositorioUsuario) {
         this.servicioSala = servicioSala;
         this.repositorioPartida = repositorioPartida;
+        this.repositorioUsuario = repositorioUsuario;
     }
 
     @Override
+    @Transactional
     public Etapa obtenerEtapaPorNumero(Integer idSala, Integer numeroEtapa) {
         return this.repositorioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
     }
 
     @Override
-    public Pista obtenerSiguientePista(Long idAcertijo) {
+    @Transactional
+    public Pista obtenerSiguientePista(Long idAcertijo, Long id_usuario) {
 
-//        int pistasUsadas = this.repositorioPartida.obtenerPistasUsadas();
+        Integer pistasUsadas = this.repositorioPartida.obtenerPistasUsadas(idAcertijo, id_usuario);
 
-        int pistasUsadas = 0;
 
         List<Pista> listaObtenidaDePistas = this.repositorioPartida.obtenerListaDePistas(idAcertijo);
         Pista pistaSeleccionada = null;
@@ -41,15 +44,15 @@ public class ServicioPartidaImpl implements ServicioPartida {
             switch (pistasUsadas) {
                 case 0:
                     pistaSeleccionada = listaObtenidaDePistas.get(0);
-                    pistasUsadas++;
+                    this.repositorioPartida.sumarPistaUsada(idAcertijo, id_usuario);
                     break;
                 case 1:
                     pistaSeleccionada = listaObtenidaDePistas.get(1);
-                    pistasUsadas++;
+                    this.repositorioPartida.sumarPistaUsada(idAcertijo, id_usuario);
                     break;
                 case 2:
                     pistaSeleccionada = listaObtenidaDePistas.get(2);
-                    pistasUsadas++;
+                    this.repositorioPartida.sumarPistaUsada(idAcertijo, id_usuario);
                     break;
             }
 
@@ -59,6 +62,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
     }
 
     @Override
+    @Transactional
     public Boolean validarRespuesta(Long idAcertijo, String respuesta) {
         boolean esCorrecta = false;
         Respuesta correcta =this.repositorioPartida.obtenerRespuestaCorrecta(idAcertijo);
@@ -72,19 +76,28 @@ public class ServicioPartidaImpl implements ServicioPartida {
     }
 
     @Override
+    @Transactional
     public void guardarPartida(Partida partida) {
+        partida.setInicio(LocalDateTime.now());
         this.repositorioPartida.guardarPartida(partida);
     }
 
     @Override
-    public Acertijo obtenerAcertijo(Long idEtapa) {
+    @Transactional
+    public Acertijo obtenerAcertijo(Long idEtapa, Long id_usuario) {
         Acertijo acertijoSeleccionado = null;
         List<Acertijo> listaDeAcertijosObtenida = this.repositorioPartida.obtenerListaDeAcertijos(idEtapa);
 
         if(!listaDeAcertijosObtenida.isEmpty()) {
             Random random = new Random();
             acertijoSeleccionado = listaDeAcertijosObtenida.get(random.nextInt(listaDeAcertijosObtenida.size()));
+
+            Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(id_usuario);
+            AcertijoUsuario acertijoUsuario = new AcertijoUsuario(acertijoSeleccionado, usuario);
+            this.repositorioPartida.registrarAcertijoMostrado(acertijoUsuario);
         }
+
+
 
         return acertijoSeleccionado;
     }
