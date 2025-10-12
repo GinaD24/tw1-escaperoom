@@ -2,10 +2,7 @@ package com.tallerwebi.dominio;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,6 +22,13 @@ public class Usuario {
     private String rol;
     private Boolean activo = false;
     private String fotoPerfil;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "usuario_logro_favorito",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "logro_id")
+    )
     private List<Logro> logrosFavoritos;
 
     public Long getId() {

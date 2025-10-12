@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
-@RequestMapping("/jugador")
+@RequestMapping("/perfil")
 public class ControladorPerfilJugador {
 
     private final ServicioPerfilJugador servicioPerfilJugador;
@@ -32,10 +32,10 @@ public class ControladorPerfilJugador {
         try {
             PerfilJugador perfil = servicioPerfilJugador.obtenerPerfil(id);
             modelo.put("perfil", perfil);
-            return new ModelAndView("thymeleaf/perfilJugador", modelo);
+            return new ModelAndView("perfil-Jugador", modelo);
         } catch (RuntimeException e) {
             modelo.put("error", e.getMessage());
-            return new ModelAndView("thymeleaf/error", modelo);
+            return new ModelAndView("error", modelo);
         }
     }
 
@@ -48,10 +48,10 @@ public class ControladorPerfilJugador {
             List<Logro> logros = servicioPerfilJugador.obtenerTodosLosLogros();
             modelo.put("perfil", perfil);
             modelo.put("logros", logros);
-            return new ModelAndView("thymeleaf/editarPerfil", modelo);
+            return new ModelAndView("editar-Perfil", modelo);
         } catch (RuntimeException e) {
             modelo.put("error", e.getMessage());
-            return new ModelAndView("thymeleaf/error", modelo);
+            return new ModelAndView("error", modelo);
         }
     }
 
@@ -63,11 +63,11 @@ public class ControladorPerfilJugador {
                                          @RequestParam(required = false) List<Long> logrosFavoritos) {
         try {
             servicioPerfilJugador.actualizarPerfil(id, nombre, nombreArchivo, logrosFavoritos);
-            return new ModelAndView("redirect:/jugador/" + id + "/ver");
+            return new ModelAndView("redirect:/perfil/" + id + "/ver");
         } catch (RuntimeException e) {
             ModelMap modelo = new ModelMap();
             modelo.put("error", e.getMessage());
-            return new ModelAndView("thymeleaf/error", modelo);
+            return new ModelAndView("error", modelo);
         }
     }
 
@@ -78,10 +78,10 @@ public class ControladorPerfilJugador {
         try {
             PerfilJugador perfil = servicioPerfilJugador.obtenerPerfil(id);
             modelo.put("perfil", perfil);
-            return new ModelAndView("thymeleaf/editarFotoPerfil", modelo);
+            return new ModelAndView("editar-foto", modelo);
         } catch (RuntimeException e) {
             modelo.put("error", e.getMessage());
-            return new ModelAndView("thymeleaf/error", modelo);
+            return new ModelAndView("error", modelo);
         }
     }
 
@@ -93,7 +93,7 @@ public class ControladorPerfilJugador {
         try {
             if (foto.isEmpty()) {
                 modelo.put("error", "Debe seleccionar una imagen válida");
-                return new ModelAndView("thymeleaf/error", modelo);
+                return new ModelAndView("error", modelo);
             }
 
             // Guarda físicamente la imagen en webapp/img/
@@ -104,10 +104,10 @@ public class ControladorPerfilJugador {
             // Actualiza en la base de datos el nombre del archivo
             servicioPerfilJugador.actualizarFotoPerfil(id, nombreArchivo);
 
-            return new ModelAndView("redirect:/jugador/" + id + "/ver");
+            return new ModelAndView("redirect:/perfil/" + id + "/ver");
 
         } catch (IOException e) {
             modelo.put("error", "Error al guardar la imagen: " + e.getMessage());
-            return new ModelAndView("thymeleaf/error", modelo);
+            return new ModelAndView("error", modelo);
         }
     } }
