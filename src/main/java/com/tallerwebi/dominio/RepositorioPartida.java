@@ -18,4 +18,8 @@ public interface RepositorioPartida {
     Integer obtenerPistasUsadas(Long idAcertijo, Long id_usuario);
 
     void sumarPistaUsada(Long idAcertijo, Long idUsuario);
+
+    List<Acertijo> obtenerAcertijosVistosPorUsuario(Long idUsuario);
+
+    void eliminarRegistrosDePartidas(Long idUsuario);
 }

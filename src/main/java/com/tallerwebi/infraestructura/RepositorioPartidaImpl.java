@@ -84,5 +84,22 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
                 .executeUpdate();
     }
 
+    @Override
+    public List<Acertijo> obtenerAcertijosVistosPorUsuario(Long idUsuario) {
+        String hql = "SELECT au.acertijo FROM AcertijoUsuario au WHERE au.usuario.id = :idUsuario";
+        Query<Acertijo> query = this.sessionFactory.getCurrentSession().createQuery(hql, Acertijo.class);
+        query.setParameter("idUsuario", idUsuario);
+        return query.getResultList();
+    }
+
+
+    @Override
+    public void eliminarRegistrosDePartidas(Long idUsuario) {
+        String hql = "DELETE FROM AcertijoUsuario au WHERE au.usuario.id = :idUsuario";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        query.setParameter("idUsuario", idUsuario);
+        query.executeUpdate();
+    }
+
 
 }

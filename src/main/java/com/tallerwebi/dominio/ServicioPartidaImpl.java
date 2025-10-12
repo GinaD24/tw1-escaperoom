@@ -89,15 +89,22 @@ public class ServicioPartidaImpl implements ServicioPartida {
         List<Acertijo> listaDeAcertijosObtenida = this.repositorioPartida.obtenerListaDeAcertijos(idEtapa);
 
         if(!listaDeAcertijosObtenida.isEmpty()) {
+            List<Acertijo> acertijosVistos = this.repositorioPartida.obtenerAcertijosVistosPorUsuario(id_usuario);
+            if (acertijosVistos != null && acertijosVistos.size() == listaDeAcertijosObtenida.size()) {
+                this.repositorioPartida.eliminarRegistrosDePartidas(id_usuario);
+                acertijosVistos.clear();
+            }
+
             Random random = new Random();
-            acertijoSeleccionado = listaDeAcertijosObtenida.get(random.nextInt(listaDeAcertijosObtenida.size()));
+            do {
+                acertijoSeleccionado = listaDeAcertijosObtenida.get(random.nextInt(listaDeAcertijosObtenida.size()));
+            } while (acertijosVistos != null && acertijosVistos.contains(acertijoSeleccionado));
+
 
             Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(id_usuario);
             AcertijoUsuario acertijoUsuario = new AcertijoUsuario(acertijoSeleccionado, usuario);
             this.repositorioPartida.registrarAcertijoMostrado(acertijoUsuario);
         }
-
-
 
         return acertijoSeleccionado;
     }
