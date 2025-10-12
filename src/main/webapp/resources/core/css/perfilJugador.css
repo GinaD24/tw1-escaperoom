@@ -1,0 +1,157 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #2c0d5a 0%, #1a0b3d 30%, #0d1a4f 100%);
+    background-attachment: fixed;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    position: relative;
+   overflow-x: hidden;
+
+}
+
+header {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+      justify-content: space-between;
+}
+
+.contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 15px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.7);
+    width: 90%;
+    max-width: 600px;
+    margin-left: 30%;
+}
+
+
+.contenedorFoto {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 20px;
+  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: 400ms;
+}
+
+.contenedorFoto > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.contenedorFoto:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.5);
+}
+
+
+.contenedorTitulo h1 {
+    color: #fac020;
+    font-size: 2.5em;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.contenedorNombre h2 {
+    font-size: 1.8em;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.contenedorLogros {
+    margin-top: 20px;
+    text-align: left;
+    width: 100%;
+}
+
+.contenedorLogros h3 {
+    font-size: 1.5em;
+    font-weight: 500;
+    color: #fac020;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.contenedorLogros ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.contenedorLogros li {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.contenedorLogros li:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.contenedorLogros b {
+    color: #fac020;
+}
+
+a {
+    color: #fac020;
+    text-decoration: none;
+    font-size: 1.2em;
+    margin-top: 20px;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .contenedor {
+        padding: 20px;
+    }
+
+    .contenedorTitulo h1 {
+        font-size: 2em;
+    }
+
+    .contenedorNombre h2 {
+        font-size: 1.5em;
+    }
+
+    .contenedorFoto {
+        width: 120px;
+        height: 120px;
+    }
+
+    .contenedorLogros h3 {
+        font-size: 1.3em;
+    }
+
+
+
+
+}

@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
+import java.util.List;
+
 @Entity
 public class Usuario {
 
@@ -22,6 +24,8 @@ public class Usuario {
     private String nombreUsuario;
     private String rol;
     private Boolean activo = false;
+    private String fotoPerfil;
+    private List<Logro> logrosFavoritos;
 
     public Long getId() {
         return id;
@@ -71,5 +75,21 @@ public class Usuario {
 
     public void activar() {
         activo = true;
+    }
+
+    public String getFotoPerfil() {
+        return fotoPerfil;
+    }
+
+    public void setFotoPerfil(String fotoPerfil) {
+        this.fotoPerfil = fotoPerfil;
+    }
+
+    public List<Logro> getLogrosFavoritos() {
+        return logrosFavoritos;
+    }
+
+    public void setLogrosFavoritos(List<Logro> logrosFavoritos) {
+        this.logrosFavoritos = logrosFavoritos;
     }
 }
