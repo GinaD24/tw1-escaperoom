@@ -1,0 +1,65 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Perfil del Jugador</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+
+    <!-- custom style -->
+    <link rel="stylesheet" th:href="@{/css/perfilJugador.css}"/>
+
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">ESCAPE ROOM</a>
+            <div class="d-flex">
+                <button class="btn btn-outline-light rounded-circle me-2"><i class="bi bi-person"></i></button>
+                <button class="btn btn-outline-light"><i class="bi bi-list"></i></button>
+            </div>
+        </div>
+    </nav>
+</header>
+
+
+<main>
+
+
+    <div class="contenedor">
+
+        <div class="contenedorFoto">
+            <img th:src="@{'/img/' + ${perfil.fotoPerfil}}" alt="Foto de perfil" width="120" height="120">
+        </div>
+
+
+        <div  class="contenedorTitulo">
+            <h1  th:text="${perfil.nombre}"></h1>
+        </div>
+
+        <div class="contenedorLogros">
+            <h3>Logros</h3>
+            <ul>
+                <li th:each="logro : ${perfil.logrosFavoritos}">
+                    <b th:text="${logro.nombre}"></b> - <span th:text="${logro.descripcion}"></span>
+                </li>
+            </ul>
+        </div>
+
+        <a th:href="@{/perfil/editar(idUsuario=${perfil.id})}" >Editar perfil</a><br>
+        <a th:href="@{/perfil/editar-foto(idUsuario=${perfil.id})}">Cambiar foto</a>
+    </div>
+
+
+</main>
+
+
+
+</body>
+
+</html>
