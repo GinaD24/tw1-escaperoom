@@ -60,7 +60,7 @@ public class ControladorLoginTest {
 	}
 
 	@Test
-	public void loginConUsuarioYPasswordCorrectosDeberiaLLevarAHome() throws CredencialesInvalidasException {
+	public void loginConUsuarioYPasswordCorrectosDeberiaLLevarAInicio() throws CredencialesInvalidasException {
 		// preparacion
 		Usuario usuarioEncontradoMock = mock(Usuario.class);
 		when(usuarioEncontradoMock.getRol()).thenReturn("ADMIN");
@@ -72,8 +72,8 @@ public class ControladorLoginTest {
 		ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
 
 		// validacion
-		assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/home"));
-		verify(sessionMock, times(1)).setAttribute("ROL", usuarioEncontradoMock.getRol());
+		assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/inicio/"));
+		verify(sessionMock, times(1)).setAttribute("id_usuario", usuarioEncontradoMock.getId());
 	}
 
     @Test
