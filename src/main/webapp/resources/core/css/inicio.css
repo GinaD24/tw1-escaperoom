@@ -7,7 +7,8 @@ body {
     margin: 0;
 }
 .navbar {
-    background-color: #1a1a3b;
+    background-color: rgba(26, 26, 59, 0.49);
+    border-bottom: 2px solid rgba(90, 27, 167, 0.69);
 }
 .navbar-brand {
     font-family: 'Rajdhani', sans-serif;
@@ -25,7 +26,7 @@ body {
 
 .sala-card a {
     text-decoration: none;
-    color: #a882d0;
+    color:white;
 }
 
 .sala-card {
@@ -39,18 +40,25 @@ body {
     height: 350px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     text-align: center;
-}
 
+}
+.texto-card{
+    color:white;
+}
 .sala-card img {
     width: 120px;
+    height: 140px;
     margin-bottom: 20px;
 }
 .sala-card h5{
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    font-family: 'Rajdhani', sans-serif;
+    color: #fafb63;
 }
+
+
 
 .card:hover {
     transform: scale(1.0);

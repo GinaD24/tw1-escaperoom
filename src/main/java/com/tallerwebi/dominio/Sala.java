@@ -34,6 +34,9 @@ public class Sala {
     @Column
     private String imagen;
 
+    @Column
+    private String imagenSala;
+
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Etapa> etapas;
 
@@ -114,5 +117,21 @@ public class Sala {
 
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    public List<Etapa> getEtapas() {
+        return etapas;
+    }
+
+    public void setEtapas(List<Etapa> etapas) {
+        this.etapas = etapas;
+    }
+
+    public String getImagenSala() {
+        return imagenSala;
+    }
+
+    public void setImagenSala(String imagenSala) {
+        this.imagenSala = imagenSala;
     }
 }
