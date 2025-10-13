@@ -101,5 +101,21 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         query.executeUpdate();
     }
 
+    @Override
+    public Acertijo buscarAcertijoPorId(Long idAcertijo) {
+        String hql = "SELECT a FROM Acertijo a WHERE a.id = :idAcertijo";
+        Query<Acertijo> query = this.sessionFactory.getCurrentSession().createQuery(hql, Acertijo.class);
+        query.setParameter("idAcertijo", idAcertijo);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public Etapa buscarEtapaPorId(Long idEtapa) {
+        String hql = "SELECT e FROM Etapa e WHERE e.id = :idEtapa";
+        Query<Etapa> query = this.sessionFactory.getCurrentSession().createQuery(hql, Etapa.class);
+        query.setParameter("idEtapa", idEtapa);
+        return query.getSingleResult();
+    }
+
 
 }

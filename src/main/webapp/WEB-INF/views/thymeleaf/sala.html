@@ -26,14 +26,13 @@
 </header>
 
 
-<main class="main-container">
+<main class="main-container mt-5">
     <div class="mt-5" th:if="${SalaObtenida != null}">
         <h1 class="titulo-sala" th:text="${SalaObtenida.nombre}"></h1>
         <div  class="nivel" th:text="${SalaObtenida.dificultad}"></div>
 
         <p class="historia" th:text="${SalaObtenida.historia}"> </p>
 
-        <img class="mx-auto d-block mb-3" style="width: 100px" alt="puerta" th:src="@{'/img/' + ${SalaObtenida.imagen}}">
 
         <div>
             <a class="btn btn-primary" th:href="@{/partida/sala_{idSala}(idSala=${SalaObtenida.id})}">ESTOY LISTO</a>

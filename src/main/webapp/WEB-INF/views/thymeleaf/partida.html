@@ -27,7 +27,10 @@
         <h1 class="titulo-sala" th:text="${salaElegida.nombre}"></h1>
         <h3 class="nombre-etapa mt-2" th:if="${etapa != null}" th:text="'Etapa: ' + ${etapa.nombre}"></h3>
         <p class="text-muted mt-2">Resuelve el siguiente acertijo para pasar a la próxima etapa</p>
-        <p class="texto-etapa mt-5" th:if="${etapa != null}" th:text=" ${etapa.descripcion}"></p>
+        <p class="texto-etapa mt-5" th:if="${etapa != null}">
+            <span th:text="${#strings.substringBefore(etapa.descripcion, '.')}"></span><br>
+            <span th:text="${#strings.substringAfter(etapa.descripcion, '.')}"></span>
+        </p>
 
         <div class="texto-acertijo">
             <div class="acertijo-contenido">
@@ -42,33 +45,29 @@
         </div>
 
 
-        <div class="d-flex justify-content-center align-items-center mb-4">
+        <div class="d-flex flex-column justify-content-center align-items-center mb-4">
 
-            <form th:action="@{/partida/validar/{idSala}/{numeroEtapa}/{idAcertijo}(
-            idSala=${salaElegida.id},
-            numeroEtapa=${etapa.numero},
-            idAcertijo=${acertijo.id})}"
-                  method="post">
+            <form th:action="@{/partida/validar/{idSala}/{numeroEtapa}
+            (idSala=${salaElegida.id},
+            numeroEtapa=${etapa.numero})}"
+                  method="post" class="w-100 text-center" style="max-width: 600px;">
 
-                <div class="input-group rounded-pill w-150 overflow-hidden">
-                    <input type="text" name="respuesta" class="form-control input-respuesta border-0" placeholder="Escriba su respuesta aquí">
-                    <button type="submit" class="btn btn-enviar ">Enviar</button>
+                <div class="input-group rounded-pill overflow-hidden w-100">
+                    <input type="text" name="respuesta" class="form-control input-respuesta border-0"
+                           placeholder="Escriba su respuesta aquí">
+                    <button type="submit" class="btn btn-enviar">Enviar</button>
                 </div>
+
+                <div th:if="${error != null}" th:text="${error}" class="text-danger mt-2 text-center"></div>
             </form>
 
-            <div th:if="${error != null}" th:text="${error}" class="text-danger"> </div>
-
-
-
-            <button id="btnPista" class="btn btn-pista rounded-pill ms-4"
+            <button id="btnPista" class="btn btn-pista rounded-pill mt-3"
                     th:if="${acertijo != null}"
                     th:attr="data-acertijo=${acertijo.id}">
                 Mostrar pista
             </button>
 
-
-            <div id="pista" class="ms-2" ></div>
-
+            <div id="pista" class="mt-3 text-center"></div>
         </div>
 
 

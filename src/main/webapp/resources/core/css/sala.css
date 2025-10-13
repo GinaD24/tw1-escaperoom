@@ -1,7 +1,9 @@
 
 
 body {
-    background: linear-gradient(to right, #2c0d5a, #0d1a4f);
+    background-image: url('../img/mansion-misteriosa.png');
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
     min-height: 100vh;
     margin: 0;
@@ -21,7 +23,8 @@ header {
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 2rem;
+    padding-top: 100px;
+    backdrop-filter: blur(2px);
 }
 
 

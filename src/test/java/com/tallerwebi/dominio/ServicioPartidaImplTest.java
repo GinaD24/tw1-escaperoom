@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -74,10 +75,7 @@ public class ServicioPartidaImplTest {
         Long idUsuario = 1L;
         Acertijo acertijoElegido = this.servicioPartida.obtenerAcertijo(etapa.getId(),idUsuario );
 
-        assertTrue(
-                acertijoElegido.equals(acertijo1) || acertijoElegido.equals(acertijo2) || acertijoElegido.equals(acertijo3),
-                "El acertijo elegido debe ser uno de los permitidos"
-        );
+        assertTrue(acertijoElegido.equals(acertijo1) || acertijoElegido.equals(acertijo2) || acertijoElegido.equals(acertijo3));
         verify(repositorioPartida).obtenerListaDeAcertijos(etapa.getId());
     }
 
@@ -101,6 +99,35 @@ public class ServicioPartidaImplTest {
 
         verify(repositorioPartida).obtenerListaDePistas(acertijo.getId());
         assertThat(pista, equalTo(listaDePistas.get(0)));
+    }
+
+    @Test
+    public void deberiaDevolverLaSegundaPistaDelAcertijo_UnaVezQueYaPidioLaPrimera(){
+        Acertijo acertijo = new Acertijo( "lalalal");
+        acertijo.setId(1L);
+        Pista pista1 = new Pista("pista", 1);
+        Pista pista2 = new Pista("pista", 2);
+        Long idUsuario = 1L;
+
+        List<Pista> listaDePistas = new ArrayList<>();
+        listaDePistas.add(pista1);
+        listaDePistas.add(pista2);
+
+        AtomicInteger pistasUsadas = new AtomicInteger(0);
+
+        when(repositorioPartida.obtenerListaDePistas(acertijo.getId())).thenReturn(listaDePistas);
+        when(repositorioPartida.obtenerPistasUsadas(acertijo.getId(), idUsuario)).thenAnswer(invocation -> pistasUsadas.get());
+
+        doAnswer(invocation -> {
+            pistasUsadas.incrementAndGet();
+            return null;
+        }).when(repositorioPartida).sumarPistaUsada(acertijo.getId(), idUsuario);
+
+        this.servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario);
+        Pista pista = this.servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario);
+
+        verify(repositorioPartida, times(2)).obtenerListaDePistas(acertijo.getId());
+        assertThat(pista, equalTo(listaDePistas.get(1)));
     }
 
     @Test
@@ -152,19 +179,4 @@ public class ServicioPartidaImplTest {
         assertFalse(validacionDeRespuesta);
     }
 
-/*    @Test
-    public void deberiaObtenerUnMensajeSiNoSeRespondioCorrectamenteElAcertijo(){
-        Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
-                true, 10,"puerta-mansion.png");
-        Acertijo acertijo = new Acertijo( "lalalal");
-        Respuesta respuesta = new Respuesta("Respuesta");
-
-        when(repositorioPartida.obtenerRespuesta(acertijo.getId(),respuesta.getRespuesta())).thenReturn(false);
-
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta());
-
-        verify(repositorioPartida).obtenerRespuesta(acertijo.getId(),respuesta.getRespuesta());
-        assertFalse(validacionDeRespuesta);
-    }
-*/
 }

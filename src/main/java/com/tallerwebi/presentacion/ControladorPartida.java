@@ -8,6 +8,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @RequestMapping("/partida")
 public class ControladorPartida {
@@ -36,15 +38,36 @@ public class ControladorPartida {
 
 
     @GetMapping("/sala{idSala}/etapa{numeroEtapa}")
-    public ModelAndView mostrarPartida(@PathVariable Integer idSala, @PathVariable Integer numeroEtapa, @SessionAttribute("id_usuario") Long id_usuario) {
+    public ModelAndView mostrarPartida(@PathVariable Integer idSala, @PathVariable Integer numeroEtapa,
+                                       @SessionAttribute("id_usuario") Long id_usuario, HttpServletRequest request) {
         ModelMap modelo = new ModelMap();
-
         Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
-        Etapa etapa = this.servicioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
-        Acertijo acertijo = null;
-        if (etapa != null) {
-            acertijo = this.servicioPartida.obtenerAcertijo(etapa.getId(), id_usuario);
+        Etapa etapa = null;
+        Acertijo acertijo;
 
+        Long idEtapaSesion = (Long) request.getSession().getAttribute("id_etapa");
+
+        if (idEtapaSesion == null) {
+            etapa = this.servicioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
+            request.getSession().setAttribute("id_etapa", etapa.getId());
+        } else {
+            etapa = this.servicioPartida.obtenerEtapaPorId(idEtapaSesion);
+
+            if (!etapa.getNumero().equals(numeroEtapa)) {
+                request.getSession().removeAttribute("id_etapa");
+                request.getSession().removeAttribute("id_acertijo");
+                etapa = this.servicioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
+                request.getSession().setAttribute("id_etapa", etapa.getId());
+            }
+        }
+
+
+        Long idAcertijoSesion = (Long) request.getSession().getAttribute("id_acertijo");
+        if (idAcertijoSesion == null) {
+            acertijo = this.servicioPartida.obtenerAcertijo(etapa.getId(), id_usuario);
+            request.getSession().setAttribute("id_acertijo", acertijo.getId());
+        } else {
+            acertijo = this.servicioPartida.buscarAcertijoPorId(idAcertijoSesion);
         }
 
         modelo.put("salaElegida", sala);
@@ -70,37 +93,33 @@ public class ControladorPartida {
     }
 
 
-    @PostMapping("/validar/{idSala}/{numeroEtapa}/{idAcertijo}")
+    @PostMapping("/validar/{idSala}/{numeroEtapa}")
     public ModelAndView validarRespuesta(
             @PathVariable Integer idSala,
             @PathVariable Integer numeroEtapa,
-            @PathVariable Long idAcertijo,
-            @RequestParam String respuesta,
-            @SessionAttribute("id_usuario") Long id_usuario
+            @SessionAttribute("id_acertijo") Long id_acertijo,
+            @RequestParam String respuesta
     ) {
+        ModelMap modelo = new ModelMap();
+
+        Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
+        Etapa etapa = this.servicioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
+        Acertijo acertijo = this.servicioPartida.buscarAcertijoPorId(id_acertijo);
+        modelo.put("salaElegida", sala);
+        modelo.put("etapa", etapa);
+        modelo.put("acertijo", acertijo);
 
         if (respuesta.isEmpty()) {
-            ModelAndView modelAndView = mostrarPartida(idSala, numeroEtapa, id_usuario);
-            modelAndView.addObject("error", "Completa este campo para continuar.");
-            return modelAndView;
-        }else{
-
-
-            boolean esCorrecta = this.servicioPartida.validarRespuesta(idAcertijo, respuesta);
-
-
-            if (esCorrecta) {
-                //Pasar a la siguiente etapa
-                return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa" + (numeroEtapa + 1));
-            } else {
-                ModelAndView modelAndView = mostrarPartida(idSala, numeroEtapa, id_usuario);
-                modelAndView.addObject("error", "Respuesta incorrecta. Intenta nuevamente.");
-                return modelAndView;
-            }
+            modelo.put("error", "Completa este campo para continuar.");
+        } else if (this.servicioPartida.validarRespuesta(id_acertijo, respuesta).equals(false)) {
+            modelo.put("error", "Respuesta incorrecta. Intenta nuevamente.");
+        } else {
+            return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa" + (numeroEtapa + 1));
         }
 
-
+        return new ModelAndView("partida", modelo);
     }
+
 
 
 

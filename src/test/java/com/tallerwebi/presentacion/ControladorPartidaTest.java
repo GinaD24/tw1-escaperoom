@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,12 +19,16 @@ public class ControladorPartidaTest {
     ServicioSala servicioSala;
     ServicioPartida servicioPartida;
     ControladorPartida controladorPartida;
+    HttpServletRequest requestMock;
+    HttpSession sessionMock;
 
     @BeforeEach
     public void init() {
         this.servicioSala = mock(ServicioSala.class);
         this.servicioPartida = mock(ServicioPartidaImpl.class);
         this.controladorPartida = new ControladorPartida(servicioSala, servicioPartida);
+        this.requestMock = mock(HttpServletRequest.class);
+        this.sessionMock = mock(HttpSession.class);
     }
 
 
@@ -33,8 +39,6 @@ public class ControladorPartidaTest {
                 true, 10,"puerta-mansion.png");
         Partida partida = new Partida(LocalDateTime.now());
         partida.setSala(sala);
-//        Usuario usuario = new Usuario();
-//        usuario.setId(1L);
 
         controladorPartida.iniciarPartida(sala.getId(), partida);
 
@@ -47,10 +51,11 @@ public class ControladorPartidaTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
-
+        Acertijo acertijo = new Acertijo( "lalalal");
         Long idUsuario = 1L;
 
-        ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario);
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario, requestMock);
 
         assertThat(modelAndView.getViewName(), equalTo("partida"));
     }
@@ -64,12 +69,15 @@ public class ControladorPartidaTest {
                 true, 10,"puerta-mansion.png");
         Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
         etapa.setId(1L);
-
-        when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
-
+        Acertijo acertijo = new Acertijo( "lalalal");
+        acertijo.setId(1L);
         Long idUsuario = 1L;
 
-        ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(),  idUsuario);
+        when(servicioPartida.obtenerAcertijo(etapa.getId(), idUsuario)).thenReturn(acertijo);
+        when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
+        when(requestMock.getSession()).thenReturn(sessionMock);
+
+        ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario, requestMock);
 
         assertThat(modelAndView.getModel().get("etapa"), equalTo(etapa));
         verify(servicioPartida).obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
@@ -88,7 +96,8 @@ public class ControladorPartidaTest {
         when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
         when(servicioPartida.obtenerAcertijo(etapa.getId(), idUsuario )).thenReturn(acertijo);
 
-        ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(),  idUsuario);
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario, requestMock);
 
         assertThat(modelAndView.getModel().get("acertijo"), equalTo(acertijo));
         verify(servicioPartida).obtenerAcertijo(etapa.getId(), idUsuario );
@@ -110,6 +119,20 @@ public class ControladorPartidaTest {
     }
 
     @Test
+    public void deberiaDevolverUnMensajeYaNoQuedanPistas_CuandoElUsuarioAgotoLasPistas() {
+        Acertijo acertijo = new Acertijo( "lalalal");
+        acertijo.setId(1L);
+        Pista pista = new Pista("pista", 1);
+        Long idUsuario = 1L;
+        when(servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario)).thenReturn(null);
+
+        String pistaObtenida = controladorPartida.obtenerPista(acertijo.getId(), idUsuario);
+
+        assertThat(pistaObtenida, equalTo("Ya no quedan pistas."));
+        verify(servicioPartida).obtenerSiguientePista(acertijo.getId(),idUsuario);
+    }
+
+    @Test
     public void deberiaMostrarLaSegundaEtapaYelSegundoAcertijoSiYaSeResolvioElPrimero() {
 
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
@@ -120,9 +143,9 @@ public class ControladorPartidaTest {
         Respuesta respuesta = new Respuesta("Respuesta");
 
        when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta())).thenReturn(true);
-        Long idUsuario = 1L;
 
-       ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), idUsuario);
+
+       ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta());
 
        assertThat(modelAndView.getViewName(), equalTo("redirect:/partida/sala" + sala.getId() + "/etapa" + (etapa.getNumero() + 1)));
        verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta());
@@ -139,28 +162,11 @@ public class ControladorPartidaTest {
         Respuesta respuesta = new Respuesta("Respuesta");
 
         when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta())).thenReturn(false);
-        Long idUsuario = 1L;
-        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), idUsuario);
+        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta());
 
-        assertThat(modelAndView.getViewName(), equalTo("partida"));
+
         assertThat(modelAndView.getModel().get("error"), equalTo("Respuesta incorrecta. Intenta nuevamente."));
         verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta());
     }
 
-    /*
-    @Test
-    public void deberiaMostrarActualizadoElTiempoDeLaPartidaCuandoSolicitoUnaPista() {
-        Partida partida = new Partida();
-        Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
-                true, 10,"puerta-mansion.png");
-        Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
-        etapa.setId(1L);
-        Acertijo acertijo = new Acertijo( "lalalal");
-        Pista pista = new Pista("pista", 1);
-        Respuesta respuesta = new Respuesta("Respuesta");
-
-        when(servicioPartida.obtenerSiguientePista(acertijo.getId())).thenReturn(pista);
-        verify(servicioPartida).descontarTiempoPista();
-    }
-    */
 }

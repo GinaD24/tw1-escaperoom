@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 @Service
+
 public class ServicioPartidaImpl implements ServicioPartida {
 
     private ServicioSala servicioSala;
@@ -73,6 +74,18 @@ public class ServicioPartidaImpl implements ServicioPartida {
         }
 
         return esCorrecta;
+    }
+
+    @Override
+    @Transactional
+    public Acertijo buscarAcertijoPorId(Long idAcertijo) {
+        return this.repositorioPartida.buscarAcertijoPorId(idAcertijo);
+    }
+
+    @Override
+    @Transactional
+    public Etapa obtenerEtapaPorId(Long idEtapa) {
+        return this.repositorioPartida.buscarEtapaPorId(idEtapa);
     }
 
     @Override
