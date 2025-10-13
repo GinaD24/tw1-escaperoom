@@ -33,7 +33,7 @@ public class RepositorioSalaImpl implements RepositorioSala {
         String hql = "SELECT s FROM Sala s WHERE s.id = :id";
         Query<Sala> query = this.sessionFactory.getCurrentSession().createQuery(hql, Sala.class);
         query.setParameter("id", id);
-        return query.getSingleResult();
+        return query.getResultList().stream().findFirst().orElse(null);
     }
 
     @Override

@@ -39,10 +39,10 @@ public class ControladorPartidaTest {
                 true, 10,"puerta-mansion.png");
         Partida partida = new Partida(LocalDateTime.now());
         partida.setSala(sala);
-
-        controladorPartida.iniciarPartida(sala.getId(), partida);
-
-        verify(servicioPartida).guardarPartida(partida);
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        controladorPartida.iniciarPartida(sala.getId(), partida,requestMock );
+        Long idUsuario = 1L;
+        verify(servicioPartida).guardarPartida(partida, idUsuario);
     }
 
     @Test
@@ -144,8 +144,8 @@ public class ControladorPartidaTest {
 
        when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta())).thenReturn(true);
 
-
-       ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta());
+        when(requestMock.getSession()).thenReturn(sessionMock);
+       ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), requestMock);
 
        assertThat(modelAndView.getViewName(), equalTo("redirect:/partida/sala" + sala.getId() + "/etapa" + (etapa.getNumero() + 1)));
        verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta());
@@ -160,9 +160,9 @@ public class ControladorPartidaTest {
         etapa.setId(1L);
         Acertijo acertijo = new Acertijo( "lalalal");
         Respuesta respuesta = new Respuesta("Respuesta");
-
+        when(requestMock.getSession()).thenReturn(sessionMock);
         when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta())).thenReturn(false);
-        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta());
+        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), requestMock);
 
 
         assertThat(modelAndView.getModel().get("error"), equalTo("Respuesta incorrecta. Intenta nuevamente."));

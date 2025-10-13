@@ -19,11 +19,18 @@ public interface RepositorioPartida {
 
     void sumarPistaUsada(Long idAcertijo, Long idUsuario);
 
-    List<Acertijo> obtenerAcertijosVistosPorUsuario(Long idUsuario);
+    List<Acertijo> obtenerAcertijosVistosPorUsuarioPorEtapa(Long idUsuario, Long idEtapa);
 
     void eliminarRegistrosDePartidas(Long idUsuario);
 
     Acertijo buscarAcertijoPorId(Long idAcertijo);
 
     Etapa buscarEtapaPorId(Long idEtapa);
+
+    Integer obtenerTodasLasEtapas(Integer idSala);
+
+    Partida obtenerPartidaActivaPorUsuario(Long idUsuario);
+
+    void finalizarPartida(Partida partida);
+
 }

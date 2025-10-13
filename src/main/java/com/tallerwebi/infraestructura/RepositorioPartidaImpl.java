@@ -5,7 +5,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         Query<Etapa> query = this.sessionFactory.getCurrentSession().createQuery(hql, Etapa.class);
         query.setParameter("idSala", idSala);
         query.setParameter("numero", numero);
-        return query.getSingleResult();
+        return query.getResultList().stream().findFirst().orElse(null);
     }
 
     @Override
@@ -85,10 +84,11 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
     }
 
     @Override
-    public List<Acertijo> obtenerAcertijosVistosPorUsuario(Long idUsuario) {
-        String hql = "SELECT au.acertijo FROM AcertijoUsuario au WHERE au.usuario.id = :idUsuario";
+    public List<Acertijo> obtenerAcertijosVistosPorUsuarioPorEtapa(Long idUsuario, Long idEtapa) {
+        String hql = "SELECT au.acertijo FROM AcertijoUsuario au WHERE au.usuario.id = :idUsuario AND au.etapa.id = :idEtapa";
         Query<Acertijo> query = this.sessionFactory.getCurrentSession().createQuery(hql, Acertijo.class);
         query.setParameter("idUsuario", idUsuario);
+        query.setParameter("idEtapa", idEtapa);
         return query.getResultList();
     }
 
@@ -116,6 +116,28 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         query.setParameter("idEtapa", idEtapa);
         return query.getSingleResult();
     }
+
+    @Override
+    public Integer obtenerTodasLasEtapas(Integer idSala) {
+        String hql = "SELECT s.cantidadDeEtapas FROM Sala s WHERE s.id = :idSala";
+        Query<Integer> query = this.sessionFactory.getCurrentSession().createQuery(hql, Integer.class);
+        query.setParameter("idSala", idSala);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public Partida obtenerPartidaActivaPorUsuario(Long idUsuario) {
+        String hql = "SELECT p FROM Partida p WHERE p.usuario.id = :idUsuario";
+        Query<Partida> query = this.sessionFactory.getCurrentSession().createQuery(hql, Partida.class);
+        query.setParameter("idUsuario", idUsuario);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public void finalizarPartida(Partida partida) {
+        this.sessionFactory.getCurrentSession().update(partida);
+    }
+
 
 
 }

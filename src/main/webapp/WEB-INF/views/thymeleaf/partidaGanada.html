@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" th:href="@{/css/sala.css}"/>
 </head>
-<body th:style="|background-image: url('@{/img/{img}(img=${SalaObtenida.imagenSala})}');
+<body th:style="|background-image: url('@{/img/{img}(img=${salaElegida.imagenSala})}');
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;|">
@@ -29,29 +29,14 @@
     </nav>
 </header>
 
+<main>
 
-<main class="main-container mt-5">
-    <div class="mt-5 " th:if="${SalaObtenida != null}">
-        <h2 th:if="${error != null}" th:text="${error}" class="text-danger fw-bold"></h2>
-        <h1 class="titulo-sala" th:text="${SalaObtenida.nombre}"></h1>
-        <div  class="nivel" th:text="${SalaObtenida.dificultad}"></div>
-
-        <p class="historia" th:text="${SalaObtenida.historia}"> </p>
-
-        <div class="d-flex flex-column align-items-center">
-            <a class="btn btn-primary" th:href="@{/partida/sala_{idSala}(idSala=${SalaObtenida.id})}">ESTOY LISTO</a>
-            <a class="btn btn-danger w-25" th:href="@{/inicio/}">ELEGIR OTRA SALA</a>
-        </div>
-
-        <p class="nota">
-            Una vez que entres a la sala, el cronómetro comenzará a correr.
-            Tu misión es resolver los acertijos antes de que el tiempo llegue a cero.
-        </p>
+    <div class="text-center mt-4">
+        <h1>Felicidades!</h1>
+        <h4>Lograste salir con vida</h4>
     </div>
+
 </main>
 
-
-
 </body>
-
 </html>

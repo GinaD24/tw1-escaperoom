@@ -28,6 +28,9 @@ public class Partida {
     @Column
     private Long tiempoTotal;
 
+    @Column (nullable = false)
+    private Boolean esta_activa;
+
     public Partida() {
     }
 
@@ -89,5 +92,14 @@ public class Partida {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+
+    public Boolean getEsta_activa() {
+        return esta_activa;
+    }
+
+    public void setEsta_activa(Boolean esta_activa) {
+        this.esta_activa = esta_activa;
     }
 }

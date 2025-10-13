@@ -1,10 +1,10 @@
 
 INSERT INTO Usuario(email, password, rol, activo) VALUES( 'test@unlam.edu.ar', 'test', 'ADMIN', true);
 
-INSERT INTO Sala (nombre, dificultad, escenario, historia, esta_habilitada, duracion, imagen, imagenSala)VALUES
-                                                                                          ('La Mansión Misteriosa', 'PRINCIPIANTE', 'Mansion', 'Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.', TRUE, 10,'puerta-mansion.png', 'mansion-misteriosa.png'),
-                                                                                          ('El Laboratorio Secreto', 'INTERMEDIO', 'Laboratorio', 'Un científico desaparecido dejo pistas en su laboratorio. ¿Podras descubrir que tramaba?', TRUE, 15, 'puerta-laboratorio.png', 'laboratorio-secreto.png'),
-                                                                                          ('La Carcel Abandonada', 'AVANZADO', 'Prision', 'Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podras escapar.', TRUE, 20,'puerta-prision.png', 'carcel-abandonada.png');
+INSERT INTO Sala (nombre, dificultad, escenario, historia, esta_habilitada, duracion, imagen, imagenSala, cantidadDeEtapas)VALUES
+                                                                                          ('La Mansión Misteriosa', 'PRINCIPIANTE', 'Mansion', 'Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.', TRUE, 10,'puerta-mansion.png', 'mansion-misteriosa.png', 5),
+                                                                                          ('El Laboratorio Secreto', 'INTERMEDIO', 'Laboratorio', 'Un científico desaparecido dejo pistas en su laboratorio. ¿Podras descubrir que tramaba?', TRUE, 15, 'puerta-laboratorio.png', 'laboratorio-secreto.png', 8),
+                                                                                          ('La Carcel Abandonada', 'AVANZADO', 'Prision', 'Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podras escapar.', TRUE, 20,'puerta-prision.png', 'carcel-abandonada.png', 10);
 
 -- ETAPAS PARA LA SALA 'La Mansión Misteriosa' (id_sala = 1)
 INSERT INTO Etapa (nombre, numero, descripcion, id_sala) VALUES
@@ -40,7 +40,7 @@ INSERT INTO Acertijo (descripcion, id_etapa) VALUES
 
 -- ACERTIJOS ETAPA 5: Ático (id_etapa = 5)
 INSERT INTO Acertijo (descripcion, id_etapa) VALUES
-                                                 ('Un encaje frágil y polvoriento, tejido en la oscuridad de los rincones. Soy una trampa de seda, una obra de arte abandonada por su artista.', 5),
+                                                 ('Me poso en todo lo que olvidas, me levanto con la brisa. Soy un testigo silencioso del paso del tiempo.', 5),
                                                  ('Soy un instante congelado, una memoria atrapada en papel. Mi mundo no tiene sonido ni movimiento, solo el eco de una sonrisa que ya no está.', 5),
                                                  ('Soy la promesa al final del pasillo, la luz tras la última puerta. No soy un objeto, sino un destino. Has resuelto todo para encontrarme.', 5);
 
@@ -85,8 +85,9 @@ INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Incluso en la quie
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('BRUJULA', TRUE, 12);
 
 -- PISTAS Y RESPUESTAS PARA ACERTIJOS 13-15 (Etapa 5)
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Mira hacia las esquinas altas y oscuras, donde el tiempo ha dejado su marca.', 1, 13);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('TELARAÑA', TRUE, 13);
+
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Me acumulo en las superficies y vuelo al ser tocado.', 1, 13);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('POLVO', TRUE, 13);
 
 INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Un viejo álbum guarda momentos congelados en el tiempo. Sonríen desde el pasado.', 1, 14);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('FOTOGRAFIA', TRUE, 14);

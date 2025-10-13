@@ -1,9 +1,11 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.excepcion.EtapaInexistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +29,11 @@ public class ServicioPartidaImpl implements ServicioPartida {
     @Override
     @Transactional
     public Etapa obtenerEtapaPorNumero(Integer idSala, Integer numeroEtapa) {
-        return this.repositorioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
+        Etapa etapaObtenida = this.repositorioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
+        if (etapaObtenida == null){
+            throw new EtapaInexistente();
+        }
+        return etapaObtenida;
     }
 
     @Override
@@ -90,8 +96,36 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
     @Override
     @Transactional
-    public void guardarPartida(Partida partida) {
+    public Integer obtenerCantidadDeEtapas(Integer idSala) {
+        return this.repositorioPartida.obtenerTodasLasEtapas(idSala);
+    }
+
+    @Override
+    @Transactional
+    public void finalizarPartida(Long idUsuario) {
+        Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
+
+        if (partida != null) {
+            partida.setEsta_activa(false);
+            LocalDateTime fin = LocalDateTime.now();
+            partida.setFin(fin);
+            LocalDateTime inicio = partida.getInicio();
+
+            if (inicio != null) {
+                Long duracionSegundos = Duration.between(inicio, fin).getSeconds();
+                partida.setTiempoTotal(duracionSegundos);
+            }
+            this.repositorioPartida.finalizarPartida(partida);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void guardarPartida(Partida partida, Long idUsuario) {
+        Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+        partida.setUsuario(usuario);
         partida.setInicio(LocalDateTime.now());
+        partida.setEsta_activa(true);
         this.repositorioPartida.guardarPartida(partida);
     }
 
@@ -102,7 +136,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
         List<Acertijo> listaDeAcertijosObtenida = this.repositorioPartida.obtenerListaDeAcertijos(idEtapa);
 
         if(!listaDeAcertijosObtenida.isEmpty()) {
-            List<Acertijo> acertijosVistos = this.repositorioPartida.obtenerAcertijosVistosPorUsuario(id_usuario);
+            List<Acertijo> acertijosVistos = this.repositorioPartida.obtenerAcertijosVistosPorUsuarioPorEtapa(id_usuario, idEtapa);
             if (acertijosVistos != null && acertijosVistos.size() == listaDeAcertijosObtenida.size()) {
                 this.repositorioPartida.eliminarRegistrosDePartidas(id_usuario);
                 acertijosVistos.clear();
@@ -116,6 +150,8 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
             Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(id_usuario);
             AcertijoUsuario acertijoUsuario = new AcertijoUsuario(acertijoSeleccionado, usuario);
+            Etapa etapa = this.repositorioPartida.buscarEtapaPorId(idEtapa);
+            acertijoUsuario.setEtapa(etapa);
             this.repositorioPartida.registrarAcertijoMostrado(acertijoUsuario);
         }
 

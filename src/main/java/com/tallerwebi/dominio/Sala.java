@@ -3,7 +3,6 @@ package com.tallerwebi.dominio;
 import com.tallerwebi.dominio.enums.Dificultad;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Sala {
@@ -37,8 +36,8 @@ public class Sala {
     @Column
     private String imagenSala;
 
-    @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Etapa> etapas;
+   @Column (nullable = false)
+   private Integer cantidadDeEtapas;
 
     public Sala() {
     }
@@ -119,12 +118,12 @@ public class Sala {
         this.imagen = imagen;
     }
 
-    public List<Etapa> getEtapas() {
-        return etapas;
+    public Integer getCantidadDeEtapas() {
+        return cantidadDeEtapas;
     }
 
-    public void setEtapas(List<Etapa> etapas) {
-        this.etapas = etapas;
+    public void setCantidadDeEtapas(Integer cantidadDeEtapas) {
+        this.cantidadDeEtapas = cantidadDeEtapas;
     }
 
     public String getImagenSala() {

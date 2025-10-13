@@ -10,12 +10,18 @@ public class AcertijoUsuario {
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_etapa")
+    private Etapa etapa;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_acertijo")
     private Acertijo acertijo;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
+
+
 
     @Column (nullable = false)
     private Integer pistasUsadas = 0;
@@ -59,5 +65,13 @@ public class AcertijoUsuario {
 
     public void setPistasUsadas(Integer pistasUsadas) {
         this.pistasUsadas = pistasUsadas;
+    }
+
+    public Etapa getEtapa() {
+        return etapa;
+    }
+
+    public void setEtapa(Etapa etapa) {
+        this.etapa = etapa;
     }
 }

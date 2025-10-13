@@ -2,7 +2,7 @@ package com.tallerwebi.dominio;
 
 public interface ServicioPartida {
 
-    void guardarPartida(Partida partida);
+    void guardarPartida(Partida partida, Long idUsuario);
 
     Acertijo obtenerAcertijo(Long idEtapa, Long id_usuario);
 
@@ -15,4 +15,8 @@ public interface ServicioPartida {
     Acertijo buscarAcertijoPorId(Long idAcertijo);
 
     Etapa obtenerEtapaPorId(Long idEtapa);
+
+    Integer obtenerCantidadDeEtapas(Integer idSala);
+
+    void finalizarPartida(Long idUsuario);
 }

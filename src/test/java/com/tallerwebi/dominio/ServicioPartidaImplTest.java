@@ -38,8 +38,8 @@ public class ServicioPartidaImplTest {
                 true, 10,"puerta-mansion.png");
         Partida partida = new Partida(LocalDateTime.now());
         partida.setSala(sala);
-
-        this.servicioPartida.guardarPartida(partida);
+        Long idUsuario = 1L;
+        this.servicioPartida.guardarPartida(partida, idUsuario);
 
         verify(repositorioPartida).guardarPartida(partida);
     }
