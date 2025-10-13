@@ -51,4 +51,12 @@ public class Acertijo {
     public void setEtapa(Etapa etapa) {
         this.etapa = etapa;
     }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
 }

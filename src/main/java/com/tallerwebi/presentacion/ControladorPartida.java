@@ -29,6 +29,7 @@ public class ControladorPartida {
         try {
             Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
             partida.setSala(sala);
+
             this.servicioPartida.guardarPartida(partida, (Long) request.getSession().getAttribute("id_usuario"));
             request.getSession().setAttribute("id_sala_actual", sala.getId());
             request.getSession().setAttribute("numero_etapa_actual", 1);

@@ -18,7 +18,7 @@ header {
     border-radius: 16px;
     margin: auto;
     text-align: center;
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(2px);
 }
 
 .titulo-sala {
@@ -37,7 +37,7 @@ h3 {
 }
 
 .nombre-etapa{
-    color: #af58fc;
+    color: #8139b6;
     font-size: 2.0rem;
     font-family:'Rajdhani', sans-serif;
 }

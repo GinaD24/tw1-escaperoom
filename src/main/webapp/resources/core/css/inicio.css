@@ -1,5 +1,5 @@
 body {
-    background: linear-gradient(to right, #2c0d5a, #0d1a4f);
+    background: linear-gradient(to right, #200a46, #180547, #081136);
     background-repeat: no-repeat;
     color: #fff;
     font-family: 'Montserrat', sans-serif;
@@ -45,6 +45,7 @@ body {
 }
 .texto-card{
     color:white;
+    padding-bottom: 10px;
 }
 .sala-card img {
     width: 120px;

@@ -7,12 +7,12 @@ INSERT INTO Sala (nombre, dificultad, escenario, historia, esta_habilitada, dura
                                                                                           ('La Carcel Abandonada', 'AVANZADO', 'Prision', 'Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podras escapar.', TRUE, 20,'puerta-prision.png', 'carcel-abandonada.png', 10);
 
 -- ETAPAS PARA LA SALA 'La Mansión Misteriosa' (id_sala = 1)
-INSERT INTO Etapa (nombre, numero, descripcion, id_sala) VALUES
-                                                             ('Lobby', 1, 'La puerta se ha cerrado a tus espaldas. El aire es denso y el único camino es adelante. Resuelve los enigmas del vestíbulo para avanzar.', 1),
-                                                             ('Biblioteca', 2, 'Has llegado a una biblioteca cubierta de polvo. Entre miles de libros se esconden secretos que ansían ser leídos en voz alta.', 1),
-                                                             ('Salón', 3, 'Un gran salón donde aún resuenan las risas y los lamentos del pasado. La música y el silencio guardan las claves para continuar.', 1),
-                                                             ('Despacho', 4, 'Este era el refugio del antiguo dueño. Sus objetos personales, mapas y cartas, ocultan las piezas finales de su misterio.', 1),
-                                                             ('Ático', 5, 'El último piso. Entre baúles y objetos olvidados yace el secreto final que te permitirá encontrar la salida de la mansión.', 1);
+INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
+                                                             ('Lobby', 1, 'La puerta se ha cerrado a tus espaldas. El aire es denso y el único camino es adelante. Resuelve los enigmas del vestíbulo para avanzar.', 1, 'etapa-lobby.png'),
+                                                             ('Biblioteca', 2, 'Has llegado a una biblioteca cubierta de polvo. Entre miles de libros se esconden secretos que ansían ser leídos en voz alta.', 1, 'etapa-biblioteca.png'),
+                                                             ('Salón', 3, 'Un gran salón donde aún resuenan las risas y los lamentos del pasado. La música y el silencio guardan las claves para continuar.', 1, 'etapa-salon.png'),
+                                                             ('Despacho', 4, 'Este era el refugio del antiguo dueño. Sus objetos personales, mapas y cartas, ocultan las piezas finales de su misterio.', 1, 'etapa-despacho.png'),
+                                                             ('Ático', 5, 'El último piso. Entre baúles y objetos olvidados yace el secreto final que te permitirá encontrar la salida de la mansión.', 1, 'etapa-atico.png');
 
 -- ACERTIJOS ETAPA 1: Lobby (id_etapa = 1)
 INSERT INTO Acertijo (descripcion, id_etapa) VALUES
