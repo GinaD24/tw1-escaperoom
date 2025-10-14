@@ -161,12 +161,17 @@ public class ControladorPartidaTest {
 
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
              true, 10,"puerta-mansion.png");
+        sala.setCantidadDeEtapas(5);
         Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
         etapa.setId(1L);
         Acertijo acertijo = new Acertijo( "lalalal");
         Respuesta respuesta = new Respuesta("Respuesta");
+        Long idUsuario = 1L;
 
        when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta())).thenReturn(true);
+       when(servicioSala.obtenerSalaPorId(sala.getId())).thenReturn(sala);
+       when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
+       when(servicioPartida.obtenerAcertijo(etapa.getId(), idUsuario)).thenReturn(acertijo);
 
         when(requestMock.getSession()).thenReturn(sessionMock);
        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), requestMock);

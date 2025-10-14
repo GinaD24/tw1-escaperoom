@@ -94,7 +94,7 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
 
 
     @Override
-    public void eliminarRegistrosDePartidas(Long idUsuario) {
+    public void eliminarRegistrosDeAcertijosVistos(Long idUsuario) {
         String hql = "DELETE FROM AcertijoUsuario au WHERE au.usuario.id = :idUsuario";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("idUsuario", idUsuario);

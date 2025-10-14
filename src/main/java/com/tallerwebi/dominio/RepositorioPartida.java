@@ -21,7 +21,7 @@ public interface RepositorioPartida {
 
     List<Acertijo> obtenerAcertijosVistosPorUsuarioPorEtapa(Long idUsuario, Long idEtapa);
 
-    void eliminarRegistrosDePartidas(Long idUsuario);
+    void eliminarRegistrosDeAcertijosVistos(Long idUsuario);
 
     Acertijo buscarAcertijoPorId(Long idAcertijo);
 

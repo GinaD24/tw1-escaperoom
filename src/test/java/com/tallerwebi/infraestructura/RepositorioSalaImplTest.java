@@ -44,6 +44,10 @@ public class RepositorioSalaImplTest {
         Sala sala3 =new Sala(null, "La Cárcel Abandonada", Dificultad.AVANZADO, "Prisión",
                 "Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podrás escapar.", false, 20, null);
 
+        sala1.setCantidadDeEtapas(5);
+        sala2.setCantidadDeEtapas(8);
+        sala3.setCantidadDeEtapas(10);
+
         this.sessionFactory.getCurrentSession().save(sala1);
         this.sessionFactory.getCurrentSession().save(sala2);
         this.sessionFactory.getCurrentSession().save(sala3);
@@ -66,7 +70,9 @@ public class RepositorioSalaImplTest {
                 "Un científico desaparecido dejó pistas en su laboratorio. ¿Podrás descubrir qué tramaba?", true, 15, null);
         Sala sala3 =new Sala(null, "La Cárcel Abandonada", Dificultad.AVANZADO, "Prisión",
                 "Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podrás escapar.", false, 20, null);
-
+        sala1.setCantidadDeEtapas(5);
+        sala2.setCantidadDeEtapas(8);
+        sala3.setCantidadDeEtapas(10);
         this.sessionFactory.getCurrentSession().save(sala1);
         this.sessionFactory.getCurrentSession().save(sala2);
         this.sessionFactory.getCurrentSession().save(sala3);
@@ -89,7 +95,10 @@ public class RepositorioSalaImplTest {
 
         Sala sala4 = new Sala(null, "La casa Misteriosa", Dificultad.PRINCIPIANTE, "Casa",
                 "Una noche tormentosa te encuentras atrapado en una vieja mansión llena de acertijos.", true, 10, null);
-
+        sala1.setCantidadDeEtapas(5);
+        sala2.setCantidadDeEtapas(8);
+        sala3.setCantidadDeEtapas(10);
+        sala4.setCantidadDeEtapas(5);
         this.sessionFactory.getCurrentSession().save(sala1);
         this.sessionFactory.getCurrentSession().save(sala2);
         this.sessionFactory.getCurrentSession().save(sala3);

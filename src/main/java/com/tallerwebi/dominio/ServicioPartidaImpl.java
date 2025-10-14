@@ -2,7 +2,6 @@ package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.excepcion.EtapaInexistente;
 import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
-import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -152,7 +151,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
         if(!listaDeAcertijosObtenida.isEmpty()) {
             List<Acertijo> acertijosVistos = this.repositorioPartida.obtenerAcertijosVistosPorUsuarioPorEtapa(id_usuario, idEtapa);
             if (acertijosVistos != null && acertijosVistos.size() == listaDeAcertijosObtenida.size()) {
-                this.repositorioPartida.eliminarRegistrosDePartidas(id_usuario);
+                this.repositorioPartida.eliminarRegistrosDeAcertijosVistos(id_usuario);
                 acertijosVistos.clear();
             }
 
