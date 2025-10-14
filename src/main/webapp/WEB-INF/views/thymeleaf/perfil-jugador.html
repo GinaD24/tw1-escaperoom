@@ -18,11 +18,7 @@
 <header>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">ESCAPE ROOM</a>
-            <div class="d-flex">
-                <button class="btn btn-outline-light rounded-circle me-2"><i class="bi bi-person"></i></button>
-                <button class="btn btn-outline-light"><i class="bi bi-list"></i></button>
-            </div>
+            <a class="navbar-brand " href="#">ESCAPE ROOM</a>
         </div>
     </nav>
 </header>
@@ -34,8 +30,7 @@
     <div class="contenedor">
 
         <div class="contenedorFoto">
-            <img th:src="@{/img/{img}(img=${perfil.fotoPerfil})}" alt="Foto de perfil" width="120" height="120">
-
+            <img th:src="@{'/img/' + ${perfil.fotoPerfil}}" alt="Foto de perfil" width="120" height="120">
         </div>
 
 
@@ -43,17 +38,8 @@
             <h1  th:text="${perfil.nombre}"></h1>
         </div>
 
-        <div class="contenedorLogros">
-            <h3>Logros</h3>
-            <ul>
-                <li th:each="logro : ${perfil.logrosFavoritos}">
-                    <b th:text="${logro.nombre}"></b> - <span th:text="${logro.descripcion}"></span>
-                </li>
-            </ul>
-        </div>
-
-        <a th:href="@{/perfil/editar-perfil(idUsuario=${perfil.id})}" >Editar perfil</a><br>
-        <a th:href="@{/perfil/editar-foto(idUsuario=${perfil.id})}">Cambiar foto</a>
+        <a class="btn btn-primary">Editar perfil</a><br>
+        <a class="btn btn-primary">Cambiar foto</a>
     </div>
 
 

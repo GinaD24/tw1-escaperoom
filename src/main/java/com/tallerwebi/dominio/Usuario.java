@@ -23,13 +23,6 @@ public class Usuario {
     private Boolean activo = false;
     private String fotoPerfil;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "usuario_logro_favorito",
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "logro_id")
-    )
-    private List<Logro> logrosFavoritos;
 
     public Long getId() {
         return id;
@@ -89,11 +82,4 @@ public class Usuario {
         this.fotoPerfil = fotoPerfil;
     }
 
-    public List<Logro> getLogrosFavoritos() {
-        return logrosFavoritos;
-    }
-
-    public void setLogrosFavoritos(List<Logro> logrosFavoritos) {
-        this.logrosFavoritos = logrosFavoritos;
-    }
 }

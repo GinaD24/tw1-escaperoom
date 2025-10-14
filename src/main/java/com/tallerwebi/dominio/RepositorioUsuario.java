@@ -8,5 +8,6 @@ public interface RepositorioUsuario {
     void modificar(Usuario usuario);
     Usuario buscarPorNombreUsuario(String nombreUsuario);
     Usuario buscarPorId(Long id);
+
 }
 
