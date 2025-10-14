@@ -23,7 +23,7 @@ public class Usuario {
     private Boolean activo = false;
     private String fotoPerfil;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuario_logro_favorito",
             joinColumns = @JoinColumn(name = "usuario_id"),

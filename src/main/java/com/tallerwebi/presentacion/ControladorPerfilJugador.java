@@ -5,6 +5,7 @@ import com.tallerwebi.dominio.PerfilJugador;
 import com.tallerwebi.dominio.ServicioPerfilJugador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +33,7 @@ public class ControladorPerfilJugador {
         try {
             PerfilJugador perfil = servicioPerfilJugador.obtenerPerfil(id);
             modelo.put("perfil", perfil);
-            return new ModelAndView("perfil-Jugador", modelo);
+            return new ModelAndView("perfil-jugador", modelo);
         } catch (RuntimeException e) {
             modelo.put("error", e.getMessage());
             return new ModelAndView("error", modelo);
@@ -48,7 +49,7 @@ public class ControladorPerfilJugador {
             List<Logro> logros = servicioPerfilJugador.obtenerTodosLosLogros();
             modelo.put("perfil", perfil);
             modelo.put("logros", logros);
-            return new ModelAndView("editar-Perfil", modelo);
+            return new ModelAndView("editar-perfil", modelo);
         } catch (RuntimeException e) {
             modelo.put("error", e.getMessage());
             return new ModelAndView("error", modelo);
@@ -61,14 +62,25 @@ public class ControladorPerfilJugador {
                                          @RequestParam(required = false) String nombre,
                                          @RequestParam(required = false) String nombreArchivo,
                                          @RequestParam(required = false) List<Long> logrosFavoritos) {
+
+        ModelMap modelo = new ModelMap();
         try {
             servicioPerfilJugador.actualizarPerfil(id, nombre, nombreArchivo, logrosFavoritos);
             return new ModelAndView("redirect:/perfil/" + id + "/ver");
+        } catch (IllegalArgumentException e) {
+            PerfilJugador perfil = servicioPerfilJugador.obtenerPerfil(id);
+            List<Logro> logros = servicioPerfilJugador.obtenerTodosLosLogros();
+            modelo.put("perfil", perfil);
+            modelo.put("logros", logros);
+            modelo.put("errorNombre", e.getMessage());
+            return new ModelAndView("editar-perfil", modelo);
         } catch (RuntimeException e) {
-            ModelMap modelo = new ModelMap();
             modelo.put("error", e.getMessage());
             return new ModelAndView("error", modelo);
         }
+
+
+
     }
 
     //  Mostrar formulario para cambiar foto de perfil
@@ -96,9 +108,9 @@ public class ControladorPerfilJugador {
                 return new ModelAndView("error", modelo);
             }
 
-            // Guarda físicamente la imagen en webapp/img/
+
             String nombreArchivo = foto.getOriginalFilename();
-            String rutaDestino = "src/main/webapp/img/" + nombreArchivo;
+            String rutaDestino = "src/main/webapp/resources/img/" + nombreArchivo;
             foto.transferTo(new File(rutaDestino));
 
             // Actualiza en la base de datos el nombre del archivo
@@ -110,4 +122,22 @@ public class ControladorPerfilJugador {
             modelo.put("error", "Error al guardar la imagen: " + e.getMessage());
             return new ModelAndView("error", modelo);
         }
-    } }
+
+
+    }
+
+    //servi
+    @GetMapping("/4/ver")
+    public ModelAndView verPerfilPrueba() {
+        ModelMap modelo = new ModelMap();
+        PerfilJugador perfil = new PerfilJugador(4l,"JugadorPrueba", "pruebafoto.jpg", null );
+        Logro logro1 = new Logro("Escapista Novato", "Completó su primera sala");
+        Logro logro2 = new Logro("Velocista", "Terminó una sala en menos de 10 minutos");
+        perfil.setLogrosFavoritos(List.of(logro1, logro2));
+        modelo.put("perfil", perfil);
+        return new ModelAndView("perfil-jugador", modelo);
+    }
+}
+
+
+

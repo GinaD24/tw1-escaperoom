@@ -34,7 +34,8 @@
     <div class="contenedor">
 
         <div class="contenedorFoto">
-            <img th:src="@{'/img/' + ${perfil.fotoPerfil}}" alt="Foto de perfil" width="120" height="120">
+            <img th:src="@{/img/{img}(img=${perfil.fotoPerfil})}" alt="Foto de perfil" width="120" height="120">
+
         </div>
 
 
@@ -51,7 +52,7 @@
             </ul>
         </div>
 
-        <a th:href="@{/perfil/editar(idUsuario=${perfil.id})}" >Editar perfil</a><br>
+        <a th:href="@{/perfil/editar-perfil(idUsuario=${perfil.id})}" >Editar perfil</a><br>
         <a th:href="@{/perfil/editar-foto(idUsuario=${perfil.id})}">Cambiar foto</a>
     </div>
 

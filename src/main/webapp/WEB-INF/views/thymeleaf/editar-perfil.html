@@ -14,17 +14,20 @@
 </head>
 <body>
 
-<header>
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">ESCAPE ROOM</a>
-            <div class="d-flex">
-                <button class="btn btn-outline-light rounded-circle me-2"><i class="bi bi-person"></i></button>
-                <button class="btn btn-outline-light"><i class="bi bi-list"></i></button>
-            </div>
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <div >
+            <a>
+                <img class="logo-escape" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
+            </a>
         </div>
-    </nav>
-</header>
+        <a class="navbar-brand">ESCAPE ROOM</a>
+        <div class="d-flex">
+            <button class="btn btn-outline-light rounded-circle me-2"><i class="bi bi-person"></i></button>
+            <button class="btn btn-outline-light"><i class="bi bi-list"></i></button>
+        </div>
+    </div>
+</nav>
 
 <div class="contenedor">
 
@@ -39,7 +42,7 @@
         <div class="conytenedorNombre">
             <label>Nuevo nombre:</label>
             <input type="text" name="nuevoNombre" th:value="${perfil.nombre}" required minlength="6"><br><br>
-
+            <div th:if="${errorNombre}" class="alert alert-danger" th:text="${errorNombre}"></div>
         </div>
 
         <div class="contenedorLogros">
@@ -47,7 +50,8 @@
 
             <div th:each="logro : ${todosLogros}">
                 <label>
-                    <input type="checkbox" name="idsLogrosFavoritos" th:value="${logro.id}">
+                    <input type="checkbox" name="LogrosFavoritos"
+                           th:value="${logro.id}"  th:checked="${perfil.logrosFavoritos.contains(logro)}">
                     <span th:text="${logro.nombre}"></span> - <small th:text="${logro.descripcion}"></small>
                 </label>
             </div>

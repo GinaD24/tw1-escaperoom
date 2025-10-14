@@ -15,7 +15,7 @@ public class PerfilJugador {
     private List<Logro> logrosFavoritos;
 
 
-    public PerfilJugador(Long id, String nombre, String fotoPerfil, List <Logro> logrosFavoritos){
+    public PerfilJugador(Long id, String nombre, String fotoPerfil, List<Logro> logrosFavoritos){
         this.id =id;
         this.nombre = nombre;
         this.fotoPerfil = fotoPerfil;
@@ -51,6 +51,10 @@ public class PerfilJugador {
 
     public String getFotoPerfil() {
         return fotoPerfil; }
+
+    public void setFotoPerfil(String fotoPerfil) {
+        this.fotoPerfil = fotoPerfil;
+    }
 
     public List<Logro> getLogrosFavoritos() {
         return logrosFavoritos;
