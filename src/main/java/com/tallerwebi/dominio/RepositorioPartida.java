@@ -27,8 +27,6 @@ public interface RepositorioPartida {
 
     Etapa buscarEtapaPorId(Long idEtapa);
 
-    Integer obtenerTodasLasEtapas(Integer idSala);
-
     Partida obtenerPartidaActivaPorUsuario(Long idUsuario);
 
     void finalizarPartida(Partida partida);

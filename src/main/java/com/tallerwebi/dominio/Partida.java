@@ -31,6 +31,9 @@ public class Partida {
     @Column (nullable = false)
     private Boolean esta_activa;
 
+    @Column
+    private Boolean ganada;
+
     public Partida() {
     }
 
@@ -101,5 +104,13 @@ public class Partida {
 
     public void setEsta_activa(Boolean esta_activa) {
         this.esta_activa = esta_activa;
+    }
+
+    public Boolean getGanada() {
+        return ganada;
+    }
+
+    public void setGanada(Boolean ganada) {
+        this.ganada = ganada;
     }
 }

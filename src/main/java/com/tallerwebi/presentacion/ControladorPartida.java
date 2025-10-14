@@ -3,6 +3,8 @@ package com.tallerwebi.presentacion;
 import com.tallerwebi.dominio.*;
 import com.tallerwebi.dominio.excepcion.EtapaInexistente;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
+import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
+import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -27,11 +29,27 @@ public class ControladorPartida {
     @GetMapping("/sala_{idSala}")
     public ModelAndView iniciarPartida(@PathVariable Integer idSala, Partida partida, HttpServletRequest request) {
         try {
-            Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
-            partida.setSala(sala);
 
-            this.servicioPartida.guardarPartida(partida, (Long) request.getSession().getAttribute("id_usuario"));
-            request.getSession().setAttribute("id_sala_actual", sala.getId());
+            try{
+                this.servicioPartida.obtenerEtapaPorNumero(idSala, 1);
+
+            }catch(EtapaInexistente e){
+                ModelMap modelo = new ModelMap();
+                Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
+
+                modelo.put("error", "Sala en construcción!");
+                modelo.put("SalaObtenida", sala);
+                return new ModelAndView("sala", modelo);
+            }
+
+            try{
+                Long idUsuarioSesion = (Long) request.getSession().getAttribute("id_usuario");
+                this.servicioPartida.guardarPartida(partida, idUsuarioSesion, idSala);
+            } catch(SesionDeUsuarioExpirada | UsuarioInexistente e){
+                return new ModelAndView("redirect:/login");
+            }
+
+            request.getSession().setAttribute("id_sala_actual", idSala);
             request.getSession().setAttribute("numero_etapa_actual", 1);
 
             return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa1");
@@ -48,14 +66,9 @@ public class ControladorPartida {
         ModelMap modelo = new ModelMap();
         Integer idSalaSesion = (Integer) request.getSession().getAttribute("id_sala_actual");
         Integer numeroEtapaSesion = (Integer) request.getSession().getAttribute("numero_etapa_actual");
-        Sala sala = null;
-        try {
-             sala = this.servicioSala.obtenerSalaPorId(idSala);
-        }catch (SalaInexistente e){
-            modelo.put("error", "Sala en construcción!");
-            return new ModelAndView("redirect:/partida/sala" + idSalaSesion + "/etapa" + numeroEtapaSesion);
-        }
-        Etapa etapa = null;
+
+        Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
+        Etapa etapa;
         Acertijo acertijo;
 
         if (idSalaSesion == null || !idSalaSesion.equals(idSala) ||
@@ -63,13 +76,14 @@ public class ControladorPartida {
             return new ModelAndView("redirect:/partida/sala" + idSalaSesion + "/etapa" + numeroEtapaSesion);
         }
 
-        Long idEtapaSesion = (Long) request.getSession().getAttribute("id_etapa");
 
+        Long idEtapaSesion = (Long) request.getSession().getAttribute("id_etapa");
         try {
+
             if (idEtapaSesion == null) {
                 etapa = this.servicioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
-
                 request.getSession().setAttribute("id_etapa", etapa.getId());
+
             } else {
                 etapa = this.servicioPartida.obtenerEtapaPorId(idEtapaSesion);
 
@@ -80,6 +94,7 @@ public class ControladorPartida {
                     request.getSession().setAttribute("id_etapa", etapa.getId());
                 }
             }
+
         }catch (EtapaInexistente e) {
             modelo.put("SalaObtenida", sala);
             modelo.put("error", "Sala en construcción!");
@@ -98,7 +113,6 @@ public class ControladorPartida {
         modelo.put("salaElegida", sala);
         modelo.put("etapa", etapa);
         modelo.put("acertijo", acertijo);
-
         return new ModelAndView("partida", modelo);
     }
 
@@ -133,12 +147,17 @@ public class ControladorPartida {
 
         if (respuesta.isEmpty()) {
             modelo.put("error", "Completa este campo para continuar.");
+
         } else if (this.servicioPartida.validarRespuesta(id_acertijo, respuesta).equals(false)) {
             modelo.put("error", "Respuesta incorrecta. Intenta nuevamente.");
+
         } else {
-            Integer cantidadDeEtapasTotales = this.servicioPartida.obtenerCantidadDeEtapas(idSala);
+
+            Integer cantidadDeEtapasTotales = sala.getCantidadDeEtapas();
             if (cantidadDeEtapasTotales.equals(numeroEtapa)) {
-                this.servicioPartida.finalizarPartida((Long) request.getSession().getAttribute("id_usuario"));
+
+                Boolean ganada = this.servicioPartida.validarRespuesta(id_acertijo, respuesta);
+                this.servicioPartida.finalizarPartida((Long) request.getSession().getAttribute("id_usuario"), ganada);
                 return new ModelAndView("partidaGanada", modelo);
             }
             request.getSession().setAttribute("numero_etapa_actual", numeroEtapa + 1);
@@ -152,6 +171,15 @@ public class ControladorPartida {
     public ModelAndView accesoInvalido(@PathVariable Integer idSala,
                                        @PathVariable Integer numeroEtapa) {
         return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa" + numeroEtapa);
+    }
+
+    @GetMapping("/finalizarPartida")
+    public ModelAndView finalizarPartida(HttpServletRequest request) {
+        Integer idSala = (Integer)  request.getSession().getAttribute("id_sala_actual");
+        Boolean ganada = false;
+        this.servicioPartida.finalizarPartida((Long) request.getSession().getAttribute("id_usuario"), ganada);
+
+        return new ModelAndView("redirect:/inicio/sala/" + idSala);
     }
 
 

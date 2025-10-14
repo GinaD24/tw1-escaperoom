@@ -174,3 +174,46 @@ h3 {
     transform: scale(1.05);
 }
 
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenido del modal */
+.modal-content {
+    background-color: rgba(25, 11, 47, 0.82);
+    padding: 20px;
+    width: 40%;
+    border-radius: 8px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+
+
+.modal-buttons button {
+    margin: 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#confirmarSalir {
+    background-color: #aa1b0b;
+    color: white;
+}
+
+#cancelarSalir {
+    background-color: #0a50b9;
+    color: white;
+}
+

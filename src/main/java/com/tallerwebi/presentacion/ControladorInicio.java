@@ -4,6 +4,7 @@ import com.tallerwebi.dominio.Sala;
 import com.tallerwebi.dominio.ServicioSala;
 import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.excepcion.NoHaySalasExistentes;
+import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -41,14 +42,13 @@ public class ControladorInicio {
     public ModelAndView verSala(@PathVariable Integer id) {
         ModelMap modelo = new ModelMap();
 
-        Sala sala = servicioSala.obtenerSalaPorId(id);
-       
-        if(sala != null){
+        try{
+            Sala sala = servicioSala.obtenerSalaPorId(id);
             modelo.put("SalaObtenida", sala);
-        }else{
-            modelo.put("error", "Sala no encontrada");
-        }
+        }catch(SalaInexistente e){
 
+            return new ModelAndView("redirect:/inicio/");
+        }
 
         return new ModelAndView("sala", modelo);
     }

@@ -117,17 +117,10 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         return query.getSingleResult();
     }
 
-    @Override
-    public Integer obtenerTodasLasEtapas(Integer idSala) {
-        String hql = "SELECT s.cantidadDeEtapas FROM Sala s WHERE s.id = :idSala";
-        Query<Integer> query = this.sessionFactory.getCurrentSession().createQuery(hql, Integer.class);
-        query.setParameter("idSala", idSala);
-        return query.getSingleResult();
-    }
 
     @Override
     public Partida obtenerPartidaActivaPorUsuario(Long idUsuario) {
-        String hql = "SELECT p FROM Partida p WHERE p.usuario.id = :idUsuario";
+        String hql = "SELECT p FROM Partida p WHERE p.usuario.id = :idUsuario AND p.esta_activa = true";
         Query<Partida> query = this.sessionFactory.getCurrentSession().createQuery(hql, Partida.class);
         query.setParameter("idUsuario", idUsuario);
         return query.getSingleResult();

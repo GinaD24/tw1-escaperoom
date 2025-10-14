@@ -1,6 +1,9 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.excepcion.EtapaInexistente;
+import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
+import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +21,15 @@ public class ServicioPartidaImpl implements ServicioPartida {
     private ServicioSala servicioSala;
     private RepositorioPartida repositorioPartida;
     private RepositorioUsuario repositorioUsuario;
+    private RepositorioSala repositorioSala;
 
     @Autowired
-    public ServicioPartidaImpl(ServicioSala servicioSala, RepositorioPartida repositorioPartida, RepositorioUsuario repositorioUsuario) {
+    public ServicioPartidaImpl(ServicioSala servicioSala, RepositorioPartida repositorioPartida,
+                               RepositorioUsuario repositorioUsuario, RepositorioSala repositorioSala) {
         this.servicioSala = servicioSala;
         this.repositorioPartida = repositorioPartida;
         this.repositorioUsuario = repositorioUsuario;
+        this.repositorioSala = repositorioSala;
     }
 
     @Override
@@ -94,19 +100,15 @@ public class ServicioPartidaImpl implements ServicioPartida {
         return this.repositorioPartida.buscarEtapaPorId(idEtapa);
     }
 
-    @Override
-    @Transactional
-    public Integer obtenerCantidadDeEtapas(Integer idSala) {
-        return this.repositorioPartida.obtenerTodasLasEtapas(idSala);
-    }
 
     @Override
     @Transactional
-    public void finalizarPartida(Long idUsuario) {
+    public void finalizarPartida(Long idUsuario, Boolean ganada) {
         Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
 
         if (partida != null) {
             partida.setEsta_activa(false);
+            partida.setGanada(ganada);
             LocalDateTime fin = LocalDateTime.now();
             partida.setFin(fin);
             LocalDateTime inicio = partida.getInicio();
@@ -121,9 +123,21 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
     @Override
     @Transactional
-    public void guardarPartida(Partida partida, Long idUsuario) {
+    public void guardarPartida(Partida partida, Long idUsuario, Integer idSala) {
+
+        if(idUsuario == null){
+            throw new SesionDeUsuarioExpirada();
+        }
+
         Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+
+        if(usuario == null){
+            throw new UsuarioInexistente();
+        }
+
+        Sala sala = repositorioSala.obtenerSalaPorId(idSala);
         partida.setUsuario(usuario);
+        partida.setSala(sala);
         partida.setInicio(LocalDateTime.now());
         partida.setEsta_activa(true);
         this.repositorioPartida.guardarPartida(partida);

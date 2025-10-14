@@ -4,6 +4,7 @@ import com.tallerwebi.dominio.Sala;
 import com.tallerwebi.dominio.ServicioSala;
 import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.excepcion.NoHaySalasExistentes;
+import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
@@ -88,16 +89,16 @@ public class ControladorInicioTest {
 
 
     @Test
-    public void dadoQueExistenSalasCuandoQuieroVerUnaQueNoExisteDevuelveMensajeDeError_SalaNoEncontrada() {
+    public void dadoQueExistenSalasCuandoQuieroVerUnaQueNoExisteMeRedirigeAElInicio() {
 
         //preparacion
-        when(servicioSala.obtenerSalaPorId(5)).thenReturn(null);
+        doThrow(SalaInexistente.class).when(servicioSala).obtenerSalaPorId(5);;
 
         //ejecucion
         ModelAndView modelAndView = controladorInicio.verSala(5);
 
         //verificacion
-        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Sala no encontrada"));
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/inicio/"));
         verify(servicioSala).obtenerSalaPorId(5);
     }
 

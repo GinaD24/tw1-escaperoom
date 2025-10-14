@@ -39,15 +39,19 @@ public class ControladorPartidaTest {
                 true, 10,"puerta-mansion.png");
         Partida partida = new Partida(LocalDateTime.now());
         partida.setSala(sala);
-        when(requestMock.getSession()).thenReturn(sessionMock);
-        controladorPartida.iniciarPartida(sala.getId(), partida,requestMock );
+        Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
         Long idUsuario = 1L;
-        verify(servicioPartida).guardarPartida(partida, idUsuario);
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), 1)).thenReturn(etapa);
+        when(sessionMock.getAttribute("id_usuario")).thenReturn(idUsuario);
+
+        controladorPartida.iniciarPartida(sala.getId(), partida,requestMock );
+
+        verify(servicioPartida).guardarPartida(partida, idUsuario, sala.getId());
     }
 
     @Test
     public void deberiaMostrarLaVistaDeLaPartida() {
-
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
@@ -55,9 +59,18 @@ public class ControladorPartidaTest {
         Long idUsuario = 1L;
 
         when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("id_sala_actual")).thenReturn(sala.getId());
+        when(sessionMock.getAttribute("numero_etapa_actual")).thenReturn(etapa.getNumero());
+        when(sessionMock.getAttribute("id_usuario")).thenReturn(idUsuario);
+
+        when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
+        when(servicioPartida.obtenerAcertijo(etapa.getId(), idUsuario)).thenReturn(acertijo);
+
         ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario, requestMock);
 
         assertThat(modelAndView.getViewName(), equalTo("partida"));
+        verify(sessionMock).setAttribute("id_etapa", etapa.getId());
+        verify(sessionMock).setAttribute("id_acertijo", acertijo.getId());
     }
 
 
@@ -75,12 +88,19 @@ public class ControladorPartidaTest {
 
         when(servicioPartida.obtenerAcertijo(etapa.getId(), idUsuario)).thenReturn(acertijo);
         when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
+
         when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("id_sala_actual")).thenReturn(sala.getId());
+        when(sessionMock.getAttribute("numero_etapa_actual")).thenReturn(etapa.getNumero());
+        when(sessionMock.getAttribute("id_usuario")).thenReturn(idUsuario);
 
         ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario, requestMock);
 
         assertThat(modelAndView.getModel().get("etapa"), equalTo(etapa));
         verify(servicioPartida).obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
+        verify(servicioPartida).obtenerAcertijo(etapa.getId(), idUsuario );
+        verify(sessionMock).setAttribute("id_etapa", etapa.getId());
+        verify(sessionMock).setAttribute("id_acertijo", acertijo.getId());
     }
 
     @Test
@@ -97,6 +117,10 @@ public class ControladorPartidaTest {
         when(servicioPartida.obtenerAcertijo(etapa.getId(), idUsuario )).thenReturn(acertijo);
 
         when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("id_sala_actual")).thenReturn(sala.getId());
+        when(sessionMock.getAttribute("numero_etapa_actual")).thenReturn(etapa.getNumero());
+        when(sessionMock.getAttribute("id_usuario")).thenReturn(idUsuario);
+
         ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario, requestMock);
 
         assertThat(modelAndView.getModel().get("acertijo"), equalTo(acertijo));
