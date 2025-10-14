@@ -38,21 +38,20 @@
 <header class="w-full fixed top-0 left-0 z-10 py-8" style="background-color: #1a1a3b;">
     <div class="container-fluid flex justify-between items-center px-4">
         <div>
-            <a>
+            <a href="login.html">
                 <img class="logo-escape" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
             </a>
         </div>
         <a class="text-4xl sm:text-5xl font-bold text-center text-yellow-300 tracking-wider"
-           href="#"
            style="
                font-family: 'Rajdhani', sans-serif;
                text-shadow: 0 0 10px rgba(255, 235, 59, 0.3);
            ">
             ESCAPE ROOM
         </a>
-        <div class="h-6 flex gap-2 items-center">
-            <img th:src="@{/img/person (2).svg}" alt="Perfil" class="w-6 h-6 object-contain cursor-pointer hover:opacity-80 transition duration-200">
-            <img th:src="@{/img/hamburger-button.svg}" alt="Menú" class="w-6 h-6 object-contain cursor-pointer hover:opacity-80 transition duration-200">
+        <div class="h-6 flex gap-6 items-center">
+            <img th:src="@{/img/person (2).svg}" alt="Perfil" class="w-8 h-8 object-contain cursor-pointer hover:opacity-80 transition duration-200 border-2 border-white rounded-full p-0.5">
+            <img th:src="@{/img/hamburger-button.svg}" alt="Menú" class="w-8 h-8 object-contain cursor-pointer hover:opacity-80 transition duration-200">
         </div>
     </div>
 </header>
