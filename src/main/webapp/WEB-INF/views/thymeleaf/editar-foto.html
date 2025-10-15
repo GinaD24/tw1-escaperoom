@@ -1,0 +1,58 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Perfil del Jugador</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+
+    <!-- custom style -->
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+
+</head>
+<body>
+
+
+<header>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">ESCAPE ROOM</a>
+            <div class="d-flex">
+                <button class="btn btn-outline-light rounded-circle me-2"><i class="bi bi-person"></i></button>
+                <button class="btn btn-outline-light"><i class="bi bi-list"></i></button>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="contenedor">
+    <div class="titulo">
+        <h1>Cambiar Foto de Perfil</h1>
+    </div>
+
+    <div class="contenedorFoto">
+        <form th:action="@{/perfil/actualizar-foto}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="idUsuario" th:value="${perfil.id}">
+            <img th:src="@{'/img/' + ${perfil.fotoPerfil}}" alt="Foto actual" width="120" height="120"><br><br>
+
+    </div>
+
+    <div class="cambioFoto">
+        <label>Seleccionar nueva foto:</label>
+        <input type="file" name="foto" accept="image/*" required><br>
+    </div>
+
+
+    <div class="btn">
+        <button type="submit">Actualizar Foto</button>
+    </div>
+    </form>
+
+    <a th:href="@{/perfil/ver(idUsuario=${perfil.id})}">Volver al perfil</a>
+
+
+</div>
+
+</body>
+</html>

@@ -2,6 +2,8 @@ package com.tallerwebi.dominio;
 
 import java.util.Comparator;
 import java.util.List;
+
+import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,9 @@ public class ServicioRankingImpl implements ServicioRanking {
     @Transactional
     public List<Ranking> obtenerRankingPorSala(Integer idSala) {
         List<Ranking> rankingsDeSala = this.rankingRepository.obtenerRankingPorSala(idSala);
+       if (rankingsDeSala.isEmpty()) {
+           throw new SalaInexistente();
+       }
 
         rankingsDeSala.sort(Comparator
                 .comparing(Ranking::getTiempoFinalizacion)

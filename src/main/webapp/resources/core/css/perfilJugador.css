@@ -1,0 +1,166 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #2c0d5a 0%, #1a0b3d 30%, #0d1a4f 100%);
+    background-attachment: fixed;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    position: relative;
+   overflow-x: hidden;
+
+}
+
+header {
+    width: 100%;
+}
+
+.navbar {
+    background-color: rgba(26, 26, 59, 0.49);
+    border-bottom: 2px solid rgba(90, 27, 167, 0.69);
+}
+.navbar-brand {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: bold;
+    font-size: 4rem;
+    color: #fafb63;
+}
+
+.navbar-brand a:hover {
+    color: yellow;
+}
+.logo-escape{
+    width: 60px;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.51);
+    border-radius: 15px;
+    max-width: 700px;
+    width: 90%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.contenedorFoto {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 20px;
+    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: 400ms;
+}
+
+.contenedorFoto > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.contenedorFoto:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.5);
+}
+
+.contenedorTitulo h1 {
+    color: #fac020;
+    font-size: 2.5em;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+a.btn {
+    background-color: #3b1a75;
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+a.btn:hover {
+    background-color: #fac020;
+    color: #1a0b3d;
+}
+
+@media (max-width: 768px) {
+    .contenedor {
+        padding: 20px;
+    }
+
+    .contenedorTitulo h1 {
+        font-size: 2em;
+    }
+
+    .contenedorNombre h2 {
+        font-size: 1.5em;
+    }
+
+    .contenedorFoto {
+        width: 120px;
+        height: 120px;
+    }
+
+    .contenedorLogros h3 {
+        font-size: 1.3em;
+    }
+
+    .iconos-nav img {
+        transition: transform 0.2s ease;
+    }
+
+    .iconos-nav a:hover img {
+        transform: scale(1.2);
+    }
+
+    .icono {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip-text {
+        visibility: hidden;
+        width: max-content;
+        background-color: rgba(14, 6, 23, 0.7);
+        color: #fff;
+        text-align: center;
+        padding: 4px 8px;
+        border-radius: 4px;
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s ease, bottom 0.3s ease;
+        white-space: nowrap;
+        font-size: 0.8rem;
+    }
+
+    .icono:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+        top: 140%;
+    }
+
+}

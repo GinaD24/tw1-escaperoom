@@ -1,5 +1,6 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.dominio;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -12,14 +13,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tallerwebi.dominio.excepcion.SalaInexistente;
+import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.cglib.core.Local;
-
-import com.tallerwebi.dominio.Ranking;
-import com.tallerwebi.dominio.RankingRepository;
-import com.tallerwebi.dominio.ServicioRankingImpl;
 
 public class ServicioRankingTest {
     
@@ -90,8 +87,9 @@ public class ServicioRankingTest {
 
         when(rankingRepository.obtenerRankingPorSala(idSala)).thenReturn(rankingVacio);
 
-        servicioRanking.obtenerRankingPorSala(idSala);
-
+        assertThrows(SalaInexistente.class, () -> {
+            this.servicioRanking.obtenerRankingPorSala(idSala);
+        });
         assertThat(rankingVacio, is(empty()));
     }
 

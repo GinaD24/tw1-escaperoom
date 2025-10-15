@@ -16,24 +16,19 @@
 
 <body>
 
-<header class="w-full fixed top-0 left-0 z-10 py-8" style="background-color: #1a1a3b;">
-    <div class="container-fluid flex justify-between items-center px-4">
-        <div>
-            <a th:href="@{/inicio.html}">
-                <img class="logo-escape" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <div >
+            <a th:href="@{/inicio/}">
+                <img class="logo-escape ms-3" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
             </a>
         </div>
-        <a class="text-4xl sm:text-5xl font-bold text-center text-yellow-300 tracking-wider"
-           href="#"
-           style="
-               font-family: 'Rajdhani', sans-serif;
-               text-shadow: 0 0 10px rgba(255, 235, 59, 0.3);
-           ">
-            ESCAPE ROOM
-        </a>
-        <div class="h-6 flex gap-6 items-center">
-            <img th:src="@{/img/person (2).svg}" alt="Perfil" class="w-8 h-8 object-contain cursor-pointer hover:opacity-80 transition duration-200 border-2 border-white rounded-full p-0.5">
-            <img th:src="@{/img/hamburger-button.svg}" alt="Menú" class="w-8 h-8 object-contain cursor-pointer hover:opacity-80 transition duration-200">
+        <h1 class="navbar-brand mt-3">ESCAPE ROOM</h1>
+        <div class="iconos-nav d-flex me-4">
+            <a class="icono" th:href="@{/perfil/miPerfil}">
+                <img th:src="@{/img/icono-perfil.png}" alt="img-user" style="width: 50px">
+                <span class="tooltip-text">Ver mi perfil</span>
+            </a>
         </div>
     </div>
 </header>
@@ -41,9 +36,27 @@
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card p-4 shadow">
-                <h2 class="card-title text-center">Ranking de la Sala <span th:text="${idSala}"></span></h2>
+            <div class="row justify-content-center mb-4">
+                <div class="col-md-6">
+                    <form th:action="@{/ranking/filtrarPorSala/}" method="get">
+                        <div class="input-group">
+                            <select class="form-select rounded-pill me-2" name="filtroSalas" id="filtroSalas">
+                                <option disabled>Filtrar por sala</option>
+                                <option th:each="sala : ${salas}"
+                                        th:value="${sala.id}"
+                                        th:text="${sala.nombre}">
+                                </option>
+                            </select>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                Filtrar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
+            <div class="card p-4 shadow">
+                <h2 class="card-title text-center">Ranking de <span th:text="${sala.nombre}"></span></h2>
                 <table class="table table-striped mt-4">
                     <thead>
                         <tr>

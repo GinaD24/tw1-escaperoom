@@ -1,0 +1,153 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #2c0d5a 0%, #1a0b3d 30%, #0d1a4f 100%);
+    background-attachment: fixed;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    position: relative;
+   overflow-x: hidden;
+
+}
+
+header {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 15px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.7);
+    width: 90%;
+    max-width: 600px;
+    margin-top: 50px;
+      margin-left: 30%;
+}
+
+.titulo h1 {
+    color: #fac020;
+    font-size: 2.5em;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+form {
+    width: 100%;
+  /*  display: flex;*/
+    flex-direction: column;
+    align-items: center;
+}
+
+form input[type="text"] {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid #fac020;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 400px;
+}
+
+form input[type="text"]:focus {
+    border-color: #fff;
+}
+
+form label {
+    font-size: 1.2em;
+    color: #fac020;
+    margin-bottom: 10px;
+    display: block;
+}
+
+label {
+    display: flex;
+    align-items: center;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: #fff;
+}
+
+label input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2);  /* Aumenta el tamaño del checkbox */
+}
+
+label span {
+    font-weight: bold;
+    color: #fac020;  /* Resalta el nombre del logro */
+}
+
+label small {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.7); /* Un color más suave para la descripción */
+}
+
+
+form .btnGuardar button {
+    background-color: #fac020;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 80%;
+    max-width: 400px;
+    margin-top: 20px;
+}
+
+form .btnGuardar button:hover {
+    background-color: #f7c17b;
+}
+
+a {
+    color: #fac020;
+    text-decoration: none;
+    font-size: 1.2em;
+    margin-top: 20px;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .contenedor {
+        padding: 20px;
+    }
+
+    .titulo h1 {
+        font-size: 2em;
+    }
+
+    form input[type="text"] {
+        width: 100%;
+    }
+
+    form .btnGuardar button {
+        width: 100%;
+    }
+}

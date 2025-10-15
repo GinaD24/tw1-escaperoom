@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Sala</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/sala.css}"/>
+</head>
+<body th:style="|background-image: url('@{/img/{img}(img=${SalaObtenida.imagenSala})}');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;|">
+
+
+<header>
+    <nav class="navbar navbar-expand-lg mb-5">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/inicio/}">
+                <img class="logo-escape" th:src="@{/img/Logo.png}" alt="Logo">
+            </a>
+        </div>
+    </nav>
+</header>
+
+
+<main class="main-container mt-5">
+    <div class="mt-5 " th:if="${SalaObtenida != null}">
+        <h2 th:if="${error != null}" th:text="${error}" class="text-danger fw-bold"></h2>
+        <h1 class="titulo-sala" th:text="${SalaObtenida.nombre}"></h1>
+        <div  class="nivel" th:text="${SalaObtenida.dificultad}"></div>
+
+        <p class="historia" th:text="${SalaObtenida.historia}"> </p>
+
+        <div class="d-flex flex-column align-items-center">
+            <a class="btn btn-primary" th:href="@{/partida/sala_{idSala}(idSala=${SalaObtenida.id})}">ESTOY LISTO</a>
+            <a class="btn btn-danger w-25" th:href="@{/inicio/}">ELEGIR OTRA SALA</a>
+        </div>
+
+        <p class="nota">
+            Una vez que entres a la sala, el cronómetro comenzará a correr.
+            Tu misión es resolver los acertijos antes de que el tiempo llegue a cero.
+        </p>
+    </div>
+</main>
+
+
+
+</body>
+
+</html>

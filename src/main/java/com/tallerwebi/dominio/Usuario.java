@@ -2,11 +2,10 @@ package com.tallerwebi.dominio;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
+
 @Entity
 public class Usuario {
 
@@ -22,6 +21,8 @@ public class Usuario {
     private String nombreUsuario;
     private String rol;
     private Boolean activo = false;
+    private String fotoPerfil;
+
 
     public Long getId() {
         return id;
@@ -72,4 +73,13 @@ public class Usuario {
     public void activar() {
         activo = true;
     }
+
+    public String getFotoPerfil() {
+        return fotoPerfil;
+    }
+
+    public void setFotoPerfil(String fotoPerfil) {
+        this.fotoPerfil = fotoPerfil;
+    }
+
 }
