@@ -48,9 +48,9 @@ public class ControladorRanking {
         } catch(SalaInexistente e) {
             modelo.put("error", "Sala no encontrada.");
             return new ModelAndView("ranking-sala", modelo);
-    }
+        }
 
-}
+    }
 
     @GetMapping("/filtrarPorSala")
     public ModelAndView filtrarRanking(@RequestParam(value = "filtroSalas", required = false) String filtroSalas) {
