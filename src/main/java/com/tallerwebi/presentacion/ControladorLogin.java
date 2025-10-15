@@ -2,7 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.ServicioLogin;
 import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.excepcion.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -32,13 +32,13 @@ public class ControladorLogin {
     }
 
     @RequestMapping(path = "/validar-login", method = RequestMethod.POST)
-    public ModelAndView validarLogin(@ModelAttribute("datosLogin") DatosLogin datosLogin, HttpServletRequest request) {
+    public ModelAndView validarLogin(@ModelAttribute("datosLogin") DatosLogin datosLogin, HttpServletRequest request) throws CredencialesInvalidasException {
         ModelMap model = new ModelMap();
 
         Usuario usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
         if (usuarioBuscado != null) {
-            request.getSession().setAttribute("ROL", usuarioBuscado.getRol());
-            return new ModelAndView("redirect:/home");
+            request.getSession().setAttribute("id_usuario", usuarioBuscado.getId());
+            return new ModelAndView("redirect:/inicio/");
         } else {
             model.put("error", "Usuario o clave incorrecta");
         }
@@ -46,18 +46,27 @@ public class ControladorLogin {
     }
 
     @RequestMapping(path = "/registrarme", method = RequestMethod.POST)
-    public ModelAndView registrarme(@ModelAttribute("usuario") Usuario usuario) {
+    public ModelAndView registrarme(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request) {
         ModelMap model = new ModelMap();
-        try{
+        try {
+            String confirmPassword = request.getParameter("confirmPassword");
+            if (confirmPassword == null || !usuario.getPassword().equals(confirmPassword)) {
+                model.put("error", "Las contraseñas no coinciden.");
+                return new ModelAndView("nuevo-usuario", model);
+            }
             servicioLogin.registrar(usuario);
-        } catch (UsuarioExistente e){
-            model.put("error", "El usuario ya existe");
+            model.put("mensaje", "Usuario registrado exitosamente. ir al login.");
+            return new ModelAndView("redirect:/login", model);
+        } catch (UsuarioExistente e) {
+            model.put("error", e.getMessage());
             return new ModelAndView("nuevo-usuario", model);
-        } catch (Exception e){
-            model.put("error", "Error al registrar el nuevo usuario");
+        } catch (ValidacionInvalidaException | DatosIncompletosException | EdadInvalidaException e) {
+            model.put("error", e.getMessage());
+            return new ModelAndView("nuevo-usuario", model);
+        } catch (Exception e) {
+            model.put("error", "Error inesperado al registrar el usuario");
             return new ModelAndView("nuevo-usuario", model);
         }
-        return new ModelAndView("redirect:/login");
     }
 
     @RequestMapping(path = "/nuevo-usuario", method = RequestMethod.GET)

@@ -1,7 +1,10 @@
 package com.tallerwebi.dominio;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
 public class ServicioHistorialImpl implements ServicioHistorial {
 
     private RepositorioHistorial repositorio;

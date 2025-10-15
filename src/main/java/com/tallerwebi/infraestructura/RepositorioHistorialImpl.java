@@ -2,11 +2,13 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.RepositorioHistorial;
 import com.tallerwebi.dominio.Historial;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Repository
 public class RepositorioHistorialImpl implements RepositorioHistorial {
 
     private List<Historial> historials = new ArrayList<>();

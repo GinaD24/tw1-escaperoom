@@ -2,6 +2,8 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.Historial;
 import com.tallerwebi.dominio.ServicioHistorial;
+import com.tallerwebi.dominio.ServicioPerfil;
+import com.tallerwebi.dominio.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +15,13 @@ import java.util.List;
 @RequestMapping("/historial")
 public class ControladorHistorial {
 
-    private final ServicioHistorial servicio;
+    private final ServicioHistorial servicioHistorial;
+    private final ServicioPerfil servicioPerfil;
 
     // 3. Spring inyectará la implementación de ServicioHistorial
-    public ControladorHistorial(ServicioHistorial servicio) {
-        this.servicio = servicio;
+    public ControladorHistorial(ServicioHistorial servicioHistorial, ServicioPerfil servicioPerfil) {
+        this.servicioHistorial = servicioHistorial;
+        this.servicioPerfil = servicioPerfil;
     }
 
     /**
@@ -26,30 +30,24 @@ public class ControladorHistorial {
      */
     @PostMapping("/registrar")
     public String registrar(@ModelAttribute Historial historial) {
-        servicio.registrarPartida(historial);
-        return "redirect:/historial/ver";
-    }
+        servicioHistorial.registrarPartida(historial);
 
+        // 1. Obtener el identificador String del objeto Historial
+        String emailJugador = historial.getJugador();
 
-    @GetMapping("/ver")
-    public ModelAndView verHistorial() {
-        List<Historial> historiales = servicio.traerHistorial();
+        // 2. Necesitamos obtener el ID (Long) del usuario para la redirección.
+        // **NOTA:** Tu ServicioPerfil debe tener un método para buscar Usuario por email.
+        // Asumiendo que agregaste un método: 'Usuario buscarPorEmail(String email)'
 
-        ModelAndView modelAndView = new ModelAndView("historial-lista");
-        modelAndView.addObject("historiales", historiales);
+        Usuario usuario = servicioPerfil.buscarPorEmail(emailJugador);
 
-        return modelAndView;
-    }
-
-    @GetMapping("/jugador/{nombreJugador}")
-    // @PathVariable mapea la parte de la URL {nombreJugador} a la variable String jugador
-    public ModelAndView verHistorialJugador(@PathVariable("nombreJugador") String jugador) {
-        List<Historial> historialesJugador = servicio.traerHistorialDeJugador(jugador);
-
-        ModelAndView modelAndView = new ModelAndView("historial-jugador");
-        modelAndView.addObject("jugador", jugador);
-        modelAndView.addObject("historiales", historialesJugador);
-
-        return modelAndView;
+        if (usuario != null && usuario.getId() != null) {
+            // 3. Redirigir al perfil/historial usando el ID del usuario
+            return "redirect:/perfil/" + usuario.getId() + "/historial";
+        } else {
+            // Manejo de error o caso donde el usuario no se encuentra
+            // Podrías redirigir a una página de éxito genérica o al login
+            return "redirect:/inicio";
+        }
     }
 }

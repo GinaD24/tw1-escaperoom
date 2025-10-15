@@ -3,6 +3,7 @@ package com.tallerwebi.dominio;
 import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
@@ -13,7 +14,7 @@ public class ServicioRankingImpl implements ServicioRanking {
 
 
     @Autowired
-    public ServicioRankingImpl(RankingRepository rankingRepository) {
+    public ServicioRankingImpl(@Qualifier("rankingRepositoryImpl") RankingRepository rankingRepository) {
         this.rankingRepository = rankingRepository;
     }
 

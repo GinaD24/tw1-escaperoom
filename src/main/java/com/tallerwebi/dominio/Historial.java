@@ -1,8 +1,9 @@
 package com.tallerwebi.dominio;
-
 import java.time.LocalDateTime;
 
+
 public class Historial {
+
 
     private Integer id;
     private String jugador;
