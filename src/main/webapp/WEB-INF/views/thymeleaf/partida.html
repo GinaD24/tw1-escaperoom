@@ -40,9 +40,8 @@
                 <div class="acertijo">
                     <p th:if="${acertijo != null}" th:text=" ${acertijo.descripcion}"></p>
                 </div>
-
-                <div class="candado">
-                    <img th:src="@{'/img/' + ${acertijo.imagen}}" alt="img-etapa" class="img-etapa">
+                <div class="candado" th:if="${acertijo.imagen}">
+                    <img th:src="@{'/img/' + ${acertijo.imagen}}" alt="img-acertijo" class="img-acertijo">
                 </div>
             </div>
         </div>

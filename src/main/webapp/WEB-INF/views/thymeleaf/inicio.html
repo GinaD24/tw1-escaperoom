@@ -25,8 +25,15 @@
             </a>
         </div>
         <h1 class="navbar-brand mt-3">ESCAPE ROOM</h1>
-        <div class="d-flex">
-            <a><img th:src="@{/img/perfil-usuario.png}" alt="img-user" style="width: 45px"></a>
+        <div class="iconos-nav d-flex me-4">
+            <a class="icono me-3" th:href="@{/ranking/}">
+                <img th:src="@{/img/icono-ranking.png}" alt="img-ranking" style="width: 50px">
+                <span class="tooltip-text">Ver rankings</span>
+            </a>
+            <a class="icono" th:href="@{/perfil/miPerfil}">
+                <img th:src="@{/img/icono-perfil.png}" alt="img-user" style="width: 50px">
+                <span class="tooltip-text">Ver mi perfil</span>
+            </a>
         </div>
     </div>
 </nav>

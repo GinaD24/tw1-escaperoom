@@ -67,8 +67,12 @@ public class ControladorPartida {
         ModelMap modelo = new ModelMap();
         Integer idSalaSesion = (Integer) request.getSession().getAttribute("id_sala_actual");
         Integer numeroEtapaSesion = (Integer) request.getSession().getAttribute("numero_etapa_actual");
-
-        Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
+        Sala sala = null;
+        try{
+        sala = this.servicioSala.obtenerSalaPorId(idSala);
+        }catch (SalaInexistente e){
+            return new ModelAndView("redirect:/partida/sala" + idSalaSesion + "/etapa" + numeroEtapaSesion);
+        }
         Etapa etapa;
         Acertijo acertijo;
 
