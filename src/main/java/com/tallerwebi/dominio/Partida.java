@@ -32,6 +32,9 @@ public class Partida {
     private Boolean esta_activa;
 
     @Column
+    private Integer pistasUsadas;
+
+    @Column
     private Boolean ganada;
 
     public Partida() {
@@ -112,5 +115,13 @@ public class Partida {
 
     public void setGanada(Boolean ganada) {
         this.ganada = ganada;
+    }
+
+    public Integer getPistasUsadas() {
+        return pistasUsadas;
+    }
+
+    public void setPistasUsadas(Integer pistasUsadas) {
+        this.pistasUsadas = pistasUsadas;
     }
 }

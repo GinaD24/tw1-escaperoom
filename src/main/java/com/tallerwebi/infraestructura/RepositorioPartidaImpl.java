@@ -131,6 +131,17 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         this.sessionFactory.getCurrentSession().update(partida);
     }
 
+    @Override
+    public void registrarPistaEnPartida(Long idUsuario) {
+        String hql = "UPDATE Partida p " +
+                "SET p.pistasUsadas = p.pistasUsadas + 1 " +
+                "WHERE p.usuario.id = :idUsuario AND p.esta_activa = true";
+
+        int updated = sessionFactory.getCurrentSession()
+                .createQuery(hql)
+                .setParameter("idUsuario", idUsuario)
+                .executeUpdate();
+    }
 
 
 }

@@ -69,7 +69,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
             }
 
         }
-
+        this.repositorioPartida.registrarPistaEnPartida(id_usuario);
         return pistaSeleccionada;
     }
 

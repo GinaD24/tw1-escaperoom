@@ -13,12 +13,10 @@ public class RankingRepositoryFake implements RankingRepository {
 
     @Override
     public void guardar(Ranking ranking) {
-        // No hace nada, solo para pruebas
     }
 
     @Override
     public Ranking buscarPorIdDeSalaYNombreDeUsuario(Integer idSala, String nombreUsuario) {
-        // Retorna null o algún objeto dummy si querés
         return null;
     }
 
