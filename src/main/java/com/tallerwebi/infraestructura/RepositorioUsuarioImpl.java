@@ -45,4 +45,7 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
         sessionFactory.getCurrentSession().update(usuario);
     }
 
+    public Usuario obtenerUsuarioPorId(Long id) {
+        return sessionFactory.getCurrentSession().get(Usuario.class, id);
+    }
 }
