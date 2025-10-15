@@ -7,6 +7,7 @@ import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -133,8 +134,7 @@ public class ControladorPartida {
 
 
     @PostMapping("/validar/{idSala}/{numeroEtapa}")
-    public ModelAndView validarRespuesta(
-            @PathVariable Integer idSala, @PathVariable Integer numeroEtapa,
+    public ModelAndView validarRespuesta(@PathVariable Integer idSala, @PathVariable Integer numeroEtapa,
             @SessionAttribute("id_acertijo") Long id_acertijo, @RequestParam String respuesta, HttpServletRequest request) {
         ModelMap modelo = new ModelMap();
 
@@ -155,31 +155,45 @@ public class ControladorPartida {
 
             Integer cantidadDeEtapasTotales = sala.getCantidadDeEtapas();
             if (cantidadDeEtapasTotales.equals(numeroEtapa)) {
-
                 Boolean ganada = this.servicioPartida.validarRespuesta(id_acertijo, respuesta);
-                this.servicioPartida.finalizarPartida((Long) request.getSession().getAttribute("id_usuario"), ganada);
-                return new ModelAndView("partidaGanada", modelo);
+                request.getSession().setAttribute("partida_ganada", ganada);
+                return new ModelAndView("redirect:/partida/finalizarPartida");
             }
+
             request.getSession().setAttribute("numero_etapa_actual", numeroEtapa + 1);
             return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa" + (numeroEtapa + 1));
         }
-
         return new ModelAndView("partida", modelo);
+    }
+
+
+
+    @GetMapping("/finalizarPartida")
+    public ModelAndView finalizarPartida(HttpServletRequest request) {
+        Integer idSala = (Integer) request.getSession().getAttribute("id_sala_actual");
+        Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");
+
+        Boolean ganada = (Boolean) request.getSession().getAttribute("partida_ganada");
+        if (ganada == null) ganada = false;
+
+        this.servicioPartida.finalizarPartida(idUsuario, ganada);
+        request.getSession().removeAttribute("partida_ganada");
+
+        if (ganada) {
+            ModelMap modelo = new ModelMap();
+            Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
+            modelo.put("sala", sala);
+            return new ModelAndView("partidaGanada", modelo);
+
+        } else {
+            return new ModelAndView("redirect:/inicio/");
+        }
     }
 
     @GetMapping("/validar/{idSala}/{numeroEtapa}")
     public ModelAndView accesoInvalido(@PathVariable Integer idSala,
                                        @PathVariable Integer numeroEtapa) {
         return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa" + numeroEtapa);
-    }
-
-    @GetMapping("/finalizarPartida")
-    public ModelAndView finalizarPartida(HttpServletRequest request) {
-        Integer idSala = (Integer)  request.getSession().getAttribute("id_sala_actual");
-        Boolean ganada = false;
-        this.servicioPartida.finalizarPartida((Long) request.getSession().getAttribute("id_usuario"), ganada);
-
-        return new ModelAndView("redirect:/inicio/sala/" + idSala);
     }
 
 

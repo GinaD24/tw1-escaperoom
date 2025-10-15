@@ -123,7 +123,7 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         String hql = "SELECT p FROM Partida p WHERE p.usuario.id = :idUsuario AND p.esta_activa = true";
         Query<Partida> query = this.sessionFactory.getCurrentSession().createQuery(hql, Partida.class);
         query.setParameter("idUsuario", idUsuario);
-        return query.getSingleResult();
+        return query.getResultList().stream().findFirst().orElse(null);
     }
 
     @Override

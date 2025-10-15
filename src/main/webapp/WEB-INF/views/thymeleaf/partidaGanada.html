@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" th:href="@{/css/sala.css}"/>
 </head>
-<body th:style="|background-image: url('@{/img/{img}(img=${salaElegida.imagenSala})}');
+<body th:style="|background-image: url('@{/img/{img}(img=${sala.imagenSala})}');
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;|">
@@ -29,10 +29,10 @@
     </nav>
 </header>
 
-<main>
+<main class="main-container">
 
-    <div class="text-center mt-4">
-        <h1>Felicidades!</h1>
+    <div class="partida-ganada text-center mt-4">
+        <h1 class="fw-bold">Felicidades!</h1>
         <h4>Lograste salir con vida</h4>
     </div>
 
