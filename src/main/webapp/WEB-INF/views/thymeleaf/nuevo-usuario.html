@@ -38,7 +38,7 @@
 <header class="w-full fixed top-0 left-0 z-10 py-8" style="background-color: #1a1a3b;">
     <div class="container-fluid flex justify-between items-center px-4">
         <div>
-            <a href="login.html">
+            <a th:href="@{/login.html}>
                 <img class="logo-escape" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
             </a>
         </div>
@@ -88,7 +88,7 @@
             </label>
             <input th:field="*{nombreUsuario}" type="text" id="nombreUsuario"
                    class="w-full px-4 py-3 rounded-xl bg-white/10 border border-yellow-200/30 text-white placeholder-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition duration-200"
-                   placeholder="MiUsuario">
+                   placeholder="Minimo 4 caracteres" required minlength="4">
         </div>
 
         <div>
