@@ -2,7 +2,9 @@ package com.tallerwebi.presentacion;
 
 import java.util.List;
 
-import com.tallerwebi.dominio.excepcion.NoExisteSala;
+import com.tallerwebi.dominio.Sala;
+import com.tallerwebi.dominio.ServicioSala;
+import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -46,34 +48,32 @@ public class ControladorRanking {
         } catch(SalaInexistente e) {
             modelo.put("error", "Sala no encontrada.");
             return new ModelAndView("ranking-sala", modelo);
-    }
+        }
 
-}
+    }
 
     @GetMapping("/filtrarPorSala")
     public ModelAndView filtrarRanking(@RequestParam(value = "filtroSalas", required = false) String filtroSalas) {
         ModelMap modelo = new ModelMap();
+        Sala sala = null;
+        Integer idSala = Integer.valueOf(filtroSalas);
 
-        if(idSala == null || idSala < 1){
-            modelo.put("error", "ID de Sala invalido");
-            return new ModelAndView("error-ranking", modelo);
+
+        try{
+            sala = servicioSala.obtenerSalaPorId(idSala);
         }
+        catch(SalaInexistente e){
+            sala = servicioSala.obtenerSalaPorId(1);
+        }
+        List<Sala> salas = servicioSala.traerSalas();
 
-        try {
-            List<Ranking> rankings = servicioRanking.obtenerRankingPorSala(idSala);
-            modelo.put("rankings", rankings);
-            modelo.put("idSala", idSala);
+        List<Ranking> rankings = servicioRanking.obtenerRankingPorSala(sala.getId());
+        modelo.put("rankings", rankings);
+        modelo.put("salas", salas);
+        modelo.put("sala", sala);
 
-            return new ModelAndView("ranking-sala", modelo);
-
-        } catch(NoExisteSala e) {
-            modelo.put("error", "Sala no encontrada.");
-            return new ModelAndView("error-ranking", modelo);
-
-
-        } catch(Exception e) {
-        modelo.put("error", "Error interno al cargar los rankings");
-        return new ModelAndView("error-ranking", modelo);
+        return new ModelAndView("ranking-sala", modelo);
     }
-    }
+
+
 }

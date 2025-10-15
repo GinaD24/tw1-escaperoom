@@ -21,7 +21,7 @@ public class ServicioPerfilImpl implements ServicioPerfil{
     }
 
     public Usuario obtenerPerfil(Long idUsuario) {
-        Usuario usuario = repositorioUsuario.buscarPorId(idUsuario);
+        Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
         if (usuario == null) {
             throw new RuntimeException("Usuario no encontrado con ID: " + idUsuario);
         }

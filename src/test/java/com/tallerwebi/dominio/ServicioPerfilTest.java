@@ -49,7 +49,7 @@ public class ServicioPerfilTest {
 
     @Test
     void deberiaObtenerPerfilCorrectamente() {
-        when(repositorioUsuario.buscarPorId(1L)).thenReturn(usuarioMock);
+        when(repositorioUsuario.obtenerUsuarioPorId(1L)).thenReturn(usuarioMock);
         when(sessionMock.getAttribute("id_usuario")).thenReturn(1L);
 
         Usuario perfil = servicioPerfilJugador.obtenerPerfil(1L);
@@ -57,12 +57,12 @@ public class ServicioPerfilTest {
         assertNotNull(perfil);
         assertEquals("Jugador.Prueba", perfil.getNombreUsuario());
 
-        verify(repositorioUsuario, times(1)).buscarPorId(1L);
+        verify(repositorioUsuario, times(1)).obtenerUsuarioPorId(1L);
     }
 
     @Test
     void deberiaLanzarErrorSiUsuarioNoExiste() {
-        when(repositorioUsuario.buscarPorId(99L)).thenReturn(null);
+        when(repositorioUsuario.obtenerUsuarioPorId(99L)).thenReturn(null);
 
         RuntimeException ex = assertThrows(RuntimeException.class,
                 () -> servicioPerfilJugador.obtenerPerfil(99L));

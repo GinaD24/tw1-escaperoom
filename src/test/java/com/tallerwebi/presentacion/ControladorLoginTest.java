@@ -76,17 +76,6 @@ public class ControladorLoginTest {
 		verify(sessionMock, times(1)).setAttribute("id_usuario", usuarioEncontradoMock.getId());
 	}
 
-	@Test
-	public void registrameSiUsuarioNoExisteDeberiaCrearUsuarioYVolverAlLogin() throws UsuarioExistente {
-
-		// ejecucion
-		ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
-
-		// validacion
-		assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/perfil/verPerfil"));
-		verify(sessionMock, times(1)).setAttribute("id_usuario", usuarioEncontradoMock.getId());
-	}
-
     @Test
     public void registrameSiUsuarioNoExisteDeberiaCrearUsuarioYVolverAlLogin() throws UsuarioExistente, EdadInvalidaException, DatosIncompletosException, ValidacionInvalidaException, CredencialesInvalidasException  {
         when(requestMock.getParameter("confirmPassword")).thenReturn("password123");  // Coincide con usuarioMock.getPassword()
