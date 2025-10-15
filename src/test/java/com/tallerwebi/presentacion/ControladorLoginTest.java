@@ -67,6 +67,17 @@ public class ControladorLoginTest {
 
 		when(requestMock.getSession()).thenReturn(sessionMock);
 		when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(usuarioEncontradoMock);
+		
+		// ejecucion
+		ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
+		
+		// validacion
+		assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/inicio/"));
+		verify(sessionMock, times(1)).setAttribute("id_usuario", usuarioEncontradoMock.getId());
+	}
+
+	@Test
+	public void registrameSiUsuarioNoExisteDeberiaCrearUsuarioYVolverAlLogin() throws UsuarioExistente {
 
 		// ejecucion
 		ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
