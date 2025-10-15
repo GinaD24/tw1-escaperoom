@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Partidas - Escape Room</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
+        .font-rajdhani {
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .match-victory {
+            border-left: 6px solid #4CAF50; /* Verde */
+            background-color: #2b332c; /* Fondo oscuro sutil para victoria */
+        }
+        .match-defeat {
+            border-left: 6px solid #f44336; /* Rojo */
+            background-color: #332b2b; /* Fondo oscuro sutil para derrota */
+        }
+    </style>
+</head>
+
+<body class="pt-24 flex flex-col items-center justify-center text-white p-4 min-h-screen relative overflow-x-hidden"
+      style="
+          background: linear-gradient(135deg, #2c0d5a 0%, #1a0b3d 30%, #0d1a4f 100%);
+          background-attachment: fixed;
+      ">
+
+<header class="w-full fixed top-0 left-0 z-10 py-5" style="background-color: #1a1a3b;">
+    <div class="container-fluid flex justify-between items-center px-4 max-w-7xl mx-auto">
+        <div>
+            <a href="inicio.html">
+                <img class="logo-escape" style="width: 60px" alt="logo" src="https://via.placeholder.com/60/FFFFFF?text=Logo">
+            </a>
+        </div>
+        <a class="text-4xl sm:text-5xl font-bold text-center text-yellow-300 tracking-wider hover:text-blue-800 font-rajdhani"
+           href="#"
+           style="
+                   text-shadow: 0 0 10px rgba(255, 235, 59, 0.3);
+               ">
+            ESCAPE ROOM
+        </a>
+        <div class="h-6 flex gap-6 items-center">
+            <img src="https://via.placeholder.com/32/FFFFFF?text=P" alt="Perfil" class="w-8 h-8 object-contain cursor-pointer hover:opacity-80 transition duration-200 border-2 border-white rounded-full p-0.5">
+            <img src="https://via.placeholder.com/32/FFFFFF?text=M" alt="Menú" class="w-8 h-8 object-contain cursor-pointer hover:opacity-80 transition duration-200">
+        </div>
+    </div>
+</header>
+
+<div class="w-full max-w-4xl space-y-4 pt-8">
+    <h1 class="text-3xl font-bold text-yellow-300 mb-6 border-b border-gray-700 pb-2">Historial de Partidas (Últimos 20)</h1>
+
+    <template id="match-template">
+        <div class="match-item p-4 rounded-lg shadow-xl flex flex-col sm:flex-row justify-between items-center gap-4">
+
+            <div class="w-full sm:w-1/4 flex flex-col items-center sm:items-start text-center sm:text-left">
+                <span class="match-result text-2xl font-bold uppercase"></span>
+                <span class="text-xs text-gray-400">Normal (Dificultad)</span>
+                <span class="match-difficulty text-sm font-semibold mt-1 p-1 rounded-sm"></span>
+            </div>
+
+            <div class="w-full sm:w-1/4 flex flex-col items-center sm:items-start text-center sm:text-left">
+                <span class="match-date text-sm text-gray-300"></span>
+                <span class="match-time text-xl font-bold mt-1"></span>
+                <span class="text-xs text-gray-400">Tiempo de Escape</span>
+            </div>
+
+            <div class="w-full sm:w-1/4 flex flex-col items-center sm:items-start text-center sm:text-left">
+                <div class="match-clues text-xl font-bold">
+                    <span class="clues-used text-yellow-300"></span> / <span class="clues-total text-gray-400">6</span>
+                </div>
+                <span class="text-xs text-gray-400">Pistas Utilizadas</span>
+            </div>
+
+            <div class="w-full sm:w-1/4 flex justify-center sm:justify-end">
+                <div class="flex items-center space-x-2">
+                    <img class="w-12 h-12 rounded-full border-2 border-yellow-300" src="https://via.placeholder.com/50/607D8B?text=Room" alt="Sala Jugada">
+                    <div class="flex flex-col">
+                        <span class="match-room-name text-lg font-semibold">Sala del Faraón</span>
+                        <span class="text-xs text-gray-400">Tipo de Sala</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <div id="match-list" class="space-y-3">
+    </div>
+
+</div>
+
+<script>
+    const matches = [
+        {
+            result: 'VICTORIA',
+            date: '05/09/2025',
+            time: '28:45',
+            clues_used: 1,
+            difficulty: 'FÁCIL',
+            room_name: 'Laboratorio Secreto'
+        },
+        {
+            result: 'VICTORIA',
+            date: '04/09/2025',
+            time: '33:12',
+            clues_used: 3,
+            difficulty: 'MEDIO',
+            room_name: 'Misterio Medieval'
+        },
+        {
+            result: 'DERROTA',
+            date: '02/09/2025',
+            time: '60:00',
+            clues_used: 6,
+            difficulty: 'DIFÍCIL',
+            room_name: 'Templo Perdido'
+        },
+        {
+            result: 'VICTORIA',
+            date: '01/09/2025',
+            time: '45:01',
+            clues_used: 2,
+            difficulty: 'MEDIO',
+            room_name: 'Viaje Intergaláctico'
+        }
+    ];
+
+    const listContainer = document.getElementById('match-list');
+    const template = document.getElementById('match-template');
+
+    matches.forEach(match => {
+        const matchElement = template.content.cloneNode(true).querySelector('.match-item');
+
+        // Determinar clases de color según el resultado
+        if (match.result === 'VICTORIA') {
+            matchElement.classList.add('match-victory');
+            matchElement.querySelector('.match-result').classList.add('text-green-400');
+        } else {
+            matchElement.classList.add('match-defeat');
+            matchElement.querySelector('.match-result').classList.add('text-red-400');
+        }
+
+        // Mapear dificultad a color para la etiqueta
+        let difficultyColor = '';
+        if (match.difficulty === 'FÁCIL') {
+            difficultyColor = 'bg-green-600';
+        } else if (match.difficulty === 'MEDIO') {
+            difficultyColor = 'bg-yellow-600';
+        } else {
+            difficultyColor = 'bg-red-600';
+        }
+
+        // Llenar los datos
+        matchElement.querySelector('.match-result').textContent = match.result;
+        matchElement.querySelector('.match-date').textContent = `Día: ${match.date}`;
+        matchElement.querySelector('.match-time').textContent = match.time;
+        matchElement.querySelector('.clues-used').textContent = match.clues_used;
+        matchElement.querySelector('.match-difficulty').textContent = match.difficulty;
+        matchElement.querySelector('.match-difficulty').classList.add(difficultyColor);
+        matchElement.querySelector('.match-room-name').textContent = match.room_name;
+
+        listContainer.appendChild(matchElement);
+    });
+</script>
+</body>
+</html>
