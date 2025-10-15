@@ -47,66 +47,58 @@ public class ControladorLoginTest {
 
     @Test
 	public void loginConUsuarioYPasswordInorrectosDeberiaLlevarALoginNuevamente() throws CredencialesInvalidasException {
-		// preparacion
 		when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(null);
 
-		// ejecucion
 		ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
 
-		// validacion
 		assertThat(modelAndView.getViewName(), equalToIgnoringCase("login"));
 		assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Usuario o clave incorrecta"));
 		verify(sessionMock, times(0)).setAttribute("ROL", "ADMIN");
 	}
 
 	@Test
-	public void loginConUsuarioYPasswordCorrectosDeberiaLLevarAHome() throws CredencialesInvalidasException {
-		// preparacion
+	public void loginConUsuarioYPasswordCorrectosDeberiaLLevarAInicio() throws CredencialesInvalidasException {
+
 		Usuario usuarioEncontradoMock = mock(Usuario.class);
 		when(usuarioEncontradoMock.getRol()).thenReturn("ADMIN");
 
 		when(requestMock.getSession()).thenReturn(sessionMock);
 		when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(usuarioEncontradoMock);
-		
-		// ejecucion
+
 		ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
-		
-		// validacion
+
 		assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/inicio/"));
 		verify(sessionMock, times(1)).setAttribute("id_usuario", usuarioEncontradoMock.getId());
 	}
 
     @Test
     public void registrameSiUsuarioNoExisteDeberiaCrearUsuarioYVolverAlLogin() throws UsuarioExistente, EdadInvalidaException, DatosIncompletosException, ValidacionInvalidaException, CredencialesInvalidasException  {
-        when(requestMock.getParameter("confirmPassword")).thenReturn("password123");  // Coincide con usuarioMock.getPassword()
+        when(requestMock.getParameter("confirmPassword")).thenReturn("password123");
         ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock, requestMock);
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/login"));
-        verify(servicioLoginMock, times(1)).registrar(usuarioMock);  // Ahora compila con throws completo
+        verify(servicioLoginMock, times(1)).registrar(usuarioMock);
     }
     @Test
     public void registrarmeSiUsuarioExisteDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente, EdadInvalidaException, DatosIncompletosException, ValidacionInvalidaException, CredencialesInvalidasException  {
-        // Preparación
+
         when(requestMock.getParameter("confirmPassword")).thenReturn("password123");
 
         doThrow(new UsuarioExistente("El usuario ya existe")).when(servicioLoginMock).registrar(usuarioMock);
-        // Ejecución
+
         ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock, requestMock);
-        // Validación
+
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
         assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("El usuario ya existe"));
         verify(servicioLoginMock, times(1)).registrar(usuarioMock);
     }
     @Test
     public void errorEnRegistrarmeDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente, EdadInvalidaException, DatosIncompletosException, ValidacionInvalidaException, CredencialesInvalidasException  {
-        // Preparación
         when(requestMock.getParameter("confirmPassword")).thenReturn("password123");
 
         doThrow(new RuntimeException("Error simulado")).when(servicioLoginMock).registrar(usuarioMock);
 
-        // Ejecución
         ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock, requestMock);
 
-        // Validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
         assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Error inesperado al registrar el usuario"));
         verify(servicioLoginMock, times(1)).registrar(usuarioMock);

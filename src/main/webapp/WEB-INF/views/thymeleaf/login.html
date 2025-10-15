@@ -37,11 +37,11 @@
 <header class="w-full fixed top-0 left-0 z-10 py-8" style="background-color: #1a1a3b;">
     <div class="container-fluid flex justify-between items-center px-4">
         <div>
-            <a>
+            <a th:href="@{/inicio.html}">
                 <img class="logo-escape" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
             </a>
         </div>
-        <a class="text-4xl sm:text-5xl font-bold text-center text-yellow-300 tracking-wider"
+        <a class="text-4xl sm:text-5xl font-bold text-center text-yellow-300 tracking-wider hover:text-blue-800"
            href="#"
            style="
                font-family: 'Rajdhani', sans-serif;
@@ -49,20 +49,20 @@
            ">
             ESCAPE ROOM
         </a>
-        <div class="h-6 flex gap-2 items-center">
-            <img th:src="@{/img/person (2).svg}" alt="Perfil" class="w-6 h-6 object-contain cursor-pointer hover:opacity-80 transition duration-200">
-            <img th:src="@{/img/hamburger-button.svg}" alt="Menú" class="w-6 h-6 object-contain cursor-pointer hover:opacity-80 transition duration-200">
+        <div class="h-6 flex gap-6 items-center">
+            <img th:src="@{/img/person (2).svg}" alt="Perfil" class="w-8 h-8 object-contain cursor-pointer hover:opacity-80 transition duration-200 border-2 border-white rounded-full p-0.5">
+            <img th:src="@{/img/hamburger-button.svg}" alt="Menú" class="w-8 h-8 object-contain cursor-pointer hover:opacity-80 transition duration-200">
         </div>
     </div>
 </header>
 
-<main class="w-full max-w-md mt-20">
+<main class="w-full max-w-md mt-20 ">
     <div class="p-8 rounded-2xl shadow-2xl bg-white/10 backdrop-blur-md border border-yellow-400/20">
         <h2 class="text-3xl title-font font-bold text-center text-yellow-300 mb-6">
             Iniciar Sesion
         </h2>
 
-        <form th:action="@{/validar-login}" method="post" th:object="${datosLogin}" class="space-y-6">
+        <form th:action="@{/validar-login/}" method="post" th:object="${datosLogin}" class="space-y-6">
             <div>
                 <label for="email" class="block mb-2 text-sm font-medium text-yellow-100 flex items-center">Correo electronico
                 </label>
