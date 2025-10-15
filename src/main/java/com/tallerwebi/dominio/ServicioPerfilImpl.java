@@ -1,16 +1,10 @@
 package com.tallerwebi.dominio;
 
-import com.tallerwebi.dominio.excepcion.ValidacionInvalidaException;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 @Service
-public class ServicioPerfilJugador implements ServicioPerfil{
+public class ServicioPerfilImpl implements ServicioPerfil{
 
     private final RepositorioUsuario repositorioUsuario;
     private final RankingRepository rankingRepository;
@@ -18,8 +12,8 @@ public class ServicioPerfilJugador implements ServicioPerfil{
     private final RepositorioPerfil repositorioPerfil;
 
     @Autowired
-    public ServicioPerfilJugador(RepositorioUsuario repositorioUsuario, RankingRepository rankingRepository,
-                                 RepositorioLogro repositorioLogro, RepositorioPerfil repositorioPerfil) {
+    public ServicioPerfilImpl(RepositorioUsuario repositorioUsuario, RankingRepository rankingRepository,
+                              RepositorioLogro repositorioLogro, RepositorioPerfil repositorioPerfil) {
         this.repositorioUsuario = repositorioUsuario;
         this.rankingRepository = rankingRepository;
         this.repositorioLogro = repositorioLogro;

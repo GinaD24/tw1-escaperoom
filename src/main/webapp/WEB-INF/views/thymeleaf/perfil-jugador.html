@@ -18,15 +18,24 @@
 <header>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <a class="navbar-brand " href="#">ESCAPE ROOM</a>
+            <div >
+                <a th:href="@{/inicio/}">
+                    <img class="logo-escape ms-3" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
+                </a>
+            </div>
+            <h1 class="navbar-brand mt-3">ESCAPE ROOM</h1>
+            <div class="iconos-nav d-flex me-4">
+                <a class="icono me-3" th:href="@{/ranking/}">
+                    <img th:src="@{/img/icono-ranking.png}" alt="img-ranking" style="width: 50px">
+                    <span class="tooltip-text">Ver rankings</span>
+                </a>
+            </div>
         </div>
     </nav>
 </header>
 
 
 <main>
-
-
     <div class="contenedor">
 
         <div class="contenedorFoto">
@@ -35,17 +44,15 @@
 
 
         <div  class="contenedorTitulo">
-            <h1  th:text="${perfil.nombre}"></h1>
+            <h1  th:text="${perfil.nombreUsuario}"></h1>
+            <h3  th:text="${perfil.nombre} + ' ' +  ${perfil.apellido}"></h3>
+            <h3  th:text="${perfil.fechaNacimiento}"></h3>
         </div>
-
         <a class="btn btn-primary">Editar perfil</a><br>
         <a class="btn btn-primary">Cambiar foto</a>
     </div>
 
-
 </main>
-
-
 
 </body>
 
