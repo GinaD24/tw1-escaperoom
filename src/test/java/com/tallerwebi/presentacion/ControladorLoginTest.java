@@ -46,14 +46,14 @@ public class ControladorLoginTest {
 
 
     @Test
-	public void loginConUsuarioYPasswordInorrectosDeberiaLlevarALoginNuevamente() throws CredencialesInvalidasException {
-		when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(null);
+	public void loginConUsuarioYPasswordInorrectosDeberiaLanzarUnaExcepcionYLlevarALoginNuevamente() throws CredencialesInvalidasException {
+        doThrow(CredencialesInvalidasException.class).when(servicioLoginMock).consultarUsuario(anyString(), anyString());
 
 		ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
 
 		assertThat(modelAndView.getViewName(), equalToIgnoringCase("login"));
 		assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Usuario o clave incorrecta"));
-		verify(sessionMock, times(0)).setAttribute("ROL", "ADMIN");
+		verify(sessionMock, times(0)).setAttribute("id_usuario", 1L);
 	}
 
 	@Test
@@ -87,7 +87,7 @@ public class ControladorLoginTest {
 
         ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock, requestMock);
 
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("registro"));
         assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("El usuario ya existe"));
         verify(servicioLoginMock, times(1)).registrar(usuarioMock);
     }
@@ -99,7 +99,7 @@ public class ControladorLoginTest {
 
         ModelAndView modelAndView = controladorLogin.registrarme(usuarioMock, requestMock);
 
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("registro"));
         assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Error inesperado al registrar el usuario"));
         verify(servicioLoginMock, times(1)).registrar(usuarioMock);
     }

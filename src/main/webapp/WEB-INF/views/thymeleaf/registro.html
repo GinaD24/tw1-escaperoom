@@ -60,6 +60,7 @@
     </h2>
 
     <form th:action="@{/registrarme}" method="post" th:object="${usuario}" class="space-y-6" id="registroForm">
+        <p th:if="${error != null}"  th:text="${error}" class="text-red-500 text-md p-1 text-center"></p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label for="nombre" class="block mb-2 text-sm font-medium text-yellow-100 flex items-center">
@@ -97,8 +98,12 @@
                    class="w-full px-4 py-3 rounded-xl bg-white/10 border border-yellow-200/30 text-white placeholder-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition duration-200"
                    placeholder="ejemplo@correo.com" required>
         </div>
+        <div>
+            <p th:if="${errorPassword != null}"  th:text="${errorPassword}" class="text-red-500 text-md p-1 text-start"></p>
 
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
             <div>
                 <label for="password" class="block mb-2 text-sm font-medium text-yellow-100 flex items-center">
                     Contrasenia
@@ -142,78 +147,7 @@
 </div>
 </main>
 
-<script>
-    const form = document.getElementById('registroForm');
-    const btn = document.getElementById('btn-registrarme');
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
-    const fechaInput = document.getElementById('fechaNacimiento');
+<script th:src="@{/js/registro.js}"></script>
 
-
-    // ----------------------------------------------------
-    // LÓGICA DE VALIDACIÓN DE CLIENTE Y CONTROL DE BOTÓN
-    // ----------------------------------------------------
-    function checkForm() {
-        // Obtiene todos los inputs required
-        const requiredFields = form.querySelectorAll('input[required]');
-
-        // Verifica si todos los required están llenos y valida la fecha no futura
-        const allRequiredFilled = Array.from(requiredFields).every(field => {
-            if (field.value.trim() === '') return false;
-
-            // Validación de fecha no futura
-            if (field === fechaInput) {
-                const selectedDate = new Date(field.value);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-
-                if (selectedDate > today) {
-                    // Feedback visual si la fecha es futura
-                    field.classList.add('border-red-400', 'ring-2', 'ring-red-400/50');
-                    return false;
-                } else {
-                    field.classList.remove('border-red-400', 'ring-2', 'ring-red-400/50');
-                }
-            }
-            return true; // Campo lleno y (si es fecha) válida
-        });
-
-        // Valida longitud mínima de contraseña (8 caracteres)
-        const isPasswordLongEnough = passwordInput.value.length >= 8;
-
-        // Valida que las contraseñas coincidan
-        const passwordsMatch = passwordInput.value === confirmPasswordInput.value;
-
-        // Feedback visual específico para contraseñas
-        if (!passwordsMatch && passwordInput.value !== '' && confirmPasswordInput.value !== '') {
-            passwordInput.classList.add('border-red-400', 'ring-2', 'ring-red-400/50');
-            confirmPasswordInput.classList.add('border-red-400', 'ring-2', 'ring-red-400/50');
-        } else {
-            passwordInput.classList.remove('border-red-400', 'ring-2', 'ring-red-400/50');
-            confirmPasswordInput.classList.remove('border-red-400', 'ring-2', 'ring-red-400/50');
-        }
-
-        // Habilita el botón solo si pasa todas las validaciones
-        btn.disabled = !(allRequiredFilled && passwordsMatch && isPasswordLongEnough);
-
-        // Feedback visual: Cambia estilo si disabled
-        if (btn.disabled) {
-            btn.classList.add('opacity-50', 'cursor-not-allowed');
-        } else {
-            btn.classList.remove('opacity-50', 'cursor-not-allowed');
-        }
-    }
-
-
-    // ----------------------------------------------------
-    // INICIALIZACIÓN
-    // ----------------------------------------------------
-
-    // Escucha cambios en cualquier input del formulario
-    form.addEventListener('input', checkForm);
-
-    // Verificación inicial al cargar la página
-    checkForm();
-</script>
 </body>
 </html>

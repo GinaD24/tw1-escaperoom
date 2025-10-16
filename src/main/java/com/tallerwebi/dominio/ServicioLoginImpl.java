@@ -51,17 +51,12 @@ public class ServicioLoginImpl implements ServicioLogin {
 
         Usuario usuarioEmailExistente = repositorioUsuario.buscar(usuario.getEmail());
         if (usuarioEmailExistente != null) {
-            throw new UsuarioExistente();
-        }
-
-        Usuario usuarioExistente = repositorioUsuario.buscarPorNombreUsuario(usuario.getNombreUsuario());
-        if (usuarioExistente != null) {
-            throw new ValidacionInvalidaException("El nombre de usuario ya está registrado.");
+            throw new UsuarioExistente("Ya existe un usuario con ese Email");
         }
 
         Usuario usuarioNombreExistente = repositorioUsuario.buscarPorNombreUsuario(usuario.getNombreUsuario());
         if (usuarioNombreExistente != null) {
-            throw new UsuarioExistente();
+            throw new ValidacionInvalidaException("El nombre de usuario ya está registrado.");
         }
 
         LocalDate fechaNacimiento = usuario.getFechaNacimiento();
@@ -78,7 +73,7 @@ public class ServicioLoginImpl implements ServicioLogin {
 
         String contraseniaUsuario = usuario.getPassword();
 
-        if(contraseniaUsuario == null || contraseniaUsuario.isEmpty() || contraseniaUsuario.length() < 8){
+        if(contraseniaUsuario == null || contraseniaUsuario.length() < 8){
             throw new DatosIncompletosException("La contraseña debe tener al menos 8 caracteres");
         }
 

@@ -1,6 +1,6 @@
 package com.tallerwebi.dominio.excepcion;
 
-public class CredencialesInvalidasException extends Exception {
+public class CredencialesInvalidasException extends RuntimeException {
 
     public CredencialesInvalidasException() {
         super("Las credenciales ingresadas son inválidas.");

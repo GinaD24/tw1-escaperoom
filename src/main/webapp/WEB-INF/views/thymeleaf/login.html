@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
 
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
 
@@ -56,11 +56,14 @@
 
 <main class="w-full max-w-md mt-20 ">
     <div class="p-8 rounded-2xl shadow-2xl bg-white/10 backdrop-blur-md border border-yellow-400/20">
-        <h2 class="text-3xl title-font font-bold text-center text-yellow-300 mb-6">
+        <h2 class="text-3xl title-font font-bold text-center text-yellow-300 mb-2">
             Iniciar Sesion
         </h2>
 
         <form th:action="@{/validar-login/}" method="post" th:object="${datosLogin}" class="space-y-6">
+            <p th:if="${error != null}"  th:text="${error}" class="text-danger text-md p-1 text-center">
+            </p>
+
             <div>
                 <label for="email" class="block mb-2 text-sm font-medium text-yellow-100 flex items-center">Correo electronico
                 </label>
@@ -84,13 +87,11 @@
                 Iniciar Sesion
             </button>
 
-            <p th:if="${error != null}" class="bg-red-500/20 border border-red-400/30 text-red-300 text-sm p-3 rounded-xl mt-2 text-center">
-                <i class="bi bi-exclamation-triangle me-1"></i> th:text="'Error: ' + ${error}"
-            </p>
+
         </form>
 
         <div class="mt-6 text-center">
-            <a th:href="@{/nuevo-usuario}" class="text-purple-300 hover:text-yellow-300 underline transition duration-200">No tenes cuenta? <span class="font-semibold">Registrate</span>
+            <a th:href="@{/irARegistro}" class="text-purple-300 hover:text-yellow-300 underline transition duration-200">No tenes cuenta? <span class="font-semibold">Registrate</span>
             </a>
         </div>
     </div>
