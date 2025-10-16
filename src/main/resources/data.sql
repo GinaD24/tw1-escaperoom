@@ -10,7 +10,7 @@ VALUES (
              'marcosl',
              'pruebafoto.png');
 
-INSERT INTO Usuario(email, password, rol, activo) VALUES( 'test@unlam.edu.ar', 'test', 'ADMIN', true);
+
 
 INSERT INTO Sala (nombre, dificultad, escenario, historia, esta_habilitada, duracion, imagen, imagenSala, cantidadDeEtapas)VALUES
                                                                                           ('La Mansión Misteriosa', 'PRINCIPIANTE', 'Mansion', 'Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.', TRUE, 10,'puerta-mansion.png', 'mansion-misteriosa.png', 5),

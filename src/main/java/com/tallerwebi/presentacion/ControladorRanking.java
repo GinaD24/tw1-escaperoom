@@ -35,6 +35,7 @@ public class ControladorRanking {
     public ModelAndView verRankings(@RequestParam(defaultValue = "1") Integer idSala){
         ModelMap modelo = new ModelMap();
 
+        if (idSala == null) idSala = 1;
         try {
             List<Ranking> rankings = servicioRanking.obtenerRankingPorSala(idSala);
             List<Sala> salas = servicioSala.traerSalas();

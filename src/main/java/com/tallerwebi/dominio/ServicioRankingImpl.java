@@ -16,7 +16,7 @@ public class ServicioRankingImpl implements ServicioRanking {
 
 
     @Autowired
-    public ServicioRankingImpl(@Qualifier("rankingRepositoryImpl") RankingRepository rankingRepository) {
+    public ServicioRankingImpl(RankingRepository rankingRepository) {
         this.rankingRepository = rankingRepository;
     }
 
