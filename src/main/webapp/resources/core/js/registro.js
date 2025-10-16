@@ -28,14 +28,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const isPasswordLongEnough = passwordInput.value.length >= 8;
 
-        if (passwordInput.value !== '' && confirmPasswordInput.value !== '') {
-            passwordInput.classList.add('border-red-400', 'ring-2', 'ring-red-400/50');
-            confirmPasswordInput.classList.add('border-red-400', 'ring-2', 'ring-red-400/50');
-        } else {
-            passwordInput.classList.remove('border-red-400', 'ring-2', 'ring-red-400/50');
-            confirmPasswordInput.classList.remove('border-red-400', 'ring-2', 'ring-red-400/50');
-        }
-
         btn.disabled = !(allRequiredFilled && isPasswordLongEnough);
 
         if (btn.disabled) {

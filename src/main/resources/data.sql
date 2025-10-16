@@ -10,6 +10,16 @@ VALUES (
              'marcosl',
              'pruebafoto.png');
 
+INSERT INTO Usuario (email,nombre,apellido,password,fechaNacimiento,nombreUsuario,fotoPerfil, rol)
+VALUES (
+           'juanP@gmail.com',
+           'Juan',
+           'Perez',
+           'juan123',
+           '1998-12-12',
+           'juan_1',
+           'fotoPerfil_juan.png',
+           'USUARIO');
 
 
 INSERT INTO Sala (nombre, dificultad, escenario, historia, esta_habilitada, duracion, imagen, imagenSala, cantidadDeEtapas)VALUES
@@ -105,3 +115,4 @@ INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('FOTOGRAFIA'
 
 INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Has resuelto todo, solo queda un último paso: cruzar el umbral.', 1, 15);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('SALIDA', TRUE, 15);
+
