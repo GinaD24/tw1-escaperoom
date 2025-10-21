@@ -24,12 +24,13 @@ public class ControladorPartidaTest {
     ControladorPartida controladorPartida;
     HttpServletRequest requestMock;
     HttpSession sessionMock;
+    DatosPartidaSesion datosPartida;
 
     @BeforeEach
     public void init() {
         this.servicioSala = mock(ServicioSala.class);
         this.servicioPartida = mock(ServicioPartidaImpl.class);
-        this.controladorPartida = new ControladorPartida(servicioSala, servicioPartida);
+        this.controladorPartida = new ControladorPartida(servicioSala, servicioPartida,datosPartida);
         this.requestMock = mock(HttpServletRequest.class);
         this.sessionMock = mock(HttpSession.class);
     }
@@ -69,7 +70,7 @@ public class ControladorPartidaTest {
         when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
         when(servicioPartida.obtenerAcertijo(etapa.getId(), idUsuario)).thenReturn(acertijo);
 
-        ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario, requestMock);
+        ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario);
 
         assertThat(modelAndView.getViewName(), equalTo("partida"));
         verify(sessionMock).setAttribute("id_etapa", etapa.getId());
@@ -97,7 +98,7 @@ public class ControladorPartidaTest {
         when(sessionMock.getAttribute("numero_etapa_actual")).thenReturn(etapa.getNumero());
         when(sessionMock.getAttribute("id_usuario")).thenReturn(idUsuario);
 
-        ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario, requestMock);
+        ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario);
 
         assertThat(modelAndView.getModel().get("etapa"), equalTo(etapa));
         verify(servicioPartida).obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
@@ -124,7 +125,7 @@ public class ControladorPartidaTest {
         when(sessionMock.getAttribute("numero_etapa_actual")).thenReturn(etapa.getNumero());
         when(sessionMock.getAttribute("id_usuario")).thenReturn(idUsuario);
 
-        ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario, requestMock);
+        ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario);
 
         assertThat(modelAndView.getModel().get("acertijo"), equalTo(acertijo));
         verify(servicioPartida).obtenerAcertijo(etapa.getId(), idUsuario );
@@ -177,7 +178,7 @@ public class ControladorPartidaTest {
        when(servicioPartida.obtenerAcertijo(etapa.getId(), idUsuario)).thenReturn(acertijo);
 
         when(requestMock.getSession()).thenReturn(sessionMock);
-       ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), requestMock);
+       ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta());
 
        assertThat(modelAndView.getViewName(), equalTo("redirect:/partida/sala" + sala.getId() + "/etapa" + (etapa.getNumero() + 1)));
        verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta());
@@ -194,7 +195,7 @@ public class ControladorPartidaTest {
         Respuesta respuesta = new Respuesta("Respuesta");
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta())).thenReturn(false);
-        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), requestMock);
+        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta());
 
 
         assertThat(modelAndView.getModel().get("error"), equalTo("Respuesta incorrecta. Intenta nuevamente."));
