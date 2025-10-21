@@ -1,7 +1,7 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.RepositorioSala;
-import com.tallerwebi.dominio.Sala;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioSala;
+import com.tallerwebi.dominio.entidad.Sala;
 import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.infraestructura.config.HibernateTestInfraestructuraConfig;
 import org.hibernate.SessionFactory;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 

@@ -1,7 +1,10 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.dominio.enums.Dificultad;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;

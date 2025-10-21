@@ -1,9 +1,9 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Ranking;
-import com.tallerwebi.dominio.Sala;
-import com.tallerwebi.dominio.ServicioRanking;
-import com.tallerwebi.dominio.ServicioSala;
+import com.tallerwebi.dominio.entidad.Ranking;
+import com.tallerwebi.dominio.entidad.Sala;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioRanking;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

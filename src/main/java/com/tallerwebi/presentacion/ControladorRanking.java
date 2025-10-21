@@ -2,20 +2,19 @@ package com.tallerwebi.presentacion;
 
 import java.util.List;
 
-import com.tallerwebi.dominio.Sala;
-import com.tallerwebi.dominio.ServicioSala;
+import com.tallerwebi.dominio.entidad.Sala;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.tallerwebi.dominio.Ranking;
-import com.tallerwebi.dominio.ServicioRanking;
+import com.tallerwebi.dominio.entidad.Ranking;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioRanking;
 
 @Controller
 @RequestMapping("/ranking")

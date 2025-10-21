@@ -1,4 +1,6 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.interfaz.repositorio;
+
+import com.tallerwebi.dominio.entidad.*;
 
 import java.util.List;
 
@@ -13,7 +15,7 @@ public interface RepositorioPartida {
 
     Respuesta obtenerRespuestaCorrecta(Long idAcertijo);
 
-    void registrarAcertijoMostrado(AcertijoUsuario  acertijoUsuario);
+    void registrarAcertijoMostrado(AcertijoUsuario acertijoUsuario);
 
     Integer obtenerPistasUsadas(Long idAcertijo, Long id_usuario);
 

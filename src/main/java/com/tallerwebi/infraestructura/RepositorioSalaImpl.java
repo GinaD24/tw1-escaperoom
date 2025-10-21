@@ -1,7 +1,7 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.RepositorioSala;
-import com.tallerwebi.dominio.Sala;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioSala;
+import com.tallerwebi.dominio.entidad.Sala;
 import com.tallerwebi.dominio.enums.Dificultad;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

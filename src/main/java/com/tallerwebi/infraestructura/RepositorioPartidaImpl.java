@@ -1,6 +1,7 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.entidad.*;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPartida;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;

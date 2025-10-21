@@ -1,7 +1,7 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Sala;
-import com.tallerwebi.dominio.ServicioSala;
+import com.tallerwebi.dominio.entidad.Sala;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.excepcion.NoHaySalasExistentes;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;

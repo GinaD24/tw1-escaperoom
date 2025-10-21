@@ -1,5 +1,9 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.entidad.Logro;
+import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioLogro;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

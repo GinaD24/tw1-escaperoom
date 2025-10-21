@@ -3,9 +3,11 @@ package com.tallerwebi.dominio;
 import java.util.Comparator;
 import java.util.List;
 
+import com.tallerwebi.dominio.entidad.Ranking;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
+import com.tallerwebi.dominio.interfaz.repositorio.RankingRepository;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioRanking;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 

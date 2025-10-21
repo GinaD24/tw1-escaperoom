@@ -1,7 +1,8 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.dominio.enums.Dificultad;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPartida;
 import com.tallerwebi.infraestructura.config.HibernateTestInfraestructuraConfig;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;

@@ -1,7 +1,7 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.Ranking;
-import com.tallerwebi.dominio.RankingRepository;
+import com.tallerwebi.dominio.entidad.Ranking;
+import com.tallerwebi.dominio.interfaz.repositorio.RankingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;

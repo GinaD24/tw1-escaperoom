@@ -1,13 +1,14 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.dominio.excepcion.EtapaInexistente;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;

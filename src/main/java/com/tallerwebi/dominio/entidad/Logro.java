@@ -1,5 +1,5 @@
 
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.entidad;
 import javax.persistence.*;
 
 @Entity

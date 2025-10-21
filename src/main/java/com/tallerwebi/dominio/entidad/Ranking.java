@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.entidad;
 
 import java.time.LocalDate;
 import java.util.List;

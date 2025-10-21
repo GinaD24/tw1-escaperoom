@@ -1,7 +1,10 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.entidad.Sala;
 import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioSala;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

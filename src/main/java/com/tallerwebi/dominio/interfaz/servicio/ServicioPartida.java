@@ -1,4 +1,9 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.interfaz.servicio;
+
+import com.tallerwebi.dominio.entidad.Acertijo;
+import com.tallerwebi.dominio.entidad.Etapa;
+import com.tallerwebi.dominio.entidad.Partida;
+import com.tallerwebi.dominio.entidad.Pista;
 
 public interface ServicioPartida {
 

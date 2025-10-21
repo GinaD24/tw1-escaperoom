@@ -1,6 +1,6 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.RepositorioPerfil;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPerfil;
 import org.springframework.stereotype.Repository;
 
 @Repository

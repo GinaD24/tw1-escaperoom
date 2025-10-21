@@ -1,17 +1,17 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.entidad.Sala;
 import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioSala;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;

@@ -1,9 +1,15 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.excepcion.EtapaInexistente;
 import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPartida;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioSala;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import com.tallerwebi.infraestructura.RepositorioPartidaImpl;
 import com.tallerwebi.infraestructura.RepositorioSalaImpl;
 import com.tallerwebi.infraestructura.RepositorioUsuarioImpl;

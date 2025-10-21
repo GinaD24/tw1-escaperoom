@@ -1,5 +1,6 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.interfaz.servicio;
 
+import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.CredencialesInvalidasException;
 import com.tallerwebi.dominio.excepcion.DatosIncompletosException;
 import com.tallerwebi.dominio.excepcion.EdadInvalidaException;

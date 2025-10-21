@@ -1,5 +1,6 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.interfaz.servicio;
 
+import com.tallerwebi.dominio.entidad.Sala;
 import com.tallerwebi.dominio.enums.Dificultad;
 
 import java.util.ArrayList;

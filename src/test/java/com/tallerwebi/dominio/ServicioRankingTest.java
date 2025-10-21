@@ -13,8 +13,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tallerwebi.dominio.entidad.Ranking;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
-import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
+import com.tallerwebi.dominio.interfaz.repositorio.RankingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
