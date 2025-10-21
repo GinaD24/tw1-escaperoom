@@ -13,7 +13,11 @@
 
     <link rel="stylesheet" th:href="@{/css/sala.css}"/>
 </head>
-<body>
+<body th:style="|background-image: url('@{/img/{img}(img=${SalaObtenida.imagenSala})}');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;|">
+
 
 <header>
     <nav class="navbar navbar-expand-lg mb-5">
@@ -26,18 +30,17 @@
 </header>
 
 
-<main class="main-container">
-    <div class="mt-5" th:if="${SalaObtenida != null}">
+<main class="main-container mt-5">
+    <div class="mt-5 " th:if="${SalaObtenida != null}">
+        <h2 th:if="${error != null}" th:text="${error}" class="text-danger fw-bold"></h2>
         <h1 class="titulo-sala" th:text="${SalaObtenida.nombre}"></h1>
         <div  class="nivel" th:text="${SalaObtenida.dificultad}"></div>
 
         <p class="historia" th:text="${SalaObtenida.historia}"> </p>
 
-        <img class="mx-auto d-block mb-3" style="width: 100px" alt="puerta" th:src="@{'/img/puerta-' + ${SalaObtenida.id} + '.png'}">
-
-        <div>
-            <button class="btn btn-primary">ESTOY LISTO</button>
-            <button class="btn btn-danger">ELEGIR OTRA SALA</button>
+        <div class="d-flex flex-column align-items-center">
+            <a class="btn btn-primary" th:href="@{/partida/sala_{idSala}(idSala=${SalaObtenida.id})}">ESTOY LISTO</a>
+            <a class="btn btn-danger w-25" th:href="@{/inicio/}">ELEGIR OTRA SALA</a>
         </div>
 
         <p class="nota">
@@ -47,7 +50,7 @@
     </div>
 </main>
 
-<h3 th:if="${error != null}" th:text="${error}" class="text-danger"></h3>
+
 
 </body>
 

@@ -1,16 +1,15 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.excepcion.IDUsuarioInvalido;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioPerfil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/perfil")
@@ -25,17 +24,16 @@ public class ControladorPerfilJugador {
         this.servicioHistorial = servicioHistorial;
     }
 
-    //  Mostrar perfil del jugador
-    @GetMapping("/{id}/ver")
-    public ModelAndView verPerfil(@PathVariable Long id) {
+    @GetMapping("/verPerfil")
+    public ModelAndView verPerfil(HttpSession session) {
         ModelMap modelo = new ModelMap();
         try {
-            Usuario usuario = servicioPerfil.obtenerPerfil(id);
+            Long idUsuario = (Long) session.getAttribute("id_usuario");
+            Usuario usuario = servicioPerfil.obtenerPerfil(idUsuario);
             modelo.put("perfil", usuario);
             return new ModelAndView("perfil-jugador", modelo);
-        } catch (RuntimeException e) {
-            modelo.put("error", e.getMessage());
-            return new ModelAndView("/inicio/", modelo);
+        } catch (IDUsuarioInvalido e) {
+            return new ModelAndView("redirect:/inicio/");
         }
     }
     @GetMapping("/{id}/historial")

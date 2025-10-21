@@ -1,7 +1,7 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.RepositorioLogro;
-import com.tallerwebi.dominio.Logro;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioLogro;
+import com.tallerwebi.dominio.entidad.Logro;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;

@@ -2,8 +2,12 @@ package com.tallerwebi.dominio;
 
 import java.util.Comparator;
 import java.util.List;
+
+import com.tallerwebi.dominio.entidad.Ranking;
+import com.tallerwebi.dominio.excepcion.SalaInexistente;
+import com.tallerwebi.dominio.interfaz.repositorio.RankingRepository;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioRanking;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
@@ -14,7 +18,7 @@ public class ServicioRankingImpl implements ServicioRanking {
 
 
     @Autowired
-    public ServicioRankingImpl(@Qualifier("rankingRepositoryImpl") RankingRepository rankingRepository) {
+    public ServicioRankingImpl(RankingRepository rankingRepository) {
         this.rankingRepository = rankingRepository;
     }
 
@@ -42,6 +46,9 @@ public class ServicioRankingImpl implements ServicioRanking {
     @Transactional
     public List<Ranking> obtenerRankingPorSala(Integer idSala) {
         List<Ranking> rankingsDeSala = this.rankingRepository.obtenerRankingPorSala(idSala);
+       if (rankingsDeSala.isEmpty()) {
+           throw new SalaInexistente();
+       }
 
         rankingsDeSala.sort(Comparator
                 .comparing(Ranking::getTiempoFinalizacion)

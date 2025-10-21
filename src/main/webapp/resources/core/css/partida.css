@@ -1,0 +1,219 @@
+body {
+    background: linear-gradient(to right, #390973, #0e1e5f);
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+}
+
+header {
+    padding: 10px;
+}
+
+.logo-escape {
+    width: 60px;
+}
+
+.contenedor-partida {
+    border-radius: 16px;
+    margin: auto;
+    text-align: center;
+    backdrop-filter: blur(2px);
+}
+
+.titulo-sala {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    color: #ffeb3b;
+    letter-spacing: 1px;
+    font-size: 4.5rem;
+    margin-bottom: 10px;
+}
+
+h3 {
+    color: #d3c7ff;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.nombre-etapa{
+    color: #8139b6;
+    font-size: 2.0rem;
+    font-family:'Rajdhani', sans-serif;
+}
+
+.text-muted {
+    color: #bfb6e5 !important;
+}
+.texto-etapa{
+    color: #c180fb;
+    font-size: 1.2rem;
+
+}
+
+.texto-acertijo {
+    background-color: rgba(60, 36, 123, 0.73);
+    border-radius: 12px;
+    padding: 25px;
+    margin: 25px auto;
+    color: #f5f5f5;
+    width: 45%;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.acertijo-contenido {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.acertijo-contenido .acertijo {
+
+    font-size: 1.2rem;
+    text-align: left;
+    margin-left: 20px;
+
+}
+.acertijo-contenido .pregunta {
+
+    font-size: 1.4rem;
+    color:#ffeb3b;
+    text-align: left;
+    margin-left: 20px;
+
+}
+
+.img-etapa {
+    width: 180px;
+    margin-left: 20px;
+}
+
+.input-respuesta {
+    border-radius: 50px;
+    padding: 12px 25px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    text-align: center;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.input-group-text {
+    background: transparent;
+    border: none;
+    color: #ffeb3b;
+    font-size: 1.7rem;
+    cursor: pointer;
+}
+
+.btn-enviar {
+    background-color: #9f92fc;
+    color: #3c247b;
+    font-weight: bold;
+    border-radius: 50px;
+    padding: 6px 15px;
+    border: none;             /* Fijo */
+    outline: none;            /* Fijo */
+    box-shadow: none;         /* Fijo */
+}
+
+.btn-enviar:hover,
+.btn-enviar:focus,
+.btn-enviar:active {
+    border-radius: 50px;
+    background-color: #ded8f6;
+    color: #7f23f4;
+    font-weight: bold;
+    border: none;
+
+}
+
+.btn-pista {
+    background: linear-gradient(45deg, #6713b1, #5a1cd0);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+
+}
+
+.btn-pista:hover {
+    cursor: pointer;
+    color: #5007aa;
+    background: linear-gradient(45deg, #a355ea, #a484e4);
+    padding: 8px 16px;
+    font-weight: bold;
+    border: 4px solid #7127cc;
+}
+
+
+.boton-salir-container {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+}
+
+.boton-salir {
+    background-color: rgba(236, 134, 134, 0.64);
+    border:4px solid #7f0c0c;
+    color: #7f0c0c;
+    border-radius: 25px;
+    padding: 10px 35px;
+    font-size: 1.0rem;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.boton-salir:hover {
+    background-color: #b61f1a;
+    color: white;
+    transform: scale(1.05);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenido del modal */
+.modal-content {
+    background-color: rgba(25, 11, 47, 0.82);
+    padding: 20px;
+    width: 40%;
+    border-radius: 8px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+
+
+.modal-buttons button {
+    margin: 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#confirmarSalir {
+    background-color: #aa1b0b;
+    color: white;
+}
+
+#cancelarSalir {
+    background-color: #0a50b9;
+    color: white;
+}
+

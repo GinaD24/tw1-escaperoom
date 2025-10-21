@@ -1,7 +1,7 @@
-/*package com.tallerwebi.infraestructura;
+package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.Ranking;
-import com.tallerwebi.dominio.RankingRepository;
+import com.tallerwebi.dominio.entidad.Ranking;
+import com.tallerwebi.dominio.interfaz.repositorio.RankingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -13,12 +13,10 @@ public class RankingRepositoryFake implements RankingRepository {
 
     @Override
     public void guardar(Ranking ranking) {
-        // No hace nada, solo para pruebas
     }
 
     @Override
     public Ranking buscarPorIdDeSalaYNombreDeUsuario(Integer idSala, String nombreUsuario) {
-        // Retorna null o algún objeto dummy si querés
         return null;
     }
 
@@ -32,4 +30,3 @@ public class RankingRepositoryFake implements RankingRepository {
         );
     }
 }
-*/

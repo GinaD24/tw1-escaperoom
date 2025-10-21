@@ -1,13 +1,16 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.entidad.Logro;
+import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioLogro;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Collections;
-import java.util.List;
+import javax.servlet.http.HttpSession;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,13 +23,13 @@ public class ServicioPerfilTest {
     private RepositorioUsuario repositorioUsuario;
 
     @Mock
-    private RankingRepository rankingRepository;
+    private HttpSession sessionMock;
 
     @Mock
     private RepositorioLogro repositorioLogro;
 
     @InjectMocks
-    private ServicioPerfilJugador servicioPerfilJugador;
+    private ServicioPerfilImpl servicioPerfilJugador;
 
     private Usuario usuarioMock;
     private Logro logro1;
@@ -50,20 +53,20 @@ public class ServicioPerfilTest {
 
     @Test
     void deberiaObtenerPerfilCorrectamente() {
-        when(repositorioUsuario.buscarPorId(1L)).thenReturn(usuarioMock);
+        when(repositorioUsuario.obtenerUsuarioPorId(1L)).thenReturn(usuarioMock);
+        when(sessionMock.getAttribute("id_usuario")).thenReturn(1L);
 
         Usuario perfil = servicioPerfilJugador.obtenerPerfil(1L);
 
         assertNotNull(perfil);
-        assertEquals("Jugador.Prueba", perfil.getNombre());
-        assertEquals("/img/perfil-default.png", perfil.getFotoPerfil());
+        assertEquals("Jugador.Prueba", perfil.getNombreUsuario());
 
-        verify(repositorioUsuario, times(1)).buscarPorId(1L);
+        verify(repositorioUsuario, times(1)).obtenerUsuarioPorId(1L);
     }
 
     @Test
     void deberiaLanzarErrorSiUsuarioNoExiste() {
-        when(repositorioUsuario.buscarPorId(99L)).thenReturn(null);
+        when(repositorioUsuario.obtenerUsuarioPorId(99L)).thenReturn(null);
 
         RuntimeException ex = assertThrows(RuntimeException.class,
                 () -> servicioPerfilJugador.obtenerPerfil(99L));

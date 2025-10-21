@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -12,6 +13,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tallerwebi.dominio.entidad.Ranking;
+import com.tallerwebi.dominio.excepcion.SalaInexistente;
+import com.tallerwebi.dominio.interfaz.repositorio.RankingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -84,8 +88,9 @@ public class ServicioRankingTest {
 
         when(rankingRepository.obtenerRankingPorSala(idSala)).thenReturn(rankingVacio);
 
-        servicioRanking.obtenerRankingPorSala(idSala);
-
+        assertThrows(SalaInexistente.class, () -> {
+            this.servicioRanking.obtenerRankingPorSala(idSala);
+        });
         assertThat(rankingVacio, is(empty()));
     }
 

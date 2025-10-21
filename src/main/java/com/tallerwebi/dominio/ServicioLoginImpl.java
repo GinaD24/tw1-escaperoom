@@ -1,6 +1,9 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.*;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,16 +52,14 @@ public class ServicioLoginImpl implements ServicioLogin {
         validarNombreUsuario(usuario.getNombreUsuario());
         validarFechaNacimiento(usuario.getFechaNacimiento());
 
-
-        //cambie UsuarioEncontrado por usuarioEmailExistente
         Usuario usuarioEmailExistente = repositorioUsuario.buscar(usuario.getEmail());
         if (usuarioEmailExistente != null) {
-            throw new UsuarioExistente();
+            throw new UsuarioExistente("Ya existe un usuario con ese Email");
         }
 
         Usuario usuarioNombreExistente = repositorioUsuario.buscarPorNombreUsuario(usuario.getNombreUsuario());
         if (usuarioNombreExistente != null) {
-            throw new UsuarioExistente();
+            throw new ValidacionInvalidaException("El nombre de usuario ya está registrado.");
         }
 
         LocalDate fechaNacimiento = usuario.getFechaNacimiento();
@@ -75,7 +76,7 @@ public class ServicioLoginImpl implements ServicioLogin {
 
         String contraseniaUsuario = usuario.getPassword();
 
-        if(contraseniaUsuario == null || contraseniaUsuario.isEmpty() || contraseniaUsuario.length() < 8){
+        if(contraseniaUsuario == null || contraseniaUsuario.length() < 8){
             throw new DatosIncompletosException("La contraseña debe tener al menos 8 caracteres");
         }
 
@@ -92,7 +93,7 @@ public class ServicioLoginImpl implements ServicioLogin {
         repositorioUsuario.guardar(usuario);
     }
 
-    // Métodos privados de validación (manuales, sin anotaciones)
+    //VALIDAICONES
     private void validarCamposObligatorios(Usuario usuario) throws DatosIncompletosException {
         if (usuario.getNombre() == null || usuario.getNombre().trim().isEmpty()) {
             throw new DatosIncompletosException("El nombre es obligatorio");
@@ -132,8 +133,8 @@ public class ServicioLoginImpl implements ServicioLogin {
     }
 
     private void validarNombreUsuario(String nombreUsuario) throws ValidacionInvalidaException {
-        if (nombreUsuario == null || nombreUsuario.length() < 3) {
-            throw new ValidacionInvalidaException("El nombre de usuario debe tener al menos 3 caracteres.");
+        if (nombreUsuario == null || nombreUsuario.length() < 4) {
+            throw new ValidacionInvalidaException("El nombre de usuario debe tener al menos 4 caracteres.");
         }
     }
 
