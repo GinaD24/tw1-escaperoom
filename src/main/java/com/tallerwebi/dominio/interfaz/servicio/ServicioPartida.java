@@ -15,11 +15,15 @@ public interface ServicioPartida {
 
     Pista obtenerSiguientePista(Long idAcertijo, Long id_usuario);
 
-    Boolean validarRespuesta(Long idAcertijo , String respuesta);
+    Boolean validarRespuesta(Long idAcertijo , String respuesta, Long idUsuario);
 
     Acertijo buscarAcertijoPorId(Long idAcertijo);
 
     Etapa obtenerEtapaPorId(Long idEtapa);
 
     void finalizarPartida(Long idUsuario, Boolean ganada);
+
+    boolean validarTiempo(Long id_usuario);
+
+    Partida obtenerPartidaActivaPorIdUsuario(Long idUsuario);
 }

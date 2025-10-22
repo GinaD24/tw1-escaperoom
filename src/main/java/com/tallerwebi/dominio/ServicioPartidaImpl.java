@@ -75,19 +75,26 @@ public class ServicioPartidaImpl implements ServicioPartida {
             }
 
         }
-        this.repositorioPartida.registrarPistaEnPartida(id_usuario);
+        if (pistaSeleccionada != null) {
+            this.repositorioPartida.registrarPistaEnPartida(id_usuario);
+            Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(id_usuario);
+            partida.setPuntaje(partida.getPuntaje() - 25);
+        }
+
         return pistaSeleccionada;
     }
 
     @Override
     @Transactional
-    public Boolean validarRespuesta(Long idAcertijo, String respuesta) {
+    public Boolean validarRespuesta(Long idAcertijo, String respuesta, Long idUsuario) {
+        Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
         boolean esCorrecta = false;
         Respuesta correcta =this.repositorioPartida.obtenerRespuestaCorrecta(idAcertijo);
         String[] palabrasIngresadas = respuesta.toLowerCase().split("\\s+");
 
         if(Arrays.asList(palabrasIngresadas).contains(correcta.getRespuesta().toLowerCase())){
             esCorrecta = true;
+            partida.setPuntaje(partida.getPuntaje() + 100);
         }
 
         return esCorrecta;
@@ -122,8 +129,36 @@ public class ServicioPartidaImpl implements ServicioPartida {
                 Long duracionSegundos = Duration.between(inicio, fin).getSeconds();
                 partida.setTiempoTotal(duracionSegundos);
             }
+            if(partida.getPuntaje() < 0){
+                partida.setPuntaje(0);
+            }
+
             this.repositorioPartida.finalizarPartida(partida);
         }
+    }
+
+    @Override
+    @Transactional
+    public boolean validarTiempo(Long id_usuario) {
+        Partida partida = repositorioPartida.obtenerPartidaActivaPorUsuario(id_usuario);
+        Sala salaPartida = partida.getSala();
+
+        LocalDateTime inicio = partida.getInicio();
+        LocalDateTime tiempoActual = LocalDateTime.now();
+        Long duracionMinutos = Duration.between(inicio, tiempoActual).toMinutes();
+
+        boolean tiempoValido = true;
+
+        if(duracionMinutos >= salaPartida.getDuracion()) {
+            tiempoValido = false;
+        }
+        return tiempoValido;
+    }
+
+    @Override
+    @Transactional
+    public Partida obtenerPartidaActivaPorIdUsuario(Long idUsuario) {
+        return this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
     }
 
     @Override

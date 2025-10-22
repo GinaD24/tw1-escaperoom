@@ -19,7 +19,7 @@ public class Partida {
     private Usuario usuario;
 
     @Column
-    private Integer puntaje;
+    private Integer puntaje = 0;
 
     @Column(nullable = false)
     private LocalDateTime inicio;
@@ -32,7 +32,7 @@ public class Partida {
     private Boolean esta_activa;
 
     @Column
-    private Integer pistasUsadas;
+    private Integer pistasUsadas = 0;
 
     @Column
     private Boolean ganada;

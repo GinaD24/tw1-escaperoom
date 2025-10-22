@@ -217,3 +217,13 @@ h3 {
     color: white;
 }
 
+.contador-timer {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+    background: rgba(25, 11, 47, 0.82);
+    padding: 10px 20px;
+    border-radius: 10px;
+    top: 15px;
+    right: 15px;
+}

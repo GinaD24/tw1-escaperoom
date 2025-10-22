@@ -230,10 +230,11 @@ public class ServicioPartidaImplTest {
         Acertijo acertijo = new Acertijo( "lalalal");
         Respuesta respuestaCorrecta = new Respuesta("Respuesta");
         Respuesta respuestaIngresada = new Respuesta("Respuesta");
+        Long idUsuario = 1L;
 
         when(repositorioPartida.obtenerRespuestaCorrecta(acertijo.getId())).thenReturn(respuestaCorrecta);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuestaIngresada.getRespuesta());
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuestaIngresada.getRespuesta(), idUsuario);
 
         verify(repositorioPartida).obtenerRespuestaCorrecta(acertijo.getId());
         assertTrue(validacionDeRespuesta);
@@ -244,13 +245,14 @@ public class ServicioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         Acertijo acertijo = new Acertijo( "lalalal");
+        Long idUsuario = 1L;
 
         Respuesta respuestaCorrecta = new Respuesta("Respuesta");
         Respuesta respuestaIngresada = new Respuesta("LA Respuesta INGRESADA");
 
         when(repositorioPartida.obtenerRespuestaCorrecta(acertijo.getId())).thenReturn(respuestaCorrecta);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuestaIngresada.getRespuesta());
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuestaIngresada.getRespuesta(), idUsuario);
 
         verify(repositorioPartida).obtenerRespuestaCorrecta(acertijo.getId());
         assertTrue(validacionDeRespuesta);
@@ -263,10 +265,11 @@ public class ServicioPartidaImplTest {
         Acertijo acertijo = new Acertijo( "lalalal");
         Respuesta respuestaCorrecta = new Respuesta("Respuesta");
         Respuesta respuestaIngresada = new Respuesta("akhsdgauysduiaRespuestahbsduykhagsdygasdyi");
+        Long idUsuario = 1L;
 
         when(repositorioPartida.obtenerRespuestaCorrecta(acertijo.getId())).thenReturn(respuestaCorrecta);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuestaIngresada.getRespuesta());
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuestaIngresada.getRespuesta(), idUsuario);
 
         verify(repositorioPartida).obtenerRespuestaCorrecta(acertijo.getId());
         assertFalse(validacionDeRespuesta);
