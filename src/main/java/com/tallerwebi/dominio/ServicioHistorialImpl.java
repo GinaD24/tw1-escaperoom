@@ -1,5 +1,8 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.entidad.Historial;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioHistorial;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioHistorial;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

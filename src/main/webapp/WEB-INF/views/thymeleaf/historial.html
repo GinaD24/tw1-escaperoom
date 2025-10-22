@@ -38,7 +38,7 @@
 <header class="w-full fixed top-0 left-0 z-10 py-8" style="background-color: #1a1a3b;">
     <div class="container-fluid flex justify-between items-center px-4 mx-auto">
         <div>
-            <a th:href="@{/inicio.html}">
+            <a th:href="@{/inicio/}">
                 <img class="logo-escape" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
             </a>
         </div>
@@ -59,40 +59,67 @@
 <div class="w-full max-w-4xl space-y-4 pt-8">
     <h1 class="text-3xl font-bold text-yellow-300 mb-6 border-b border-gray-700 pb-2">Historial de Partidas</h1>
 
-    <template id="match-template">
-        <div class="match-item p-4 rounded-lg shadow-xl flex flex-col sm:flex-row justify-between items-center gap-4">
+    <div th:if="${#lists.isEmpty(historial)}" class="text-center py-10 bg-gray-800 rounded-lg shadow-xl">
+        <p class="text-xl text-gray-400">Aún no has finalizado ninguna partida.</p>
+        <p class="text-sm text-gray-500 mt-2">¡Es hora de poner a prueba tus habilidades!</p>
+    </div>
+
+    <div id="match-list" class="space-y-3" th:unless="${#lists.isEmpty(historial)}">
+        <div th:each="partida : ${historial}"
+             class="match-item p-4 rounded-lg shadow-xl flex flex-col sm:flex-row justify-between items-center gap-4 transition duration-300 ease-in-out hover:scale-[1.01]"
+
+             th:classappend="${partida.ganada ? 'match-victory' : 'match-defeat'}">
 
             <div class="w-full sm:w-1/4 flex flex-col items-center sm:items-start text-center sm:text-left">
-                <span class="match-resultado text-2xl font-bold uppercase"></span>
-                <span class="match-dificultad text-sm font-semibold mt-1 p-1 rounded-sm"></span>
+                <span th:text="${partida.ganada ? 'VICTORIA' : 'DERROTA'}"
+                      class="match-resultado text-2xl font-bold uppercase"
+                      th:classappend="${partida.ganada ? 'text-green-400' : 'text-red-400'}">
+                    RESULTADO
+                </span>
+
+                <span th:text="${partida.sala.dificultad}"
+                      class="match-dificultad text-sm font-semibold mt-1 p-1 rounded-sm bg-gray-600 text-yellow-300">
+                    DIFICULTAD
+                </span>
             </div>
 
             <div class="w-full sm:w-1/4 flex flex-col items-center sm:items-start text-center sm:text-left">
-                <span class="match-datos text-sm text-gray-300"></span>
-                <span class="match-tiempo text-xl font-bold mt-1"></span>
-                <span class="text-xs text-gray-400">Tiempo de Escape</span>
+                <span th:text="${#temporals.format(partida.fechaCreacion, 'dd/MM/yyyy')}"
+                      class="match-datos text-sm text-gray-300">
+                    FECHA
+                </span>
+
+                <span th:text="|${partida.sala.duracion} min|"
+                      class="match-tiempo text-xl font-bold mt-1">
+                    00 min
+                </span>
+                <span class="text-xs text-gray-400">Duración Estándar</span>
             </div>
 
             <div class="w-full sm:w-1/4 flex flex-col items-center sm:items-start text-center sm:text-left">
                 <div class="match-clues text-xl font-bold">
-                    <span class="clues-used text-yellow-300"></span> / <span class="clues-total text-gray-400">5</span>
-                </div>
+                    <span th:text="${partida.pistasUsadas}" class="clues-used text-yellow-300">X</span> /
+                    <span class="clues-total text-gray-400">5</span> </div>
                 <span class="text-xs text-gray-400">Pistas Utilizadas</span>
             </div>
 
             <div class="w-full sm:w-1/4 flex justify-center sm:justify-end">
                 <div class="flex items-center space-x-2">
-                    <img src="" class="room-image w-14 h-18 pr-4 border-yellow-300" alt="Sala Jugada">
+                    <img th:src="@{${partida.sala.imagen}}"
+                         class="room-image w-14 h-18 pr-4 border-yellow-300"
+                         alt="Sala Jugada">
+
                     <div class="flex flex-col">
-                        <span class="match-room-name text-lg font-semibold"></span>
-                        <span class="text-xs text-gray-400">Tipo de Sala</span>
+                        <span th:text="${partida.sala.nombre}" class="match-room-name text-lg font-semibold">
+                            Nombre de la Sala
+                        </span>
+                        <span class="text-xs text-gray-400">Sala Jugada</span>
                     </div>
                 </div>
             </div>
         </div>
-    </template>
-    <div id="match-list" class="space-y-3">
     </div>
+</div>
 
 </div>
 

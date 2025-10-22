@@ -1,4 +1,6 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.interfaz.servicio;
+
+import com.tallerwebi.dominio.entidad.Historial;
 
 import java.util.List;
 

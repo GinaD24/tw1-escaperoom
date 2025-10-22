@@ -1,5 +1,7 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.entidad.Historial;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioHistorial;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.IDUsuarioInvalido;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioPerfil;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequestMapping("/perfil")

@@ -1,7 +1,7 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.RepositorioHistorial;
-import com.tallerwebi.dominio.Historial;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioHistorial;
+import com.tallerwebi.dominio.entidad.Historial;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

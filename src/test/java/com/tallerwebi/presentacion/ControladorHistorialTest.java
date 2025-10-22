@@ -4,65 +4,84 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.Historial;
-import com.tallerwebi.dominio.ServicioHistorial;
-import com.tallerwebi.dominio.ServicioPerfil; // IMPORTANTE: Nueva dependencia
-import com.tallerwebi.dominio.Usuario; // Necesario para el mock de usuario
+import com.tallerwebi.dominio.entidad.Historial;
+import com.tallerwebi.dominio.entidad.Partida;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioHistorial;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioPerfil; // IMPORTANTE: Nueva dependencia
+import com.tallerwebi.dominio.entidad.Usuario; // Necesario para el mock de usuario
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.servlet.ModelAndView; // Aunque no se use, puede mantenerse
+import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 public class ControladorHistorialTest {
 
 
-    ServicioHistorial servicioHistorial;
-    ServicioPerfil servicioPerfil;
-    ControladorHistorial controlador;
+
+
+   private ServicioHistorial servicioHistorial;
+    private ServicioPartida servicioPartida;
+
+    private ControladorHistorial controladorHistorial;
 
     @BeforeEach
     public void init() {
-        servicioHistorial = mock(ServicioHistorial.class);
-        servicioPerfil = mock(ServicioPerfil.class);
+        servicioPartida = mock(ServicioPartida.class);
 
-        controlador = new ControladorHistorial(servicioHistorial, servicioPerfil);
+        controladorHistorial = new ControladorHistorial(servicioPartida);
     }
 
     @Test
-    void dadoQueRegistroUnaPartidaExitosaEntoncesSeGuardaYRedirigeAlPerfil() {
+    public void obtenerHistorialDeberiaRedirigirALoginSiUsuarioEsNulo() {
 
-        String jugadorEmail = "alan@mail.com";
-        Long usuarioId = 5L;
-        Historial historial = new Historial(1, jugadorEmail, "Sala1", LocalDateTime.now(), true);
+        Long idUsuarioNulo = null;
 
-        Usuario usuarioMock = mock(Usuario.class);
-        when(usuarioMock.getId()).thenReturn(usuarioId);
+        ModelAndView modelAndView = controladorHistorial.obtenerHistorial(idUsuarioNulo);
 
-        when(servicioPerfil.buscarPorEmail(jugadorEmail)).thenReturn(usuarioMock);
+        assertThat(modelAndView.getViewName(), is("redirect:/login"));
 
-        String resultado = controlador.registrar(historial);
-
-        verify(servicioHistorial).registrarPartida(historial);
-        verify(servicioPerfil).buscarPorEmail(jugadorEmail);
-        assertThat(resultado, is("redirect:/perfil/" + usuarioId + "/historial"));
+        verify(servicioPartida, never()).obtenerHistorialDePartida(anyLong());
     }
 
     @Test
-    void dadoQueRegistroUnaPartidaPeroElUsuarioNoExisteEntoncesRedirigeAInicio() {
-        String jugadorEmail = "usuario_no_existe@mail.com";
-        Historial historial = new Historial(1, jugadorEmail, "Sala1", LocalDateTime.now(), true);
+    public void obtenerHistorialDeberiaRetornarVistaConPartidas() {
 
+        final Long ID_USUARIO = 1L;
 
-        when(servicioPerfil.buscarPorEmail(jugadorEmail)).thenReturn(null);
+        Partida partidaMock = mock(Partida.class);
+        List<Partida> historialEsperado = List.of(partidaMock);
 
-        String resultado = controlador.registrar(historial);
+        when(servicioPartida.obtenerHistorialDePartida(ID_USUARIO)).thenReturn(historialEsperado);
 
-        verify(servicioHistorial).registrarPartida(historial);
-        verify(servicioPerfil).buscarPorEmail(jugadorEmail);
-        assertThat(resultado, is("redirect:/inicio"));
+        ModelAndView modelAndView = controladorHistorial.obtenerHistorial(ID_USUARIO);
+
+        assertThat(modelAndView.getViewName(), is("historial"));
+
+        assertThat(modelAndView.getModel().get("historial"), is(historialEsperado));
+
+        verify(servicioPartida, times(1)).obtenerHistorialDePartida(ID_USUARIO);
     }
 
+    @Test
+    public void obtenerHistorialDeberiaRetornarVistaVaciaSiNoHayPartidas() {
+
+        final Long ID_USUARIO = 2L;
+
+        List<Partida> historialVacio = List.of();
+
+        when(servicioPartida.obtenerHistorialDePartida(ID_USUARIO)).thenReturn(historialVacio);
+
+        ModelAndView modelAndView = controladorHistorial.obtenerHistorial(ID_USUARIO);
+
+        assertThat(modelAndView.getViewName(), is("historial"));
+
+        assertThat(modelAndView.getModel().get("historial"), is(historialVacio));
+
+        verify(servicioPartida, times(1)).obtenerHistorialDePartida(ID_USUARIO);
+    }
 }

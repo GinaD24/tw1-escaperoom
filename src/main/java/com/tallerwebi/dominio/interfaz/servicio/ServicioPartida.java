@@ -5,6 +5,8 @@ import com.tallerwebi.dominio.entidad.Etapa;
 import com.tallerwebi.dominio.entidad.Partida;
 import com.tallerwebi.dominio.entidad.Pista;
 
+import java.util.List;
+
 public interface ServicioPartida {
 
     void guardarPartida(Partida partida, Long idUsuario, Integer idSala);
@@ -22,4 +24,6 @@ public interface ServicioPartida {
     Etapa obtenerEtapaPorId(Long idEtapa);
 
     void finalizarPartida(Long idUsuario, Boolean ganada);
+
+    List<Partida> obtenerHistorialDePartida(Long idUsuario);
 }

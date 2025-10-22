@@ -5,6 +5,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.entidad.Historial;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioHistorial;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioHistorial;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -2,6 +2,7 @@ package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.dominio.excepcion.EtapaInexistente;
+import com.tallerwebi.dominio.excepcion.IDUsuarioInvalido;
 import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPartida;
@@ -175,5 +176,12 @@ public class ServicioPartidaImpl implements ServicioPartida {
         }
 
         return acertijoSeleccionado;
+    }
+
+    public List<Partida> obtenerHistorialDePartida(Long idUsuario) {
+        if (idUsuario == null) {
+            throw new IDUsuarioInvalido();
+        }
+        return repositorioPartida.obtenerHistorialDePartida(idUsuario);
     }
 }

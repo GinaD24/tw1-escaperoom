@@ -1,7 +1,7 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -56,9 +56,22 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
                 .uniqueResult();
     }
 
+    @Override
+    public Usuario buscarPorId(Long id) {
+        return (Usuario) sessionFactory.getCurrentSession().createCriteria(Usuario.class)
+                .add(Restrictions.eq("id", id))
+                .uniqueResult();
+    }
+
     public Usuario obtenerUsuarioPorId(Long id) {
         return sessionFactory.getCurrentSession().get(Usuario.class, id);
     }
+
+    @Override
+    public Usuario buscarPorEmail(String email) {
+        return null;
+    }
+
 //    @Transactional
 //    public Usuario obtenerUsuarioDePrueba() {
 //        Session session = sessionFactory.getCurrentSession();

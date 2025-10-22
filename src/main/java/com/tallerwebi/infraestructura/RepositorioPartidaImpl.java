@@ -63,7 +63,7 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
     }
 
     @Override
-    public Integer obtenerPistasUsadas(Long idAcertijo, Long  id_usuario) {
+    public Integer obtenerPistasUsadas(Long idAcertijo, Long id_usuario) {
         String hql = "SELECT au.pistasUsadas FROM AcertijoUsuario au WHERE au.acertijo.id = :idAcertijo AND au.usuario.id = :id_usuario";
         Query<Integer> query = this.sessionFactory.getCurrentSession().createQuery(hql, Integer.class);
         query.setParameter("idAcertijo", idAcertijo);
@@ -77,7 +77,7 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
                 "SET au.pistasUsadas = au.pistasUsadas + 1 " +
                 "WHERE au.acertijo.id = :idAcertijo AND au.usuario.id = :idUsuario";
 
-         int updated = sessionFactory.getCurrentSession()
+        int updated = sessionFactory.getCurrentSession()
                 .createQuery(hql)
                 .setParameter("idAcertijo", idAcertijo)
                 .setParameter("idUsuario", idUsuario)
@@ -144,5 +144,12 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
                 .executeUpdate();
     }
 
-
+    @Override
+    public List<Partida> obtenerHistorialDePartida(Long idUsuario) {
+        String hql = "SELECT p FROM Partida p JOIN FETCH p.sala s WHERE p.usuario.id = :idUsuario" +
+                " AND p.esta_activa = false";
+        Query<Partida> query = this.sessionFactory.getCurrentSession().createQuery(hql, Partida.class);
+        query.setParameter("idUsuario", idUsuario);
+        return query.getResultList();
+    }
 }

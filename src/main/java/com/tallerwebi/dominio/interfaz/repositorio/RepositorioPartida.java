@@ -34,4 +34,6 @@ public interface RepositorioPartida {
     void finalizarPartida(Partida partida);
 
     void registrarPistaEnPartida(Long idUsuario);
+
+    List<Partida> obtenerHistorialDePartida(Long idUsuario);
 }
