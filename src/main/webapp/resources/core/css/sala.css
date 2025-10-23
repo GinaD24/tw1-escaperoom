@@ -20,17 +20,20 @@ header {
     align-items: center;
     text-align: center;
     padding-top:35px;
+    min-height: 600px;
     backdrop-filter: blur(2px);
 }
 
-.partida-ganada{
-    background-color: rgba(44, 13, 90, 0.45);
-    padding-top:90px;
-    padding-bottom:90px;
+.partida-finalizada{
+    background-color: rgba(15, 4, 33, 0.32);
+    padding: 50px;
     width:30%;
     margin: 100px auto 0 ;
-    border-radius: 15px;
-    font-size: 3.5rem;
+    border-radius: 20px;
+}
+.titulo-final{
+    font-size: 4.5rem;
+    font-family: 'Rajdhani', sans-serif;
 }
 .logo-escape {
     position: absolute;
@@ -68,13 +71,34 @@ header {
     width: 120px;
     margin: 1.5rem 0;
 }
+.btn-success{
+    background: #198754;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.3rem;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    margin: 0.5rem;
+}
+.btn-success:hover {
+    background: #198754;
+    color: #9efec8;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.3rem;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    margin: 0.5rem;
+}
 
 .btn-primary {
     background: #004aad;
     border: none;
     border-radius: 50px;
     font-size: 1.3rem;
-    padding: 10px 70px;
+    padding: 10px 60px;
     margin: 0.5rem;
 }
 .btn-primary:hover {
@@ -83,7 +107,7 @@ header {
     border: none;
     border-radius: 50px;
     font-size: 1.3rem;
-    padding: 10px 70px;
+    padding: 10px 60px;
     margin: 0.5rem;
 }
 
@@ -95,7 +119,7 @@ header {
 }
 
 .nota {
-    margin-top: 2rem;
+    margin-top: 5rem;
     font-size: 0.8rem;
     opacity: 0.7;
 }

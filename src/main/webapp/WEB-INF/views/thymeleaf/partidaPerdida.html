@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Sala</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+
+  <link rel="stylesheet" th:href="@{/css/sala.css}"/>
+</head>
+<body th:style="|background-image: url('@{/img/{img}(img=${sala.imagenPerdida})}');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;|">
+
+
+<header>
+  <nav class="navbar navbar-expand-lg mb-5">
+    <div class="container-fluid">
+      <a class="navbar-brand" th:href="@{/inicio/}">
+        <img class="logo-escape" th:src="@{/img/Logo.png}" alt="Logo">
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main class="main-container">
+
+  <div class="partida-finalizada text-center mt-4">
+    <h1 class="titulo-final fw-bold">Perdiste!</h1>
+    <p class="fs-5" th:text="'No lograste escapar de ' + ${sala.nombre}"></p>
+
+    <div class="d-flex justify-content-center gap-3 mt-3">
+      <a th:href="@{/inicio/}" class="btn btn-success">Ir al inicio</a>
+      <a th:href="@{/partida/sala_{idSala}(idSala=${sala.id})}" class="btn btn-primary">Reintentar</a>
+    </div>
+
+  </div>
+
+</main>
+<p class="nota mb-5 position-absolute bottom-0 start-50 translate-middle-x">
+  Te deseamos mejor suerte la proxima
+</p>
+
+</body>
+</html>

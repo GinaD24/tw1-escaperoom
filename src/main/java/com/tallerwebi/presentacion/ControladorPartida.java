@@ -163,18 +163,20 @@ public class ControladorPartida {
         if (ganada == null) ganada = false;
 
         this.servicioPartida.finalizarPartida(idUsuario, ganada);
-        datosPartidaSesion.limpiarSesionPartida();
+
+        ModelMap modelo = new ModelMap();
+        Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
+        modelo.put("sala", sala);
 
         if (ganada) {
-            ModelMap modelo = new ModelMap();
-            Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
-            modelo.put("sala", sala);
             return new ModelAndView("partidaGanada", modelo);
 
         } else {
-            return new ModelAndView("redirect:/inicio/");
+            return new ModelAndView("partidaPerdida", modelo);
         }
     }
+
+
     @GetMapping("/validarTiempo")
     private ModelAndView validarTiempo(@SessionAttribute("id_usuario") Long id_usuario) {
         datosPartidaSesion.setPartidaGanada(false);
@@ -182,17 +184,20 @@ public class ControladorPartida {
         return new ModelAndView("redirect:/partida/finalizarPartida");
     }
 
+
     @GetMapping("/validar/{idSala}/{numeroEtapa}")
     public ModelAndView accesoInvalido(@PathVariable Integer idSala,
                                        @PathVariable Integer numeroEtapa) {
         return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa" + numeroEtapa);
     }
 
+
     private ModelAndView redirigirASalaYEtapaActual() {
         Integer idSalaSesion = datosPartidaSesion.getIdSalaActual();
         Integer numeroEtapaSesion = datosPartidaSesion.getNumeroEtapaActual();
         return new ModelAndView("redirect:/partida/sala" + idSalaSesion + "/etapa" + numeroEtapaSesion);
     }
+
 
     private boolean esSesionValida(DatosPartidaSesion datosPartida, Integer idSala, Integer numeroEtapa) {
         Integer idSalaSesion = datosPartida.getIdSalaActual();
