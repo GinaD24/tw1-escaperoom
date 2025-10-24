@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.*;
+import com.tallerwebi.dominio.enums.TipoAcertijo;
 import com.tallerwebi.dominio.excepcion.EtapaInexistente;
 import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
@@ -17,7 +18,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 
@@ -89,12 +92,53 @@ public class ServicioPartidaImpl implements ServicioPartida {
     public Boolean validarRespuesta(Long idAcertijo, String respuesta, Long idUsuario) {
         Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
         boolean esCorrecta = false;
-        Respuesta correcta =this.repositorioPartida.obtenerRespuestaCorrecta(idAcertijo);
-        String[] palabrasIngresadas = respuesta.toLowerCase().split("\\s+");
 
-        if(Arrays.asList(palabrasIngresadas).contains(correcta.getRespuesta().toLowerCase())){
-            esCorrecta = true;
-            partida.setPuntaje(partida.getPuntaje() + 100);
+        Acertijo acertijo = this.repositorioPartida.buscarAcertijoPorId(idAcertijo);
+
+
+        if(acertijo.getTipo().equals(TipoAcertijo.ADIVINANZA)){
+            String[] palabrasIngresadas = respuesta.toLowerCase().split("\\s+");
+
+            Respuesta correcta =this.repositorioPartida.obtenerRespuestaCorrecta(idAcertijo);
+            if(Arrays.asList(palabrasIngresadas).contains(correcta.getRespuesta().toLowerCase())){
+                esCorrecta = true;
+                partida.setPuntaje(partida.getPuntaje() + 100);
+            }
+        }
+        if (acertijo.getTipo().equals(TipoAcertijo.ORDENAR_IMAGEN)) {
+            List<Long> ordenSeleccionado = Arrays.stream(respuesta.split(","))
+                    .map(Long::valueOf)
+                    .collect(Collectors.toList());
+
+            List<Long> ordenCorrecto = this.repositorioPartida.obtenerOrdenDeImgCorrecto(idAcertijo);
+
+            if (ordenSeleccionado.equals(ordenCorrecto)) {
+                esCorrecta = true;
+                partida.setPuntaje(partida.getPuntaje() + 100);
+            }
+        }
+
+        if (acertijo.getTipo().equals(TipoAcertijo.DRAG_DROP)) {
+
+            Map<Long, String> respuestaUsuario = Arrays.stream(respuesta.split(","))
+                    .map(pair -> pair.split(":"))
+                    .filter(arr -> arr.length == 2)
+                    .collect(Collectors.toMap(
+                            arr -> Long.valueOf(arr[0]), // id de imagen
+                            arr -> arr[1]               // categoría donde la puso
+                    ));
+
+            List<DragDropItem> itemsCorrectos = this.repositorioPartida.obtenerItemsDragDrop(idAcertijo);
+
+            boolean todoCorrecto = itemsCorrectos.stream()
+                    .allMatch(item ->
+                            respuestaUsuario.containsKey(item.getId()) &&
+                                    respuestaUsuario.get(item.getId()).equals(item.getCategoriaCorrecta())
+                    );
+            if (todoCorrecto) {
+                esCorrecta = true;
+                partida.setPuntaje(partida.getPuntaje() + 100);
+            }
         }
 
         return esCorrecta;
@@ -160,6 +204,20 @@ public class ServicioPartidaImpl implements ServicioPartida {
     public Partida obtenerPartidaActivaPorIdUsuario(Long idUsuario) {
         return this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
     }
+
+    @Override
+    @Transactional
+    public List<String> obtenerCategoriasDelAcertijoDragDrop(Long idAcertijo) {
+        Acertijo acertijo = this.repositorioPartida.buscarAcertijoPorId(idAcertijo);
+
+        return acertijo.getDragDropItems()
+                .stream()
+                .map(DragDropItem::getCategoriaCorrecta)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+
 
     @Override
     @Transactional

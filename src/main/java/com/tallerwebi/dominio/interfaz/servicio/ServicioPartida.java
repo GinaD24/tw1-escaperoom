@@ -1,9 +1,8 @@
 package com.tallerwebi.dominio.interfaz.servicio;
 
-import com.tallerwebi.dominio.entidad.Acertijo;
-import com.tallerwebi.dominio.entidad.Etapa;
-import com.tallerwebi.dominio.entidad.Partida;
-import com.tallerwebi.dominio.entidad.Pista;
+import com.tallerwebi.dominio.entidad.*;
+
+import java.util.List;
 
 public interface ServicioPartida {
 
@@ -26,4 +25,6 @@ public interface ServicioPartida {
     boolean validarTiempo(Long id_usuario);
 
     Partida obtenerPartidaActivaPorIdUsuario(Long idUsuario);
+
+    List<String> obtenerCategoriasDelAcertijoDragDrop(Long idAcertijo);
 }

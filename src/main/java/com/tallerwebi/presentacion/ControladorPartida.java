@@ -1,6 +1,7 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.entidad.*;
+import com.tallerwebi.dominio.enums.TipoAcertijo;
 import com.tallerwebi.dominio.excepcion.EtapaInexistente;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping("/partida")
@@ -87,6 +89,11 @@ public class ControladorPartida {
 
             actualizarSesion(datosPartidaSesion, dtoDatosPartida);
 
+            if(dtoDatosPartida.getAcertijo().getTipo().equals(TipoAcertijo.DRAG_DROP)){
+                List<String> categorias = this.servicioPartida.obtenerCategoriasDelAcertijoDragDrop(dtoDatosPartida.getAcertijo().getId());
+                modelo.put("categorias", categorias);
+            }
+
             Partida partida = servicioPartida.obtenerPartidaActivaPorIdUsuario(idUsuario);
             modelo.put("partida", partida);
             modelo.put("salaElegida", dtoDatosPartida.getSala());
@@ -112,7 +119,6 @@ public class ControladorPartida {
         }else{
            pistaTexto = pista.getDescripcion();
         }
-
         return pistaTexto;
     }
 
@@ -126,6 +132,10 @@ public class ControladorPartida {
         Etapa etapa = this.servicioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
         Acertijo acertijo = this.servicioPartida.buscarAcertijoPorId(id_acertijo);
 
+        if(acertijo.getTipo().equals(TipoAcertijo.DRAG_DROP)){
+            List<String> categorias = this.servicioPartida.obtenerCategoriasDelAcertijoDragDrop(id_acertijo);
+            modelo.put("categorias", categorias);
+        }
 
         Partida partida = servicioPartida.obtenerPartidaActivaPorIdUsuario(id_usuario);
         modelo.put("partida", partida);

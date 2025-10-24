@@ -1,0 +1,24 @@
+<div th:fragment="ordenar">
+
+
+  <form th:action="@{/partida/validar/{idSala}/{numeroEtapa}(idSala=${salaElegida.id}, numeroEtapa=${etapa.numero})}"
+        method="post"
+        class="d-flex flex-row align-items-center justify-content-center">
+
+    <div id="imagenes-container" class="d-flex gap-3 flex-wrap justify-content-center">
+      <div th:each="img, iter : ${acertijo.imagenes}" class="pos-relative">
+        <img th:src="@{'/img/acertijo/' + ${img.nombreArchivo}}"
+             th:data-id="${img.id}"
+             class="img-acertijo img-click"/>
+
+        <span class="numero-seleccion"></span>
+      </div>
+    </div>
+    <input type="hidden" name="respuesta" id="ordenImagenes">
+
+    <div>
+      <button type="submit" class="btn btn-enviar mt-3 ms-3">Enviar</button>
+    </div>
+
+  </form>
+</div>

@@ -36,34 +36,34 @@ INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
                                                              ('Ático', 5, 'El último piso. Entre baúles y objetos olvidados yace el secreto final que te permitirá encontrar la salida de la mansión.', 1, 'etapa-atico.png');
 
 -- ACERTIJOS ETAPA 1: Lobby (id_etapa = 1)
-INSERT INTO Acertijo (descripcion, id_etapa) VALUES
-                                                 ('Poseo un rostro sin alma y te devuelvo la mirada sin pestañear. Contengo tu reflejo, pero mi interior es un vacío helado.', 1),
-                                                 ('Mis dos manos recorren mi rostro sin cesar, devorando el tiempo que no volverá. Mi voz es un pulso constante que mide tu estadía en este lugar.', 1),
-                                                 ('Nací de la luz, pero vivo en la penumbra. Soy tu fiel compañera bajo el sol, pero la oscuridad total me hace desaparecer.', 1);
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+                                                 ('ADIVINANZA','Poseo un rostro sin alma y te devuelvo la mirada sin pestañear. Contengo tu reflejo, pero mi interior es un vacío helado.', 1),
+                                                 ('ADIVINANZA','Mis dos manos recorren mi rostro sin cesar, devorando el tiempo que no volverá. Mi voz es un pulso constante que mide tu estadía en este lugar.', 1),
+                                                 ('ADIVINANZA','Nací de la luz, pero vivo en la penumbra. Soy tu fiel compañera bajo el sol, pero la oscuridad total me hace desaparecer.', 1);
 
 -- ACERTIJOS ETAPA 2: Biblioteca (id_etapa = 2)
-INSERT INTO Acertijo (descripcion, id_etapa) VALUES
-                                                 ('Mis hojas guardan bosques y mis lomos sostienen mundos. Hablo sin voz, tejo historias en silencio para quien se atreva a abrirme.', 2),
-                                                 ('Mi cuerpo de cera se consume para darte luz. Lloro lágrimas ardientes mientras mi vida se extingue lentamente en la penumbra.', 2),
-                                                 ('Soy un río de noche líquida, nacido para dar cuerpo a los pensamientos. Con mi esencia, las palabras se graban y los secretos perduran en el papel.', 2);
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+                                                 ('ADIVINANZA','Mis hojas guardan bosques y mis lomos sostienen mundos. Hablo sin voz, tejo historias en silencio para quien se atreva a abrirme.', 2),
+                                                 ('ADIVINANZA','Mi cuerpo de cera se consume para darte luz. Lloro lágrimas ardientes mientras mi vida se extingue lentamente en la penumbra.', 2),
+                                                 ('ADIVINANZA','Soy un río de noche líquida, nacido para dar cuerpo a los pensamientos. Con mi esencia, las palabras se graban y los secretos perduran en el papel.', 2);
 
 -- ACERTIJOS ETAPA 3: Salón (id_etapa = 3)
-INSERT INTO Acertijo (descripcion, id_etapa) VALUES
-                                                 ('Una dentadura de marfil y ébano espera ser tocada. No muerdo, pero si me presionas con arte, liberaré los ecos de una triste melodía.', 3),
-                                                 ('Reino en la ausencia de todo sonido. Me puedes sentir en el aire, pero si pronuncias mi nombre, me habrás roto.', 3),
-                                                 ('Soy una cascada de cristal congelada en el tiempo. Cuelgo sobre tus cabezas, portador de una luz que ya no existe, reflejando glorias pasadas.', 3);
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+                                                 ('ADIVINANZA','Una dentadura de marfil y ébano espera ser tocada. No muerdo, pero si me presionas con arte, liberaré los ecos de una triste melodía.', 3),
+                                                 ('ADIVINANZA','Reino en la ausencia de todo sonido. Me puedes sentir en el aire, pero si pronuncias mi nombre, me habrás roto.', 3),
+                                                 ('ADIVINANZA','Soy una cascada de cristal congelada en el tiempo. Cuelgo sobre tus cabezas, portador de una luz que ya no existe, reflejando glorias pasadas.', 3);
 
 -- ACERTIJOS ETAPA 4: Despacho (id_etapa = 4)
-INSERT INTO Acertijo (descripcion, id_etapa) VALUES
-                                                 ('Mis dientes no mastican y mi cuello no sostiene una cabeza. Fui forjada para guardar secretos y solo me rindo ante la mano correcta.', 4),
-                                                 ('No soy grande, pero hago que el mundo pequeño crezca ante tus ojos. Ayudo a leer lo que el tiempo ha borrado y a encontrar lo que se esconde a simple vista.', 4),
-                                                 ('No tengo brazos, pero siempre apunto a un lugar. No tengo piernas, pero te ayudo a caminar. Mi aguja siempre tiembla buscando su hogar.', 4);
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+                                                 ('ADIVINANZA','Mis dientes no mastican y mi cuello no sostiene una cabeza. Fui forjada para guardar secretos y solo me rindo ante la mano correcta.', 4),
+                                                 ('ADIVINANZA','No soy grande, pero hago que el mundo pequeño crezca ante tus ojos. Ayudo a leer lo que el tiempo ha borrado y a encontrar lo que se esconde a simple vista.', 4),
+                                                 ('ADIVINANZA','No tengo brazos, pero siempre apunto a un lugar. No tengo piernas, pero te ayudo a caminar. Mi aguja siempre tiembla buscando su hogar.', 4);
 
 -- ACERTIJOS ETAPA 5: Ático (id_etapa = 5)
-INSERT INTO Acertijo (descripcion, id_etapa) VALUES
-                                                 ('Me poso en todo lo que olvidas, me levanto con la brisa. Soy un testigo silencioso del paso del tiempo.', 5),
-                                                 ('Soy un instante congelado, una memoria atrapada en papel. Mi mundo no tiene sonido ni movimiento, solo el eco de una sonrisa que ya no está.', 5),
-                                                 ('Soy la promesa al final del pasillo, la luz tras la última puerta. No soy un objeto, sino un destino. Has resuelto todo para encontrarme.', 5);
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+                                                 ('ADIVINANZA','Me poso en todo lo que olvidas, me levanto con la brisa. Soy un testigo silencioso del paso del tiempo.', 5),
+                                                 ('ADIVINANZA','Soy un instante congelado, una memoria atrapada en papel. Mi mundo no tiene sonido ni movimiento, solo el eco de una sonrisa que ya no está.', 5),
+                                                 ('ADIVINANZA','Soy la promesa al final del pasillo, la luz tras la última puerta. No soy un objeto, sino un destino. Has resuelto todo para encontrarme.', 5);
 
 -- PISTAS Y RESPUESTAS PARA ACERTIJOS 1-3 (Etapa 1)
 INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Busca tu propio reflejo en la sala.', 1, 1);
@@ -116,3 +116,31 @@ INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('FOTOGRAFIA'
 INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Has resuelto todo, solo queda un último paso: cruzar el umbral.', 1, 15);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('SALIDA', TRUE, 15);
 
+INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
+                                                                     ('Entrada', 1, 'La puerta del laboratorio se cierra detrás de ti. Debes reorganizar los componentes del experimento para avanzar.', 2, 'etapa-entrada-laboratorio.png'),
+                                                                     ('Sala de Reactivos', 2, 'Botellas y tubos de ensayo llenos de líquidos de colores te rodean. Organízalos correctamente para desbloquear la siguiente puerta.', 2, 'etapa-reactivos-laboratorio.png'),
+                                                                     ('Mesa de Experimentos', 3, 'Los instrumentos sobre la mesa están desordenados. Solo al colocarlos en el orden correcto podrás continuar.', 2, 'etapa-mesa-laboratorio.png'),
+                                                                     ('Sala de Microscopios', 4, 'Observa las muestras y ordénalas según la secuencia correcta de análisis.', 2, 'etapa-microscopios.png'),
+                                                                     ('Almacén de Equipos', 5, 'Hay varios aparatos de laboratorio tirados por todas partes. Organízalos para avanzar.', 2, 'etapa-almacen-laboratorio.png'),
+                                                                     ('Cámara de Cultivos', 6, 'Las placas de cultivo contienen diferentes bacterias. Debes ordenarlas según su ciclo de crecimiento.', 2, 'etapa-camara-laboratorio.png'),
+                                                                     ('Oficina del Científico', 7, 'El escritorio del científico tiene papeles y herramientas. Colócalos en la secuencia correcta para entender su investigación.', 2, 'etapa-oficina-laboratorio.png'),
+                                                                     ('Laboratorio Secreto', 8, 'El corazón del laboratorio. Solo ordenando correctamente todos los elementos del gran experimento podrás acceder al resultado final.', 2, 'etapa-secreto-laboratorio.png');
+
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+                                                       ('ORDENAR_IMAGEN', 'Observa los frascos de diferentes colores. Organízalos siguiendo el cambio gradual de tonalidad de claro a oscuro.', 6),
+                                                       ('DRAG_DROP', 'Clasifica correctamente los materiales de laboratorio en sus categorías correspondientes.', 7),
+                                                        ('ADIVINANZA', 'Clasifica correctamente los materiales de laboratorio en sus categorías correspondientes.', 8);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
+    (16, 'img-frasco1.png', 2),
+    (16, 'img-frasco2.png', 3),
+    (16, 'img-frasco3.png', 1),
+    (16, 'img-frasco4.png', 4);
+
+INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
+                                                                         (17, 'Beaker.png', 'Vidrio'),
+                                                                         (17, 'Probeta.png', 'Vidrio'),
+                                                                         (17, 'Guantes.png', 'Proteccion'),
+                                                                         (17, 'Mascarilla.png', 'Proteccion'),
+                                                                         (17, 'ReactivoA.png', 'Quimicos'),
+                                                                         (17, 'ReactivoB.png', 'Quimicos');
