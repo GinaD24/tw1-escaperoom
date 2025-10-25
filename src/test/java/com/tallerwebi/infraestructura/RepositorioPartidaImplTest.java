@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.dominio.enums.Dificultad;
+import com.tallerwebi.dominio.enums.TipoAcertijo;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPartida;
 import com.tallerwebi.infraestructura.config.HibernateTestInfraestructuraConfig;
 import org.hibernate.SessionFactory;
@@ -80,10 +81,13 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo1 = new Acertijo( "a1");
         acertijo1.setEtapa(etapa);
+        acertijo1.setTipo(TipoAcertijo.ADIVINANZA);
         Acertijo acertijo2 = new Acertijo( "a2");
         acertijo2.setEtapa(etapa);
+        acertijo2.setTipo(TipoAcertijo.ADIVINANZA);
         Acertijo acertijo3 = new Acertijo( "a3");
         acertijo3.setEtapa(etapa);
+        acertijo3.setTipo(TipoAcertijo.ADIVINANZA);
 
         this.sessionFactory.getCurrentSession().save(acertijo1);
         this.sessionFactory.getCurrentSession().save(acertijo2);
@@ -104,6 +108,7 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
 
         Pista pista1 = new Pista("pista", 1);
@@ -132,6 +137,7 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
 
         Respuesta respuesta = new Respuesta("Respuesta");
@@ -151,6 +157,7 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
 
         Usuario usuario = new Usuario();
@@ -170,6 +177,7 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
 
         Usuario usuario = new Usuario();
@@ -197,9 +205,11 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
         Acertijo acertijo2 = new Acertijo( "a2");
         acertijo2.setEtapa(etapa);
+        acertijo2.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo2);
 
         AcertijoUsuario acertijoUsuario = new AcertijoUsuario(acertijo, usuario);
@@ -225,9 +235,11 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
         Acertijo acertijo2 = new Acertijo( "a2");
         acertijo2.setEtapa(etapa);
+        acertijo2.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo2);
 
         AcertijoUsuario acertijoUsuario = new AcertijoUsuario(acertijo, usuario);
@@ -253,6 +265,7 @@ public class RepositorioPartidaImplTest {
         this.sessionFactory.getCurrentSession().save(etapa);
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
 
         Acertijo acertijoObtenido = this.repositorioPartida.buscarAcertijoPorId(acertijo.getId());

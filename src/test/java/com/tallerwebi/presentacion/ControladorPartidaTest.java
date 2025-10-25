@@ -3,6 +3,7 @@ package com.tallerwebi.presentacion;
 import com.tallerwebi.dominio.*;
 import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.dominio.enums.Dificultad;
+import com.tallerwebi.dominio.enums.TipoAcertijo;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioDatosPartida;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
@@ -26,15 +27,15 @@ public class ControladorPartidaTest {
     ControladorPartida controladorPartida;
     HttpServletRequest requestMock;
     HttpSession sessionMock;
-    DatosPartidaSesion datosPartida;
+    DatosPartidaSesion datosPartidaSesion;
 
     @BeforeEach
     public void init() {
         this.servicioSala = mock(ServicioSala.class);
         this.servicioPartida = mock(ServicioPartidaImpl.class);
         this.servicioDatosPartida = mock(ServicioDatosPartida.class);
-        this.datosPartida = mock(DatosPartidaSesion.class);
-        this.controladorPartida = new ControladorPartida(servicioSala, servicioPartida,servicioDatosPartida, datosPartida);
+        this.datosPartidaSesion = mock(DatosPartidaSesion.class);
+        this.controladorPartida = new ControladorPartida(servicioSala, servicioPartida,servicioDatosPartida, datosPartidaSesion);
         this.requestMock = mock(HttpServletRequest.class);
         this.sessionMock = mock(HttpSession.class);
     }
@@ -46,7 +47,6 @@ public class ControladorPartidaTest {
         Sala sala = crearSalaTest();
         Partida partida = new Partida(LocalDateTime.now());
         partida.setSala(sala);
-        Etapa etapa = crearEtapaTest();
 
         Long idUsuario = 1L;
         mockUsuarioSesion(requestMock, sessionMock, idUsuario);
@@ -61,11 +61,12 @@ public class ControladorPartidaTest {
         Sala sala = crearSalaTest();
         Etapa etapa = crearEtapaTest();
         Acertijo acertijo = crearAcertijoTest();
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
 
         Long idUsuario = 1L;
         mockUsuarioSesion(requestMock, sessionMock, idUsuario);
 
-        mockDatosPartidaSesion(datosPartida, sala.getId(), etapa.getNumero(), null, null);
+        mockDatosPartidaSesion(datosPartidaSesion, sala.getId(), etapa.getNumero(), null, null);
 
         DatosPartidaDTO dto = new DatosPartidaDTO(sala, etapa, acertijo);
         when(servicioDatosPartida.obtenerDatosDePartida(sala.getId(), etapa.getNumero(), idUsuario)).thenReturn(dto);
@@ -78,8 +79,8 @@ public class ControladorPartidaTest {
         assertThat(modelAndView.getModel().get("acertijo"), equalTo(acertijo));
 
         verify(servicioDatosPartida).obtenerDatosDePartida(sala.getId(), etapa.getNumero(), idUsuario);
-        verify(datosPartida).setIdEtapa(etapa.getId());
-        verify(datosPartida).setIdAcertijo(acertijo.getId());
+        verify(datosPartidaSesion).setIdEtapa(etapa.getId());
+        verify(datosPartidaSesion).setIdAcertijo(acertijo.getId());
     }
 
 
@@ -91,23 +92,23 @@ public class ControladorPartidaTest {
         Sala sala = crearSalaTest();
         Etapa etapa = crearEtapaTest();
         Acertijo acertijo = crearAcertijoTest();
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
+
         Long idUsuario = 1L;
+        mockUsuarioSesion(requestMock, sessionMock, idUsuario);
+
         DatosPartidaDTO dto = new DatosPartidaDTO(sala, etapa, acertijo);
         when(servicioDatosPartida.obtenerDatosDePartida(sala.getId(), etapa.getNumero(), idUsuario)).thenReturn(dto);
 
-        mockUsuarioSesion(requestMock, sessionMock, idUsuario);
-        mockDatosPartidaSesion(datosPartida, sala.getId(), etapa.getNumero(), null, null);
-
-        when(servicioPartida.obtenerAcertijo(etapa.getId(), idUsuario)).thenReturn(acertijo);
-        when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
+        mockDatosPartidaSesion(datosPartidaSesion, sala.getId(), etapa.getNumero(), null, null);
 
         ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario);
 
         assertThat(modelAndView.getModel().get("etapa"), equalTo(etapa));
 
         verify(servicioDatosPartida).obtenerDatosDePartida(sala.getId(), etapa.getNumero(), idUsuario);
-        verify(datosPartida).setIdEtapa(etapa.getId());
-        verify(datosPartida).setIdAcertijo(acertijo.getId());
+        verify(datosPartidaSesion).setIdEtapa(etapa.getId());
+        verify(datosPartidaSesion).setIdAcertijo(acertijo.getId());
     }
 
     @Test
@@ -116,29 +117,27 @@ public class ControladorPartidaTest {
         Sala sala = crearSalaTest();
         Etapa etapa = crearEtapaTest();
         Acertijo acertijo = crearAcertijoTest();
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
 
         Long idUsuario = 1L;
         mockUsuarioSesion(requestMock, sessionMock, idUsuario);
 
         DatosPartidaDTO dto = new DatosPartidaDTO(sala, etapa, acertijo);
         when(servicioDatosPartida.obtenerDatosDePartida(sala.getId(), etapa.getNumero(), idUsuario)).thenReturn(dto);
-        mockDatosPartidaSesion(datosPartida, sala.getId(), etapa.getNumero(), null, null);
 
-        when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
-        when(servicioPartida.obtenerAcertijo(etapa.getId(), idUsuario )).thenReturn(acertijo);
+        mockDatosPartidaSesion(datosPartidaSesion, sala.getId(), etapa.getNumero(), null, null);
 
         ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario);
 
         assertThat(modelAndView.getModel().get("acertijo"), equalTo(acertijo));
         verify(servicioDatosPartida).obtenerDatosDePartida(sala.getId(), etapa.getNumero(), idUsuario);
-        verify(datosPartida).setIdEtapa(etapa.getId());
-        verify(datosPartida).setIdAcertijo(acertijo.getId());
+        verify(datosPartidaSesion).setIdEtapa(etapa.getId());
+        verify(datosPartidaSesion).setIdAcertijo(acertijo.getId());
     }
 
     @Test
     public void deberiaPoderPedirUnaPistaDelAcertijo() {
-        Acertijo acertijo = new Acertijo( "lalalal");
-        acertijo.setId(1L);
+        Acertijo acertijo = crearAcertijoTest();
         Pista pista = new Pista("pista", 1);
         Long idUsuario = 1L;
         when(servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario)).thenReturn(pista);
@@ -151,9 +150,7 @@ public class ControladorPartidaTest {
 
     @Test
     public void deberiaDevolverUnMensajeYaNoQuedanPistas_CuandoElUsuarioAgotoLasPistas() {
-        Acertijo acertijo = new Acertijo( "lalalal");
-        acertijo.setId(1L);
-        Pista pista = new Pista("pista", 1);
+        Acertijo acertijo = crearAcertijoTest();
         Long idUsuario = 1L;
         when(servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario)).thenReturn(null);
 
@@ -164,43 +161,49 @@ public class ControladorPartidaTest {
     }
 
     @Test
-    public void deberiaMostrarLaSegundaEtapaYelSegundoAcertijoSiYaSeResolvioElPrimero() {
+    public void deberiaRedirigirALaSegundaEtapaConElSiguienteAcertijoSiYaSeResolvioElPrimero() {
 
-        Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
-             true, 10,"puerta-mansion.png");
+        Sala sala = crearSalaTest();
         sala.setCantidadDeEtapas(5);
-        Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
-        etapa.setId(1L);
-        Acertijo acertijo = new Acertijo( "lalalal");
+        Etapa etapa = crearEtapaTest();
+        Acertijo acertijo = crearAcertijoTest();
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         Respuesta respuesta = new Respuesta("Respuesta");
         Long idUsuario = 1L;
 
-       when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta(), idUsuario)).thenReturn(true);
+        mockDatosPartidaSesion(datosPartidaSesion, sala.getId(), etapa.getNumero(), null, acertijo.getId());
+
        when(servicioSala.obtenerSalaPorId(sala.getId())).thenReturn(sala);
        when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
-       when(servicioPartida.obtenerAcertijo(etapa.getId(), idUsuario)).thenReturn(acertijo);
+       when(servicioPartida.buscarAcertijoPorId(datosPartidaSesion.getIdAcertijo())).thenReturn(acertijo);
 
-        when(requestMock.getSession()).thenReturn(sessionMock);
+       when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta(), idUsuario)).thenReturn(true);
+
        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), idUsuario);
 
        assertThat(modelAndView.getViewName(), equalTo("redirect:/partida/sala" + sala.getId() + "/etapa" + (etapa.getNumero() + 1)));
        verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta(),idUsuario);
+       verify(servicioSala).obtenerSalaPorId(sala.getId());
+       verify(servicioPartida).obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
+       verify(servicioPartida).buscarAcertijoPorId(datosPartidaSesion.getIdAcertijo());
     }
 
     @Test
     public void deberiaMostrarUnMensajeSiNoSeRespondioCorrectamenteElAcertijo() {
 
-        Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
-                true, 10,"puerta-mansion.png");
-        Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
-        etapa.setId(1L);
-        Acertijo acertijo = new Acertijo( "lalalal");
+        Sala sala = crearSalaTest();
+        sala.setCantidadDeEtapas(5);
+        Etapa etapa = crearEtapaTest();
+        Acertijo acertijo = crearAcertijoTest();
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         Respuesta respuesta = new Respuesta("Respuesta");
         Long idUsuario = 1L;
-        when(requestMock.getSession()).thenReturn(sessionMock);
+
+        mockDatosPartidaSesion(datosPartidaSesion, sala.getId(), etapa.getNumero(), null, acertijo.getId());
+        when(servicioPartida.buscarAcertijoPorId(datosPartidaSesion.getIdAcertijo())).thenReturn(acertijo);
+
         when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta(),idUsuario )).thenReturn(false);
         ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), idUsuario );
-
 
         assertThat(modelAndView.getModel().get("error"), equalTo("Respuesta incorrecta. Intenta nuevamente."));
         verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta(), idUsuario);
@@ -230,11 +233,11 @@ public class ControladorPartidaTest {
         when(sessionMock.getAttribute("id_usuario")).thenReturn(idUsuario);
     }
 
-    private void mockDatosPartidaSesion(DatosPartidaSesion datosPartida, Integer idSala, Integer numeroEtapa, Long idEtapa, Long idAcertijo) {
-        when(datosPartida.getIdSalaActual()).thenReturn(idSala);
-        when(datosPartida.getNumeroEtapaActual()).thenReturn(numeroEtapa);
-        when(datosPartida.getIdEtapa()).thenReturn(idEtapa);
-        when(datosPartida.getIdAcertijo()).thenReturn(idAcertijo);
+    private void mockDatosPartidaSesion(DatosPartidaSesion datosPartidaSesion, Integer idSala, Integer numeroEtapa, Long idEtapa, Long idAcertijo) {
+        when(datosPartidaSesion.getIdSalaActual()).thenReturn(idSala);
+        when(datosPartidaSesion.getNumeroEtapaActual()).thenReturn(numeroEtapa);
+        when(datosPartidaSesion.getIdEtapa()).thenReturn(idEtapa);
+        when(datosPartidaSesion.getIdAcertijo()).thenReturn(idAcertijo);
     }
 
 

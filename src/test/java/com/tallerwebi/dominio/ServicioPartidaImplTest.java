@@ -2,6 +2,7 @@ package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.dominio.enums.Dificultad;
+import com.tallerwebi.dominio.enums.TipoAcertijo;
 import com.tallerwebi.dominio.excepcion.EtapaInexistente;
 import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
@@ -174,6 +175,7 @@ public class ServicioPartidaImplTest {
 
     @Test
     public void deberiaDevolverLaPrimeraPistaDelAcertijo(){
+        Long idUsuario = 1L;
         Acertijo acertijo = new Acertijo( "lalalal");
         acertijo.setId(1L);
         Pista pista1 = new Pista("pista", 1);
@@ -186,11 +188,15 @@ public class ServicioPartidaImplTest {
         listaDePistas.add(pista2);
         listaDePistas.add(pista3);
 
+        Partida partida = new Partida(LocalDateTime.now());
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+
         when(repositorioPartida.obtenerListaDePistas(acertijo.getId())).thenReturn(listaDePistas);
-        Long idUsuario = 1L;
+
         Pista pista = this.servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario);
 
         verify(repositorioPartida).obtenerListaDePistas(acertijo.getId());
+        verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertThat(pista, equalTo(listaDePistas.get(0)));
     }
 
@@ -216,10 +222,14 @@ public class ServicioPartidaImplTest {
             return null;
         }).when(repositorioPartida).sumarPistaUsada(acertijo.getId(), idUsuario);
 
+        Partida partida = new Partida(LocalDateTime.now());
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+
         this.servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario);
         Pista pista = this.servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario);
 
         verify(repositorioPartida, times(2)).obtenerListaDePistas(acertijo.getId());
+        verify(repositorioPartida, times(2)).obtenerPartidaActivaPorUsuario(idUsuario);
         assertThat(pista, equalTo(listaDePistas.get(1)));
     }
 
@@ -228,15 +238,22 @@ public class ServicioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         Acertijo acertijo = new Acertijo( "lalalal");
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         Respuesta respuestaCorrecta = new Respuesta("Respuesta");
         Respuesta respuestaIngresada = new Respuesta("Respuesta");
         Long idUsuario = 1L;
 
         when(repositorioPartida.obtenerRespuestaCorrecta(acertijo.getId())).thenReturn(respuestaCorrecta);
+        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+
+        Partida partida = new Partida(LocalDateTime.now());
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
         Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuestaIngresada.getRespuesta(), idUsuario);
 
         verify(repositorioPartida).obtenerRespuestaCorrecta(acertijo.getId());
+        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+        verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertTrue(validacionDeRespuesta);
     }
 
@@ -245,16 +262,23 @@ public class ServicioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         Acertijo acertijo = new Acertijo( "lalalal");
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         Long idUsuario = 1L;
 
         Respuesta respuestaCorrecta = new Respuesta("Respuesta");
         Respuesta respuestaIngresada = new Respuesta("LA Respuesta INGRESADA");
 
         when(repositorioPartida.obtenerRespuestaCorrecta(acertijo.getId())).thenReturn(respuestaCorrecta);
+        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+
+        Partida partida = new Partida(LocalDateTime.now());
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
         Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuestaIngresada.getRespuesta(), idUsuario);
 
         verify(repositorioPartida).obtenerRespuestaCorrecta(acertijo.getId());
+        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+        verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertTrue(validacionDeRespuesta);
     }
 
@@ -263,15 +287,22 @@ public class ServicioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         Acertijo acertijo = new Acertijo( "lalalal");
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         Respuesta respuestaCorrecta = new Respuesta("Respuesta");
         Respuesta respuestaIngresada = new Respuesta("akhsdgauysduiaRespuestahbsduykhagsdygasdyi");
         Long idUsuario = 1L;
 
         when(repositorioPartida.obtenerRespuestaCorrecta(acertijo.getId())).thenReturn(respuestaCorrecta);
+        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+
+        Partida partida = new Partida(LocalDateTime.now());
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
         Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuestaIngresada.getRespuesta(), idUsuario);
 
         verify(repositorioPartida).obtenerRespuestaCorrecta(acertijo.getId());
+        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+        verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertFalse(validacionDeRespuesta);
     }
 
