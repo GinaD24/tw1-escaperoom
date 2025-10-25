@@ -1,0 +1,25 @@
+<div th:fragment="secuencia">
+
+    <button id="btnMostrarSecuencia" class="btn btn-success">Mostrar secuencia</button>
+
+    <form th:action="@{/partida/validar/{idSala}/{numeroEtapa}(idSala=${salaElegida.id}, numeroEtapa=${etapa.numero})}"
+          method="post" class="d-flex flex-column align-items-center">
+
+
+
+        <div id="secuencia-botones" class="d-flex gap-3 justify-content-center mb-3">
+            <div th:each="img : ${acertijo.imagenes}"
+                 class="boton-secuencia p-2 rounded"
+                 th:data-id="${img.id}"
+                 th:data-orden="${img.ordenCorrecto}"
+                 th:style="|background-image: url('@{/img/acertijo/{img}(img=${img.nombreArchivo})}');
+                            width:120px; height:120px; background-size: cover; cursor:pointer; opacity:0.6;|">
+            </div>
+        </div>
+
+        <input type="hidden" name="respuesta" id="respuestaSecuencia">
+
+        <button type="submit" class="btn btn-enviar mt-3">Enviar</button>
+    </form>
+
+</div>

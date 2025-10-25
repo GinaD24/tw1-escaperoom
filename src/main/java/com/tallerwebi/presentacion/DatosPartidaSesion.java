@@ -66,11 +66,9 @@ public class DatosPartidaSesion {
     }
 
     public void limpiarSesionPartida() {
+        if(session.getAttribute("partida_ganada") != null) {
         session.removeAttribute("partida_ganada");
-        session.removeAttribute("id_sala_actual");
-        session.removeAttribute("numero_etapa_actual");
-        session.removeAttribute("id_acertijo");
-        session.removeAttribute("id_etapa");
+        }
     }
 
     public void limpiarSesionIdEtapaAcertijo() {

@@ -43,10 +43,7 @@ INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
 
 -- ACERTIJOS ETAPA 2: Biblioteca (id_etapa = 2)
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
-                                                 ('ADIVINANZA','Mis hojas guardan bosques y mis lomos sostienen mundos. Hablo sin voz, tejo historias en silencio para quien se atreva a abrirme.', 2),
-                                                 ('ADIVINANZA','Mi cuerpo de cera se consume para darte luz. Lloro lágrimas ardientes mientras mi vida se extingue lentamente en la penumbra.', 2),
-                                                 ('ADIVINANZA','Soy un río de noche líquida, nacido para dar cuerpo a los pensamientos. Con mi esencia, las palabras se graban y los secretos perduran en el papel.', 2);
-
+                                                 ('SECUENCIA', 'Observa la secuencia de luces y pulsa los botones en el mismo orden para continuar.', 2);
 -- ACERTIJOS ETAPA 3: Salón (id_etapa = 3)
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
                                                  ('ADIVINANZA','Una dentadura de marfil y ébano espera ser tocada. No muerdo, pero si me presionas con arte, liberaré los ecos de una triste melodía.', 3),
@@ -65,6 +62,7 @@ INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
                                                  ('ADIVINANZA','Soy un instante congelado, una memoria atrapada en papel. Mi mundo no tiene sonido ni movimiento, solo el eco de una sonrisa que ya no está.', 5),
                                                  ('ADIVINANZA','Soy la promesa al final del pasillo, la luz tras la última puerta. No soy un objeto, sino un destino. Has resuelto todo para encontrarme.', 5);
 
+--13 aacertijos
 -- PISTAS Y RESPUESTAS PARA ACERTIJOS 1-3 (Etapa 1)
 INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Busca tu propio reflejo en la sala.', 1, 1);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('ESPEJO', TRUE, 1);
@@ -75,46 +73,36 @@ INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('RELOJ', TRU
 INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('No puedes tocarme, pero siempre estoy contigo cuando hay una fuente de luz.', 1, 3);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('SOMBRA', TRUE, 3);
 
--- PISTAS Y RESPUESTAS PARA ACERTIJOS 4-6 (Etapa 2)
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('El conocimiento de la biblioteca se guarda entre tapas duras.', 1, 4);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LIBRO', TRUE, 4);
-
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Su llama danza para guiarte, pero su calor también la consume.', 1, 5);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('VELA', TRUE, 5);
-
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Las palabras del dueño necesitan un medio para nacer en el papel.', 1, 6);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('TINTA', TRUE, 6);
-
 -- PISTAS Y RESPUESTAS PARA ACERTIJOS 7-9 (Etapa 3)
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('La música es la voz del alma de esta casa. Busca el instrumento más grande.', 1, 7);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('PIANO', TRUE, 7);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('La música es la voz del alma de esta casa. Busca el instrumento más grande.', 1, 5);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('PIANO', TRUE, 5);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Para encontrar la respuesta, no debes hacer ningún ruido.', 1, 8);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('SILENCIO', TRUE, 8);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Para encontrar la respuesta, no debes hacer ningún ruido.', 1, 6);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('SILENCIO', TRUE, 6);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Mira hacia arriba. Algo brillante y fragmentado pende sobre el centro del salón.', 1, 9);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('CANDELABRO', TRUE, 9);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Mira hacia arriba. Algo brillante y fragmentado pende sobre el centro del salón.', 1, 7);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('CANDELABRO', TRUE, 7);
 
 -- PISTAS Y RESPUESTAS PARA ACERTIJOS 10-12 (Etapa 4)
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Se esconde en el cajón más pequeño del escritorio, esperando abrir algo importante.', 1, 10);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LLAVE', TRUE, 10);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Se esconde en el cajón más pequeño del escritorio, esperando abrir algo importante.', 1, 8);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LLAVE', TRUE, 8);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los detalles más pequeños son a menudo los más importantes.', 1, 11); -- Pista nueva
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LUPA', TRUE, 11); -- Respuesta nueva
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los detalles más pequeños son a menudo los más importantes.', 1, 9); -- Pista nueva
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LUPA', TRUE, 9); -- Respuesta nueva
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Incluso en la quietud de esta habitación, siempre busca el norte.', 1, 12);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('BRUJULA', TRUE, 12);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Incluso en la quietud de esta habitación, siempre busca el norte.', 1, 10);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('BRUJULA', TRUE, 10);
 
 -- PISTAS Y RESPUESTAS PARA ACERTIJOS 13-15 (Etapa 5)
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Me acumulo en las superficies y vuelo al ser tocado.', 1, 13);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('POLVO', TRUE, 13);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Me acumulo en las superficies y vuelo al ser tocado.', 1, 11);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('POLVO', TRUE, 11);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Un viejo álbum guarda momentos congelados en el tiempo. Sonríen desde el pasado.', 1, 14);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('FOTOGRAFIA', TRUE, 14);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Un viejo álbum guarda momentos congelados en el tiempo. Sonríen desde el pasado.', 1, 12);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('FOTOGRAFIA', TRUE, 12);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Has resuelto todo, solo queda un último paso: cruzar el umbral.', 1, 15);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('SALIDA', TRUE, 15);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Has resuelto todo, solo queda un último paso: cruzar el umbral.', 1, 13);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('SALIDA', TRUE, 13);
 
 INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
                                                                      ('Entrada', 1, 'La puerta del laboratorio se cierra detrás de ti. Debes reorganizar los componentes del experimento para avanzar.', 2, 'etapa-entrada-laboratorio.png'),
@@ -132,76 +120,81 @@ INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
                                                        ('ADIVINANZA', 'No tengo cuerpo, pero lleno espacios. Soy invisible, pero puedo ser mortal. Nací de reacciones químicas y si escapo, el silencio es mi señal de peligro. ¿Qué soy?', 8);
 
 INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
-    (16, 'img-frasco1.png', 2),
-    (16, 'img-frasco2.png', 3),
-    (16, 'img-frasco3.png', 1),
-    (16, 'img-frasco4.png', 4);
+    (14, 'img-frasco1.png', 2),
+    (14, 'img-frasco2.png', 3),
+    (14, 'img-frasco3.png', 1),
+    (14, 'img-frasco4.png', 4);
 
 INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
-                                                                         (17, 'Beaker.png', 'Vidrio'),
-                                                                         (17, 'Probeta.png', 'Vidrio'),
-                                                                         (17, 'Guantes.png', 'Proteccion'),
-                                                                         (17, 'Mascarilla.png', 'Proteccion'),
-                                                                         (17, 'ReactivoA.png', 'Quimicos'),
-                                                                         (17, 'ReactivoB.png', 'Quimicos');
+                                                                         (15, 'Beaker.png', 'Vidrio'),
+                                                                         (15, 'Probeta.png', 'Vidrio'),
+                                                                         (15, 'Guantes.png', 'Proteccion'),
+                                                                         (15, 'Mascarilla.png', 'Proteccion'),
+                                                                         (15, 'ReactivoA.png', 'Quimicos'),
+                                                                         (15, 'ReactivoB.png', 'Quimicos');
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Algunos extinguen llamas, otros las avivan.', 1, 18);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('GAS', TRUE, 18);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Algunos extinguen llamas, otros las avivan.', 1, 16);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('GAS', TRUE, 16);
 
-INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
-(26, 'ORDENAR_IMAGEN', 'En el monitor se ven las imágenes de una muestra biológica. Ordénalas para reconstruir el ciclo de vida completo.', 4);
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+('ORDENAR_IMAGEN', 'En el monitor se ven las imágenes de una muestra biológica. Ordénalas para reconstruir el ciclo de vida completo.', 9);
 
 INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
-(26, 'ciclo-huevo.png', 1),
-(26, 'ciclo-oruga.png', 2),
-(26, 'ciclo-crisalida.png', 3),
-(26, 'ciclo-mariposa.png', 4);
+(17, 'ciclo-huevo.png', 1),
+(17, 'ciclo-oruga.png', 2),
+(17, 'ciclo-crisalida.png', 3),
+(17, 'ciclo-mariposa.png', 4);
 
-INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
-(27, 'DRAG_DROP', '¡Hay que reciclar para poder salir! Clasifica los objetos del almacén según su material principal: "Vidrio", "Metal" o "Plástico".', 5);
-
-INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
-(27, 'item-tubo-ensayo.png', 'Vidrio'),
-(27, 'item-frasco.png', 'Vidrio'),
-(27, 'item-pinzas.png', 'Metal'),
-(27, 'item-bisturi.png', 'Metal'),
-(27, 'item-jeringa.png', 'Plastico'),
-(27, 'item-guantes.png', 'Plastico');
-
-INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
-(28, 'ADIVINANZA', 'Paso siempre adelante pero nunca me muevo de mi sitio. Soy crucial para todo experimento, pero no me puedes guardar en un frasco. ¿Qué soy?', 6);
-
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los relojes y los calendarios son mis sirvientes.', 1, 28);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('TIEMPO', TRUE, 28);
-
-INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
-(29, 'DRAG_DROP', 'El escritorio del científico es un desastre. Ayúdalo a organizarse colocando cada objeto en su lugar: "Cajón de escritura", "Estante de lectura" o "Caja de herramientas".', 7);
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+('DRAG_DROP', '¡Hay que reciclar para poder salir! Clasifica los objetos del almacén según su material principal: "Vidrio", "Metal" o "Plástico".', 10);
 
 INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
-(29, 'objeto-lapicera.png', 'Cajon de escritura'),
-(29, 'objeto-cuaderno.png', 'Cajon de escritura'),
-(29, 'objeto-libro.png', 'Estante de lectura'),
-(29, 'objeto-lupa.png', 'Caja de herramientas'),
-(29, 'objeto-manual.png', 'Estante de lectura'),
-(29, 'objeto-destornillador.png', 'Caja de herramientas'),
-(29, 'objeto-regla.png', 'Cajon de escritura'),
-(29, 'objeto-mapa.png', 'Estante de lectura'),
-(29, 'objeto-martillo.png', 'Caja de herramientas'),
-(29, 'objeto-goma-borrar.png', 'Cajon de escritura'),
-(29, 'objeto-diario.png', 'Estante de lectura'),
-(29, 'objeto-pinza.png', 'Caja de herramientas');
+(18, 'item-tubo-ensayo.png', 'Vidrio'),
+(18, 'item-frasco.png', 'Vidrio'),
+(18, 'item-pinzas.png', 'Metal'),
+(18, 'item-bisturi.png', 'Metal'),
+(18, 'item-jeringa.png', 'Plastico'),
+(18, 'item-guantes.png', 'Plastico');
 
-INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
-(30, 'DRAG_DROP', '¡Alerta de Fusión del Núcleo! El reactor está fallando. Para desviar la energía a la puerta de escape, debes arrastrar los componentes funcionales al "Núcleo" y desechar los defectuosos en el "Contenedor de Residuos". ¡No te equivoques!', 8);
+INSERT INTO Acertijo ( tipo, descripcion, id_etapa) VALUES
+( 'ADIVINANZA', 'Paso siempre adelante pero nunca me muevo de mi sitio. Soy crucial para todo experimento, pero no me puedes guardar en un frasco. ¿Qué soy?', 11);
+
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los relojes y los calendarios son mis sirvientes.', 1, 19);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('TIEMPO', TRUE, 19);
+
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+('DRAG_DROP', 'El escritorio del científico es un desastre. Ayúdalo a organizarse colocando cada objeto en su lugar: "Cajón de escritura", "Estante de lectura" o "Caja de herramientas".', 12);
 
 INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
-(30, 'bateria-llena.png', 'Nucleo'),
-(30, 'engranaje-roto.png', 'Residuos'),
-(30, 'bombilla-encendida.png', 'Nucleo'),
-(30, 'cable-cortado.png', 'Residuos'),
-(30, 'engranaje-nuevo.png', 'Nucleo'),
-(30, 'bateria-rota.png', 'Residuos');
+(20, 'objeto-lapicera.png', 'Cajon de escritura'),
+(20, 'objeto-cuaderno.png', 'Cajon de escritura'),
+(20, 'objeto-libro.png', 'Estante de lectura'),
+(20, 'objeto-lupa.png', 'Caja de herramientas'),
+(20, 'objeto-manual.png', 'Estante de lectura'),
+(20, 'objeto-destornillador.png', 'Caja de herramientas'),
+(20, 'objeto-regla.png', 'Cajon de escritura'),
+(20, 'objeto-mapa.png', 'Estante de lectura'),
+(20, 'objeto-martillo.png', 'Caja de herramientas'),
+(20, 'objeto-goma-borrar.png', 'Cajon de escritura'),
+(20, 'objeto-diario.png', 'Estante de lectura'),
+(20, 'objeto-pinza.png', 'Caja de herramientas');
 
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+('DRAG_DROP', '¡Alerta de Fusión del Núcleo! El reactor está fallando. Para desviar la energía a la puerta de escape, debes arrastrar los componentes funcionales al "Núcleo" y desechar los defectuosos en el "Contenedor de Residuos". ¡No te equivoques!', 13);
 
+INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
+(21, 'bateria-llena.png', 'Nucleo'),
+(21, 'engranaje-roto.png', 'Residuos'),
+(21, 'bombilla-encendida.png', 'Nucleo'),
+(21, 'cable-cortado.png', 'Residuos'),
+(21, 'engranaje-nuevo.png', 'Nucleo'),
+(21, 'bateria-rota.png', 'Residuos');
 
+-- Acertijo 4 sala 1
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
+                                                                           (4, 'boton-rojo.png', 1),
+                                                                           (4, 'boton-amarillo.png', 2),
+                                                                           (4, 'boton-verde.png', 3),
+                                                                           (4, 'boton-azul.png', 4),
+                                                                            (4, 'boton-naranja.png', 5);
 

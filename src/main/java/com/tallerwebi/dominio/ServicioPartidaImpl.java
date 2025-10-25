@@ -96,49 +96,69 @@ public class ServicioPartidaImpl implements ServicioPartida {
         Acertijo acertijo = this.repositorioPartida.buscarAcertijoPorId(idAcertijo);
 
 
-        if(acertijo.getTipo().equals(TipoAcertijo.ADIVINANZA)){
-            String[] palabrasIngresadas = respuesta.toLowerCase().split("\\s+");
+        switch(acertijo.getTipo()){
+            case ADIVINANZA:
+                String[] palabrasIngresadas = respuesta.toLowerCase().split("\\s+");
 
-            Respuesta correcta =this.repositorioPartida.obtenerRespuestaCorrecta(idAcertijo);
-            if(Arrays.asList(palabrasIngresadas).contains(correcta.getRespuesta().toLowerCase())){
-                esCorrecta = true;
-                partida.setPuntaje(partida.getPuntaje() + 100);
-            }
-        }
-        if (acertijo.getTipo().equals(TipoAcertijo.ORDENAR_IMAGEN)) {
-            List<Long> ordenSeleccionado = Arrays.stream(respuesta.split(","))
-                    .map(Long::valueOf)
-                    .collect(Collectors.toList());
+                Respuesta correcta =this.repositorioPartida.obtenerRespuestaCorrecta(idAcertijo);
+                if(Arrays.asList(palabrasIngresadas).contains(correcta.getRespuesta().toLowerCase())){
+                    esCorrecta = true;
+                    partida.setPuntaje(partida.getPuntaje() + 100);
+                }
+                break;
 
-            List<Long> ordenCorrecto = this.repositorioPartida.obtenerOrdenDeImgCorrecto(idAcertijo);
+            case ORDENAR_IMAGEN:
+                List<Long> ordenSeleccionado = Arrays.stream(respuesta.split(","))
+                        .map(Long::valueOf)
+                        .collect(Collectors.toList());
 
-            if (ordenSeleccionado.equals(ordenCorrecto)) {
-                esCorrecta = true;
-                partida.setPuntaje(partida.getPuntaje() + 100);
-            }
-        }
+                List<Long> ordenCorrecto = this.repositorioPartida.obtenerOrdenDeImgCorrecto(idAcertijo);
 
-        if (acertijo.getTipo().equals(TipoAcertijo.DRAG_DROP)) {
+                if (ordenSeleccionado.equals(ordenCorrecto)) {
+                    esCorrecta = true;
+                    partida.setPuntaje(partida.getPuntaje() + 100);
+                }
+                break;
 
-            Map<Long, String> respuestaUsuario = Arrays.stream(respuesta.split(","))
-                    .map(pair -> pair.split(":"))
-                    .filter(arr -> arr.length == 2)
-                    .collect(Collectors.toMap(
-                            arr -> Long.valueOf(arr[0]), // id de imagen
-                            arr -> arr[1]               // categoría donde la puso
-                    ));
+            case DRAG_DROP:
+                Map<Long, String> respuestaUsuario = Arrays.stream(respuesta.split(","))
+                        .map(pair -> pair.split(":"))
+                        .filter(arr -> arr.length == 2)
+                        .collect(Collectors.toMap(
+                                arr -> Long.valueOf(arr[0]), // id de imagen
+                                arr -> arr[1]               // categoría donde la puso
+                        ));
 
-            List<DragDropItem> itemsCorrectos = this.repositorioPartida.obtenerItemsDragDrop(idAcertijo);
+                List<DragDropItem> itemsCorrectos = this.repositorioPartida.obtenerItemsDragDrop(idAcertijo);
 
-            boolean todoCorrecto = itemsCorrectos.stream()
-                    .allMatch(item ->
-                            respuestaUsuario.containsKey(item.getId()) &&
-                                    respuestaUsuario.get(item.getId()).equals(item.getCategoriaCorrecta())
-                    );
-            if (todoCorrecto) {
-                esCorrecta = true;
-                partida.setPuntaje(partida.getPuntaje() + 100);
-            }
+                boolean todoCorrecto = itemsCorrectos.stream()
+                        .allMatch(item ->
+                                respuestaUsuario.containsKey(item.getId()) &&
+                                        respuestaUsuario.get(item.getId()).equals(item.getCategoriaCorrecta())
+                        );
+                if (todoCorrecto) {
+                    esCorrecta = true;
+                    partida.setPuntaje(partida.getPuntaje() + 100);
+                }
+                break;
+
+            case SECUENCIA:
+                // Parsear respuesta del usuario
+                List<Long> secuenciaUsuario = Arrays.stream(respuesta.split(","))
+                        .map(Long::valueOf)
+                        .collect(Collectors.toList());
+
+                // Obtener la secuencia correcta desde la base de datos
+                List<Long> secuenciaCorrecta = this.repositorioPartida.obtenerOrdenDeImgCorrecto(idAcertijo);
+
+                if(secuenciaUsuario.equals(secuenciaCorrecta)){
+                    esCorrecta = true;
+                    partida.setPuntaje(partida.getPuntaje() + 100);
+                }
+                break;
+
+
+
         }
 
         return esCorrecta;

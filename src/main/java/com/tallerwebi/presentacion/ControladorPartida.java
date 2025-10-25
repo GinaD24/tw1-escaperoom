@@ -54,6 +54,7 @@ public class ControladorPartida {
 
             try{
                 Long id_usuario = (Long) request.getSession().getAttribute("id_usuario");
+                datosPartidaSesion.limpiarSesionPartida();
                 this.servicioPartida.guardarPartida(partida, id_usuario, idSala);
             } catch(SesionDeUsuarioExpirada | UsuarioInexistente e){
                 return new ModelAndView("redirect:/login");
