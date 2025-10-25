@@ -1,10 +1,14 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.Historial;
+import com.tallerwebi.dominio.entidad.Ranking;
+import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioHistorial;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioHistorial;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -33,5 +37,18 @@ public class ServicioHistorialImpl implements ServicioHistorial {
         return repositorio.obtenerPorJugador(jugador);
     }
 
+    @Override
+    @Transactional
+    public List<Historial> obtenerHistorialPorSala(Integer idSala) {
+        List<Historial> historials = this.repositorio.ObtenerHistorialPorSala(idSala);
+        if (historials.isEmpty()) {
+            throw new SalaInexistente();
+        }
 
+        historials.sort(Comparator
+                .comparing(Historial::getFecha).reversed()
+        );
+
+        return historials;
+    }
 }

@@ -11,4 +11,5 @@ public interface RepositorioHistorial {
     void guardar(Historial historial);
     List<Historial> obtenerTodas();
     List<Historial> obtenerPorJugador(String jugador);
+    List<Historial> ObtenerHistorialPorSala(Integer idSala);
 }

@@ -64,6 +64,25 @@
         <p class="text-sm text-gray-500 mt-2">¡Es hora de poner a prueba tus habilidades!</p>
     </div>
 
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+            <form th:action="@{/historial/filtrarHistorialPorSala}" method="get">
+                <div class="input-group">
+                    <select class="form-select rounded-pill me-2" name="filtroSalas" id="filtroSalas">
+                        <option disabled>Filtrar por sala</option>
+                        <option th:each="sala : ${salas}"
+                                th:value="${sala.id}"
+                                th:text="${sala.nombre}">
+                        </option>
+                    </select>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">
+                        Filtrar Historial
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div id="match-list" class="space-y-3" th:unless="${#lists.isEmpty(historial)}">
         <div th:each="partida : ${historial}"
              class="match-item p-4 rounded-lg shadow-xl flex flex-col sm:flex-row justify-between items-center gap-4 transition duration-300 ease-in-out hover:scale-[1.01]"

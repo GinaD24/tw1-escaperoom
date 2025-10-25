@@ -7,17 +7,17 @@ public class Historial {
 
     private Integer id;
     private String jugador;
-    private String sala;
+    private Integer idSala;
     private LocalDateTime fecha;
     private Boolean gano;
 
     public Historial() {
     }
 
-    public Historial(Integer id, String jugador, String sala, LocalDateTime fecha, Boolean gano) {
+    public Historial(Integer id, String jugador, Integer idSala, LocalDateTime fecha, Boolean gano) {
         this.id = id;
         this.jugador = jugador;
-        this.sala = sala;
+        this.idSala = idSala;
         this.fecha = fecha;
         this.gano = gano;
     }
@@ -38,12 +38,12 @@ public class Historial {
         this.jugador = jugador;
     }
 
-    public String getSala() {
-        return sala;
+    public Integer getIdSala() {
+        return idSala;
     }
 
-    public void setSala(String sala) {
-        this.sala = sala;
+    public void setIdSala(Integer idSala) {
+        this.idSala = idSala;
     }
 
     public LocalDateTime getFecha() {

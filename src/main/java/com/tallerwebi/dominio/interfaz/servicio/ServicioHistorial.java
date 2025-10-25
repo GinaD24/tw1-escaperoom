@@ -8,4 +8,5 @@ public interface ServicioHistorial {
     void registrarPartida(Historial historial);
     List<Historial> traerHistorial();
     List<Historial> traerHistorialDeJugador(String jugador);
+    List<Historial> obtenerHistorialPorSala(Integer idSala);
 }

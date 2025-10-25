@@ -29,7 +29,7 @@ public class ServicioHistorialImplTest {
 
     @Test
     void dadoQueHayUnaPartidaCuandoLaRegistroEntoncesSeInvocaRepositorioGuardar() {
-        Historial historial = new Historial(1, "Alan", "Sala1", LocalDateTime.now(), true);
+        Historial historial = new Historial(1, "Alan", 1, LocalDateTime.now(), true);
 
         servicio.registrarPartida(historial);
 
@@ -38,8 +38,8 @@ public class ServicioHistorialImplTest {
 
     @Test
     void dadoQueHayPartidasDeUnJugadorCuandoTraigoSuHistorialEntoncesSeInvocaRepositorioObtenerPorJugador() {
-        Historial p1 = new Historial(1, "Alan", "Sala1", LocalDateTime.now(), true);
-        Historial p2 = new Historial(2, "Alan", "Sala2", LocalDateTime.now(), false);
+        Historial p1 = new Historial(1, "Alan", 1, LocalDateTime.now(), true);
+        Historial p2 = new Historial(2, "Alan", 2, LocalDateTime.now(), false);
         List<Historial> historials = Arrays.asList(p1, p2);
         when(repositorio.obtenerPorJugador("Alan")).thenReturn(historials);
 
@@ -47,7 +47,7 @@ public class ServicioHistorialImplTest {
 
         verify(repositorio).obtenerPorJugador("Alan");
         assertThat(resultado.size(), is(2));
-        assertThat(resultado.get(0).getSala(), is("Sala1"));
+        assertThat(resultado.get(0).getIdSala(), is(1));
     }
 
     @Test
@@ -62,9 +62,9 @@ public class ServicioHistorialImplTest {
 
     @Test
     void dadoQueHayMultiplesPartidasCuandoTraigoElHistorialCompletoEntoncesDevuelvoTodas() {
-        Historial p1 = new Historial(1, "Alan", "Sala1", LocalDateTime.now(), true);
-        Historial p2 = new Historial(2, "Alan", "Sala2", LocalDateTime.now(), false);
-        Historial p3 = new Historial(3, "Alan", "Sala3", LocalDateTime.now(), true);
+        Historial p1 = new Historial(1, "Alan", 1, LocalDateTime.now(), true);
+        Historial p2 = new Historial(2, "Alan", 2, LocalDateTime.now(), false);
+        Historial p3 = new Historial(3, "Alan", 3, LocalDateTime.now(), true);
         List<Historial> historials = Arrays.asList(p1, p2, p3);
         when(repositorio.obtenerTodas()).thenReturn(historials);
 
@@ -88,8 +88,8 @@ public class ServicioHistorialImplTest {
 
     @Test
     void dadoQueRegistroMultiplesPartidasCuandoTraigoElHistorialEntoncesSeReflejanTodas() {
-        Historial p1 = new Historial(1, "Alan", "Sala1", LocalDateTime.now(), true);
-        Historial p2 = new Historial(2, "Alan", "Sala2", LocalDateTime.now(), false);
+        Historial p1 = new Historial(1, "Alan", 1, LocalDateTime.now(), true);
+        Historial p2 = new Historial(2, "Alan", 2, LocalDateTime.now(), false);
         List<Historial> historialEsperado = Arrays.asList(p1, p2);
         when(repositorio.obtenerTodas()).thenReturn(historialEsperado);
 
@@ -104,9 +104,9 @@ public class ServicioHistorialImplTest {
 
     @Test
     void dadoQueHayVariasPartidasCuandoTraigoElHistorialEntoncesLaPartidaMasRecienteAparecePrimera() {
-        Historial historialAntigua = new Historial(1, "Alan", "Sala1", LocalDateTime.of(2023, 1, 1, 10, 0), true);
-        Historial historialReciente = new Historial(2, "Alan", "Sala2", LocalDateTime.of(2023, 6, 1, 15, 0), false);
-        Historial historialIntermedia = new Historial(3, "Alan", "Sala3", LocalDateTime.of(2023, 3, 1, 12, 0), true);
+        Historial historialAntigua = new Historial(1, "Alan", 1, LocalDateTime.of(2023, 1, 1, 10, 0), true);
+        Historial historialReciente = new Historial(2, "Alan", 2, LocalDateTime.of(2023, 6, 1, 15, 0), false);
+        Historial historialIntermedia = new Historial(3, "Alan", 3, LocalDateTime.of(2023, 3, 1, 12, 0), true);
         List<Historial> partidasDesordenadas = Arrays.asList(historialAntigua, historialReciente, historialIntermedia);
         when(repositorio.obtenerTodas()).thenReturn(partidasDesordenadas);
 
