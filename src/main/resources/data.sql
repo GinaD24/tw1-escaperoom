@@ -129,7 +129,7 @@ INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
                                                        ('ORDENAR_IMAGEN', 'Observa los frascos de diferentes colores. Organízalos siguiendo el cambio gradual de tonalidad de claro a oscuro.', 6),
                                                        ('DRAG_DROP', 'Clasifica correctamente los materiales de laboratorio en sus categorías correspondientes.', 7),
-                                                        ('ADIVINANZA', 'Clasifica correctamente los materiales de laboratorio en sus categorías correspondientes.', 8);
+                                                       ('ADIVINANZA', 'No tengo cuerpo, pero lleno espacios. Soy invisible, pero puedo ser mortal. Nací de reacciones químicas y si escapo, el silencio es mi señal de peligro. ¿Qué soy?', 8);
 
 INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
     (16, 'img-frasco1.png', 2),
@@ -144,3 +144,64 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
                                                                          (17, 'Mascarilla.png', 'Proteccion'),
                                                                          (17, 'ReactivoA.png', 'Quimicos'),
                                                                          (17, 'ReactivoB.png', 'Quimicos');
+
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Algunos extinguen llamas, otros las avivan.', 1, 18);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('GAS', TRUE, 18);
+
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(26, 'ORDENAR_IMAGEN', 'En el monitor se ven las imágenes de una muestra biológica. Ordénalas para reconstruir el ciclo de vida completo.', 4);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
+(26, 'ciclo-huevo.png', 1),
+(26, 'ciclo-oruga.png', 2),
+(26, 'ciclo-crisalida.png', 3),
+(26, 'ciclo-mariposa.png', 4);
+
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(27, 'DRAG_DROP', '¡Hay que reciclar para poder salir! Clasifica los objetos del almacén según su material principal: "Vidrio", "Metal" o "Plástico".', 5);
+
+INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
+(27, 'item-tubo-ensayo.png', 'Vidrio'),
+(27, 'item-frasco.png', 'Vidrio'),
+(27, 'item-pinzas.png', 'Metal'),
+(27, 'item-bisturi.png', 'Metal'),
+(27, 'item-jeringa.png', 'Plastico'),
+(27, 'item-guantes.png', 'Plastico');
+
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(28, 'ADIVINANZA', 'Paso siempre adelante pero nunca me muevo de mi sitio. Soy crucial para todo experimento, pero no me puedes guardar en un frasco. ¿Qué soy?', 6);
+
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los relojes y los calendarios son mis sirvientes.', 1, 28);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('TIEMPO', TRUE, 28);
+
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(29, 'DRAG_DROP', 'El escritorio del científico es un desastre. Ayúdalo a organizarse colocando cada objeto en su lugar: "Cajón de escritura", "Estante de lectura" o "Caja de herramientas".', 7);
+
+INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
+(29, 'objeto-lapicera.png', 'Cajon de escritura'),
+(29, 'objeto-cuaderno.png', 'Cajon de escritura'),
+(29, 'objeto-libro.png', 'Estante de lectura'),
+(29, 'objeto-lupa.png', 'Caja de herramientas'),
+(29, 'objeto-manual.png', 'Estante de lectura'),
+(29, 'objeto-destornillador.png', 'Caja de herramientas'),
+(29, 'objeto-regla.png', 'Cajon de escritura'),
+(29, 'objeto-mapa.png', 'Estante de lectura'),
+(29, 'objeto-martillo.png', 'Caja de herramientas'),
+(29, 'objeto-goma-borrar.png', 'Cajon de escritura'),
+(29, 'objeto-diario.png', 'Estante de lectura'),
+(29, 'objeto-pinza.png', 'Caja de herramientas');
+
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(30, 'DRAG_DROP', '¡Alerta de Fusión del Núcleo! El reactor está fallando. Para desviar la energía a la puerta de escape, debes arrastrar los componentes funcionales al "Núcleo" y desechar los defectuosos en el "Contenedor de Residuos". ¡No te equivoques!', 8);
+
+INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
+(30, 'bateria-llena.png', 'Nucleo'),
+(30, 'engranaje-roto.png', 'Residuos'),
+(30, 'bombilla-encendida.png', 'Nucleo'),
+(30, 'cable-cortado.png', 'Residuos'),
+(30, 'engranaje-nuevo.png', 'Nucleo'),
+(30, 'bateria-rota.png', 'Residuos');
+
+
+
+

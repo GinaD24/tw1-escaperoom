@@ -135,7 +135,7 @@ public class ControladorPartida {
         if(acertijo.getTipo().equals(TipoAcertijo.DRAG_DROP)){
             List<String> categorias = this.servicioPartida.obtenerCategoriasDelAcertijoDragDrop(id_acertijo);
             modelo.put("categorias", categorias);
-        }
+        } 
 
         Partida partida = servicioPartida.obtenerPartidaActivaPorIdUsuario(id_usuario);
         modelo.put("partida", partida);
