@@ -58,10 +58,10 @@ INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
     ('ORDENAR_IMAGEN', 'Ordena las tarjetas de los muebles del salón según su tamaño de menor a mayor.', 3);
 -- ORDENAR IMAGENES etapa 3
 INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
-                                                                           (5, 'img-copa.png', 2),
-                                                                           (5, 'img-silla.png', 3),
-                                                                           (5, 'img-mesa.png', 1),
-                                                                           (5, 'img-sillon.png', 4);
+                                                                           (5, 'img-copa.png', 1),
+                                                                           (5, 'img-silla.png', 2),
+                                                                           (5, 'img-mesa.png', 4),
+                                                                           (5, 'img-sillon.png', 3);
 
 -- ACERTIJOS ETAPA 4: Despacho (id_etapa = 4)
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
@@ -81,9 +81,9 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
 (9, 'item-libro-viejo.png', 'Combustible'),
 (9, 'item-alcohol.png', 'Combustible'),
 (9, 'item-tela.png', 'Combustible'),
-(9, 'item-linterna.png', 'Iluminación'),
-(9, 'item-candelabro-con-vela.png', 'Iluminación'),
-(9, 'item-caja-fosforos.png', 'Iluminación');
+(9, 'item-linterna.png', 'Iluminacion'),
+(9, 'item-candelabro-con-vela.png', 'Iluminacion'),
+(9, 'item-caja-fosforos.png', 'Iluminacion');
 
 --13 aacertijos
 -- PISTAS Y RESPUESTAS PARA ACERTIJOS 1-3 (Etapa 1)

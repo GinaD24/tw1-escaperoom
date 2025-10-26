@@ -87,9 +87,11 @@ public class ControladorLogin {
 
     @GetMapping("/cerrarSesion")
     public ModelAndView cerrarSesion(HttpSession session) {
-        Usuario usuario = servicioLogin.buscarUsuarioPorId((Long)session.getAttribute("id_usuario"));
-        servicioLogin.actualizarUsuarioActivo(usuario, false);
-        session.invalidate();
+        if(session.getAttribute("id_usuario") != null) {
+            Usuario usuario = servicioLogin.buscarUsuarioPorId((Long) session.getAttribute("id_usuario"));
+            servicioLogin.actualizarUsuarioActivo(usuario, false);
+            session.invalidate();
+        }
         return new  ModelAndView("redirect:/login");
     }
 }
