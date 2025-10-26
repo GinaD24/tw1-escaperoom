@@ -136,3 +136,25 @@ body {
     opacity: 1;
     top: 140%;
 }
+.boton-cerrar-container {
+    position: fixed;      /* Hace que siempre esté visible en pantalla */
+    bottom: 30px;         /* Separación del borde inferior */
+    left: 30px;           /* Separación del borde izquierdo */
+    z-index: 1000;
+}
+.boton-cerrarSesion {
+    background-color: rgba(248, 185, 185, 0.55);
+    border:4px solid #7f0c0c;
+    color: #7f0c0c;
+    border-radius: 25px;
+    padding: 8px 30px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    transition: 0.3s;
+}
+
+.boton-cerrarSesion:hover {
+    background-color: #b61f1a;
+    color: white;
+    transform: scale(1.05);
+}

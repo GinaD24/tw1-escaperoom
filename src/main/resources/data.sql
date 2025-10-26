@@ -1,4 +1,4 @@
-INSERT INTO Usuario( email, password, rol, activo) VALUES( 'test@unlam.edu.ar', 'test', 'ADMIN', true);
+INSERT INTO Usuario( email, password, rol) VALUES( 'test@unlam.edu.ar', 'test', 'ADMIN');
 
 INSERT INTO Usuario (email,nombre,apellido,password,fechaNacimiento,nombreUsuario,fotoPerfil)
 VALUES (
