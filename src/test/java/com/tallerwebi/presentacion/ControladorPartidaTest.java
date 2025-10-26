@@ -209,6 +209,33 @@ public class ControladorPartidaTest {
         verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta(), idUsuario);
     }
 
+    @Test
+    public void deberiaSolicitarAlServicioQueFinaliceLaPartida_GuardarlaEnElModelo_YMostrarLaVistaPartidaGanada_SiGano() {
+
+        Sala sala = crearSalaTest();
+        sala.setCantidadDeEtapas(5);
+        Partida partida = new Partida(LocalDateTime.now());
+        partida.setSala(sala);
+        partida.setGanada(true);
+        partida.setPuntaje(100);
+        Long idUsuario = 1L;
+
+        when(datosPartidaSesion.getIdSalaActual()).thenReturn(sala.getId());
+        when(datosPartidaSesion.getIdPartida()).thenReturn(partida.getId());
+        when(datosPartidaSesion.getPartidaGanada()).thenReturn(partida.getGanada());
+
+        mockUsuarioSesion(requestMock, sessionMock, idUsuario);
+
+        when(servicioPartida.buscarPartidaPorId(partida.getId())).thenReturn(partida);
+        when(servicioSala.obtenerSalaPorId(sala.getId())).thenReturn(sala);
+
+        ModelAndView modelAndView = controladorPartida.finalizarPartida(requestMock);
+
+        assertThat(modelAndView.getViewName(), equalTo("partidaGanada"));
+        assertThat(modelAndView.getModel().get("partida"), equalTo(partida));
+        verify(servicioPartida).finalizarPartida(idUsuario, partida.getGanada());
+    }
+
 
     private Sala crearSalaTest() {
         return new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion",

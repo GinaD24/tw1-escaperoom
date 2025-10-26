@@ -71,7 +71,7 @@ public class DatosPartidaSesion {
     }
 
     public void setIdPartida(Long idPartida) {
-        session.setAttribute("idpartida", idPartida);
+        session.setAttribute("idPartida", idPartida);
     }
 
     public void limpiarSesionPartida() {

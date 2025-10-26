@@ -18,7 +18,7 @@ public class Partida {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    @Column
+    @Column(nullable = false)
     private Integer puntaje = 0;
 
     @Column(nullable = false)

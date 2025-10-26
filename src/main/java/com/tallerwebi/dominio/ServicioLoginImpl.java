@@ -32,6 +32,8 @@ public class ServicioLoginImpl implements ServicioLogin {
             throw new CredencialesInvalidasException("Las credenciales ingresadas son inválidas.");
         }
 
+
+
         return usuarioBuscado;
     }
 

@@ -56,6 +56,7 @@ public class ControladorPartida {
                 Long id_usuario = (Long) request.getSession().getAttribute("id_usuario");
                 datosPartidaSesion.limpiarSesionPartida();
                 this.servicioPartida.guardarPartida(partida, id_usuario, idSala);
+                datosPartidaSesion.setIdPartida(partida.getId());
             } catch(SesionDeUsuarioExpirada | UsuarioInexistente e){
                 return new ModelAndView("redirect:/login");
             }
@@ -129,6 +130,11 @@ public class ControladorPartida {
             @SessionAttribute("id_acertijo") Long id_acertijo, @RequestParam String respuesta, @SessionAttribute("id_usuario") Long id_usuario) {
         ModelMap modelo = new ModelMap();
 
+        Partida partida = servicioPartida.obtenerPartidaActivaPorIdUsuario(id_usuario);
+        if(tiempoValido(partida) == false){
+            return new ModelAndView("redirect:/partida/finalizarPartida");
+        }
+
         Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
         Etapa etapa = this.servicioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
         Acertijo acertijo = this.servicioPartida.buscarAcertijoPorId(id_acertijo);
@@ -136,10 +142,8 @@ public class ControladorPartida {
         if(acertijo.getTipo().equals(TipoAcertijo.DRAG_DROP)){
             List<String> categorias = this.servicioPartida.obtenerCategoriasDelAcertijoDragDrop(id_acertijo);
             modelo.put("categorias", categorias);
-        } 
+        }
 
-        Partida partida = servicioPartida.obtenerPartidaActivaPorIdUsuario(id_usuario);
-        datosPartidaSesion.setIdPartida(partida.getId());
         modelo.put("partida", partida);
         modelo.put("salaElegida", sala);
         modelo.put("etapa", etapa);
@@ -157,13 +161,11 @@ public class ControladorPartida {
                 datosPartidaSesion.setPartidaGanada(true);
                 return new ModelAndView("redirect:/partida/finalizarPartida");
             }
-
             datosPartidaSesion.setNumeroEtapaActual(numeroEtapa + 1);
             return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa" + (numeroEtapa + 1));
         }
         return new ModelAndView("partida", modelo);
     }
-
 
 
     @GetMapping("/finalizarPartida")
@@ -174,14 +176,13 @@ public class ControladorPartida {
         Boolean ganada = datosPartidaSesion.getPartidaGanada();
         if (ganada == null) ganada = false;
 
-
         this.servicioPartida.finalizarPartida(idUsuario, ganada);
-        //Partida partida = this.servicioPartida.buscarPartidaPorId(datosPartidaSesion.getIdPartida());
+        Partida partida = this.servicioPartida.buscarPartidaPorId(datosPartidaSesion.getIdPartida());
 
         ModelMap modelo = new ModelMap();
         Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
         modelo.put("sala", sala);
-        //modelo.put("partida", partida);
+        modelo.put("partida", partida);
 
         if (ganada) {
             return new ModelAndView("partidaGanada", modelo);
@@ -189,16 +190,6 @@ public class ControladorPartida {
         } else {
             return new ModelAndView("partidaPerdida", modelo);
         }
-    }
-
-
-    @GetMapping("/validarTiempo")
-    private ModelAndView validarTiempo(@SessionAttribute("id_usuario") Long id_usuario) {
-        Partida partida = servicioPartida.obtenerPartidaActivaPorIdUsuario(id_usuario);
-        datosPartidaSesion.setPartidaGanada(false);
-        datosPartidaSesion.setIdPartida(partida.getId());
-        servicioPartida.validarTiempo(id_usuario);
-        return new ModelAndView("redirect:/partida/finalizarPartida");
     }
 
 
@@ -215,6 +206,14 @@ public class ControladorPartida {
         return new ModelAndView("redirect:/partida/sala" + idSalaSesion + "/etapa" + numeroEtapaSesion);
     }
 
+    private Boolean tiempoValido(Partida partida) {
+        boolean tiempoValido = true;
+        if (servicioPartida.tiempoExpirado(partida)) {
+            tiempoValido = false;
+            datosPartidaSesion.setPartidaGanada(false);
+        }
+        return tiempoValido;
+    }
 
     private boolean esSesionValida(DatosPartidaSesion datosPartida, Integer idSala, Integer numeroEtapa) {
         Integer idSalaSesion = datosPartida.getIdSalaActual();

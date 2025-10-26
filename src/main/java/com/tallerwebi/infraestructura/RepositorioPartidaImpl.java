@@ -154,13 +154,6 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
                 .executeUpdate();
     }
 
-//    @Override
-//    public List<ImagenAcertijo> obtenerImagenesPorAcertijo(Long idAcertijo) {
-//        String hql = "SELECT ia FROM ImagenAcertijo ia WHERE ia.acertijo.id = :idAcertijo";
-//        Query<ImagenAcertijo> query = this.sessionFactory.getCurrentSession().createQuery(hql, ImagenAcertijo.class);
-//        query.setParameter("idAcertijo", idAcertijo);
-//        return query.getResultList();
-//    }
 
     @Override
     public List<Long> obtenerOrdenDeImgCorrecto(Long idAcertijo) {

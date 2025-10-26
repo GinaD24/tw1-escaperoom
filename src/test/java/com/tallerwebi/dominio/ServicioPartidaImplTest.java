@@ -19,10 +19,13 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -234,9 +237,8 @@ public class ServicioPartidaImplTest {
     }
 
     @Test
-    public void deberiaDevolverTrueSiSeRespondioCorrectamenteElAcertijo(){
-        Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
-                true, 10,"puerta-mansion.png");
+    public void deberiaDevolverTrueSiSeRespondioCorrectamenteElAcertijo_DeTipoADIVINANZA(){
+
         Acertijo acertijo = new Acertijo( "lalalal");
         acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         Respuesta respuestaCorrecta = new Respuesta("Respuesta");
@@ -258,9 +260,7 @@ public class ServicioPartidaImplTest {
     }
 
     @Test
-    public void deberiaDevolverTrue_SiLaRespuestaIngresadaCONTIENELaRespuestaCorrecta(){
-        Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
-                true, 10,"puerta-mansion.png");
+    public void deberiaDevolverTrue_SiLaRespuestaDelAcertijoADIVINANZA_CONTIENELaRespuestaCorrecta(){
         Acertijo acertijo = new Acertijo( "lalalal");
         acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         Long idUsuario = 1L;
@@ -283,9 +283,7 @@ public class ServicioPartidaImplTest {
     }
 
     @Test
-    public void deberiaDevolverFalsoSiNOSeRespondioCorrectamenteElAcertijo(){
-        Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
-                true, 10,"puerta-mansion.png");
+    public void deberiaDevolverFalsoSiNOSeRespondioCorrectamenteElAcertijo_DeTipoADIVINANZA(){
         Acertijo acertijo = new Acertijo( "lalalal");
         acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         Respuesta respuestaCorrecta = new Respuesta("Respuesta");
@@ -305,6 +303,127 @@ public class ServicioPartidaImplTest {
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertFalse(validacionDeRespuesta);
     }
+
+    @Test
+    public void deberiaDevolverTrueSiORDENOCorrectamenteElAcertijo_DeTipoORDENAR_IMAGEN_ODelTipoSECUENCIA(){
+        Partida partida = new Partida(LocalDateTime.now());
+        Acertijo acertijo = new Acertijo( "lalalal");
+        acertijo.setTipo(TipoAcertijo.ORDENAR_IMAGEN);
+
+        List<Long> ordenCorrecto = new ArrayList<>();
+        ordenCorrecto.add(1L);
+        ordenCorrecto.add(2L);
+        ordenCorrecto.add(3L);
+
+        Long idUsuario = 1L;
+
+        String ordenIngresado = "1,2,3";
+
+        when(repositorioPartida.obtenerOrdenDeImgCorrecto(acertijo.getId())).thenReturn(ordenCorrecto);
+        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(), ordenIngresado, idUsuario);
+
+        verify(repositorioPartida).obtenerOrdenDeImgCorrecto(acertijo.getId());
+        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+        verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        assertTrue(validacionDeRespuesta);
+    }
+
+    @Test
+    public void deberiaDevolverFalseSi_NoORDENOCorrectamenteElAcertijo_DeTipoORDENAR_IMAGEN_ODelTipoSECUENCIA(){
+        Partida partida = new Partida(LocalDateTime.now());
+        Acertijo acertijo = new Acertijo( "lalalal");
+        acertijo.setTipo(TipoAcertijo.ORDENAR_IMAGEN);
+
+        List<Long> ordenCorrecto = new ArrayList<>();
+        ordenCorrecto.add(1L);
+        ordenCorrecto.add(2L);
+        ordenCorrecto.add(3L);
+
+        Long idUsuario = 1L;
+
+        String ordenIngresado = "2,1,3";
+
+        when(repositorioPartida.obtenerOrdenDeImgCorrecto(acertijo.getId())).thenReturn(ordenCorrecto);
+        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(), ordenIngresado, idUsuario);
+
+        verify(repositorioPartida).obtenerOrdenDeImgCorrecto(acertijo.getId());
+        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+        verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        assertFalse(validacionDeRespuesta);
+    }
+
+    @Test
+    public void deberiaDevolverTrueSiResolvioCorrectamenteElAcertijo_DeTipoDRAG_DROP(){
+        Partida partida = new Partida(LocalDateTime.now());
+        Acertijo acertijo = new Acertijo( "lalalal");
+        acertijo.setTipo(TipoAcertijo.DRAG_DROP);
+
+        DragDropItem item1 = new DragDropItem();
+        item1.setCategoriaCorrecta("cat1");
+        item1.setId(1L);
+        DragDropItem item2 = new DragDropItem();
+        item2.setId(2L);
+        item2.setCategoriaCorrecta("cat2");
+
+        List<DragDropItem> items = new ArrayList<>();
+        items.add(item1);
+        items.add(item2);
+
+        Long idUsuario = 1L;
+
+        String ordenIngresado = "1:cat1,2:cat2";
+
+        when(repositorioPartida.obtenerItemsDragDrop(acertijo.getId())).thenReturn(items);
+        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(), ordenIngresado, idUsuario);
+
+        verify(repositorioPartida).obtenerItemsDragDrop(acertijo.getId());
+        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+        verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        assertTrue(validacionDeRespuesta);
+    }
+    @Test
+    public void deberiaDevolverFalseSiNOResolvioCorrectamenteElAcertijo_DeTipoDRAG_DROP(){
+        Partida partida = new Partida(LocalDateTime.now());
+        Acertijo acertijo = new Acertijo( "lalalal");
+        acertijo.setTipo(TipoAcertijo.DRAG_DROP);
+
+        DragDropItem item1 = new DragDropItem();
+        item1.setCategoriaCorrecta("cat1");
+        item1.setId(1L);
+        DragDropItem item2 = new DragDropItem();
+        item2.setId(2L);
+        item2.setCategoriaCorrecta("cat2");
+
+        List<DragDropItem> items = new ArrayList<>();
+        items.add(item1);
+        items.add(item2);
+
+        Long idUsuario = 1L;
+
+        String ordenIngresado = "1:cat2,2:cat1";
+
+        when(repositorioPartida.obtenerItemsDragDrop(acertijo.getId())).thenReturn(items);
+        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(), ordenIngresado, idUsuario);
+
+        verify(repositorioPartida).obtenerItemsDragDrop(acertijo.getId());
+        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+        verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        assertFalse(validacionDeRespuesta);
+    }
+
+
 
 
     @Test
@@ -348,6 +467,58 @@ public class ServicioPartidaImplTest {
 
         verify(repositorioPartida).finalizarPartida(partida);
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(usuario.getId());
+    }
+
+    @Test
+    public void deberiaDevolverUnaPartidaActivaPorUsuario(){
+        Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
+                true, 10,"puerta-mansion.png");
+        Usuario usuario = new Usuario();
+        Partida partida = new Partida(LocalDateTime.now());
+        partida.setSala(sala);
+        partida.setUsuario(usuario);
+
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(usuario.getId())).thenReturn(partida);
+
+        Partida partidaObtenida =this.servicioPartida.obtenerPartidaActivaPorIdUsuario(usuario.getId());
+
+        assertThat(partidaObtenida, equalTo(partida));
+        verify(repositorioPartida).obtenerPartidaActivaPorUsuario(usuario.getId());
+    }
+
+    @Test
+    public void deberiaDevolverUnaListaDeCategoriasCreadasAPartirDeLasCategoriasCorrectasDelAcertijoDragDrop(){
+        DragDropItem item1 = new DragDropItem();
+        item1.setCategoriaCorrecta("cat1");
+        DragDropItem item2 = new DragDropItem();
+        item2.setCategoriaCorrecta("cat2");
+
+        Set<DragDropItem> itemsDD = new HashSet<>();
+        itemsDD.add(item1);
+        itemsDD.add(item2);
+
+        Acertijo acertijo = new Acertijo( "a1");
+        acertijo.setTipo(TipoAcertijo.DRAG_DROP);
+        acertijo.setDragDropItems(itemsDD);
+
+        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+
+        List <String> listaObtenida = this.servicioPartida.obtenerCategoriasDelAcertijoDragDrop(acertijo.getId());
+
+        assertThat(listaObtenida, containsInAnyOrder("cat1", "cat2"));
+        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+    }
+
+    @Test
+    public void deberiaDevolverUnaPartida_CuandoLaBuscoporId(){
+        Partida partida = new Partida(LocalDateTime.now());
+
+        when(repositorioPartida.buscarPartidaPorId(partida.getId())).thenReturn(partida);
+
+        Partida partidaObtenida = this.servicioPartida. buscarPartidaPorId(partida.getId());
+
+        assertThat(partidaObtenida, equalTo(partida));
+        verify(repositorioPartida).buscarPartidaPorId(partida.getId());
     }
 
 

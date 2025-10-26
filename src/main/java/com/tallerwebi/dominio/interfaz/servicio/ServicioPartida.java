@@ -22,7 +22,7 @@ public interface ServicioPartida {
 
     void finalizarPartida(Long idUsuario, Boolean ganada);
 
-    boolean validarTiempo(Long id_usuario);
+    boolean tiempoExpirado(Partida partida);
 
     Partida obtenerPartidaActivaPorIdUsuario(Long idUsuario);
 

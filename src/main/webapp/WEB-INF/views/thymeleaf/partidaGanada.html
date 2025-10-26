@@ -35,7 +35,16 @@
         <h1 class="titulo-final fw-bold">Felicidades!</h1>
         <p class="fs-5">Lograste salir con vida</p>
 
-        <h5 class="fs-6" th:if="${partida != null}" th:text="'Puntaje total: '+ ${partida.puntaje}"></h5>
+        <div class="d-flex flex-row justify-content-center g-2">
+            <h5 class="ms-2 fw-bold" th:if="${partida != null}">
+                Puntaje total: <span class="fw-light" th:text="${partida.puntaje} + ' pts'"></span>
+            </h5>
+
+            <h5 class="ms-3 fw-bold" th:if="${partida != null}">
+                Tiempo: <span class="fw-light" th:text="${partida.tiempoTotal}  + ' seg'"></span>
+            </h5>
+        </div>
+
 
         <div class="d-flex justify-content-center gap-3 mt-3">
             <a th:href="@{/inicio/}" class="btn btn-inicio">Ir al inicio</a>

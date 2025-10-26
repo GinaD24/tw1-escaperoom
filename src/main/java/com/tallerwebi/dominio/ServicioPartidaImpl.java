@@ -95,7 +95,6 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
         Acertijo acertijo = this.repositorioPartida.buscarAcertijoPorId(idAcertijo);
 
-
         switch(acertijo.getTipo()){
             case ADIVINANZA:
                 String[] palabrasIngresadas = respuesta.toLowerCase().split("\\s+");
@@ -108,6 +107,9 @@ public class ServicioPartidaImpl implements ServicioPartida {
                 break;
 
             case ORDENAR_IMAGEN:
+
+            case SECUENCIA:
+
                 List<Long> ordenSeleccionado = Arrays.stream(respuesta.split(","))
                         .map(Long::valueOf)
                         .collect(Collectors.toList());
@@ -125,8 +127,8 @@ public class ServicioPartidaImpl implements ServicioPartida {
                         .map(pair -> pair.split(":"))
                         .filter(arr -> arr.length == 2)
                         .collect(Collectors.toMap(
-                                arr -> Long.valueOf(arr[0]), // id de imagen
-                                arr -> arr[1]               // categoría donde la puso
+                                arr -> Long.valueOf(arr[0]),
+                                arr -> arr[1]
                         ));
 
                 List<DragDropItem> itemsCorrectos = this.repositorioPartida.obtenerItemsDragDrop(idAcertijo);
@@ -141,23 +143,6 @@ public class ServicioPartidaImpl implements ServicioPartida {
                     partida.setPuntaje(partida.getPuntaje() + 100);
                 }
                 break;
-
-            case SECUENCIA:
-                // Parsear respuesta del usuario
-                List<Long> secuenciaUsuario = Arrays.stream(respuesta.split(","))
-                        .map(Long::valueOf)
-                        .collect(Collectors.toList());
-
-                // Obtener la secuencia correcta desde la base de datos
-                List<Long> secuenciaCorrecta = this.repositorioPartida.obtenerOrdenDeImgCorrecto(idAcertijo);
-
-                if(secuenciaUsuario.equals(secuenciaCorrecta)){
-                    esCorrecta = true;
-                    partida.setPuntaje(partida.getPuntaje() + 100);
-                }
-                break;
-
-
 
         }
 
@@ -201,23 +186,6 @@ public class ServicioPartidaImpl implements ServicioPartida {
         }
     }
 
-    @Override
-    @Transactional
-    public boolean validarTiempo(Long id_usuario) {
-        Partida partida = repositorioPartida.obtenerPartidaActivaPorUsuario(id_usuario);
-        Sala salaPartida = partida.getSala();
-
-        LocalDateTime inicio = partida.getInicio();
-        LocalDateTime tiempoActual = LocalDateTime.now();
-        Long duracionMinutos = Duration.between(inicio, tiempoActual).toMinutes();
-
-        boolean tiempoValido = true;
-
-        if(duracionMinutos >= salaPartida.getDuracion()) {
-            tiempoValido = false;
-        }
-        return tiempoValido;
-    }
 
     @Override
     @Transactional
@@ -294,4 +262,11 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
         return acertijoSeleccionado;
     }
+
+    public boolean tiempoExpirado(Partida partida) {
+        Integer duracionMinutos = partida.getSala().getDuracion();
+        LocalDateTime finEsperado = partida.getInicio().plusMinutes(duracionMinutos);
+        return LocalDateTime.now().isAfter(finEsperado);
+    }
+
 }

@@ -72,7 +72,7 @@
         <div th:if="${error != null}" th:text="${error}" class="text-danger mt-2 text-center"></div>
 
         <button id="btnPista" class="btn btn-pista rounded-pill mt-3"
-                th:if="${acertijo != null}"
+                th:if="${acertijo != null and acertijo.tipo != T(com.tallerwebi.dominio.enums.TipoAcertijo).SECUENCIA}"
                 th:attr="data-acertijo=${acertijo.id}">
             Mostrar pista
         </button>
