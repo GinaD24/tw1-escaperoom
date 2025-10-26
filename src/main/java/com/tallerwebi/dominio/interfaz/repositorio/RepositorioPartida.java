@@ -38,4 +38,6 @@ public interface RepositorioPartida {
     List<Long> obtenerOrdenDeImgCorrecto(Long idAcertijo);
 
     List<DragDropItem> obtenerItemsDragDrop(Long idAcertijo);
+
+    Partida buscarPartidaPorId(Long idPartida);
 }

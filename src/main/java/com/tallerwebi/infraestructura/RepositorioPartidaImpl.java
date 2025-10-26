@@ -178,5 +178,13 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
                 .getResultList();
     }
 
+    @Override
+    public Partida buscarPartidaPorId(Long idPartida) {
+        String hql = "SELECT p FROM Partida p WHERE p.id = :idPartida";
+        Query<Partida> query = this.sessionFactory.getCurrentSession().createQuery(hql, Partida.class);
+        query.setParameter("idPartida", idPartida);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
 
 }

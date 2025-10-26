@@ -18,6 +18,7 @@ public class DatosPartidaSesion {
     private Long idEtapa;
     private Long idAcertijo;
     private Boolean partidaGanada;
+    private Long idPartida;
 
     @Autowired
     public DatosPartidaSesion(ServicioPartida servicioPartida, HttpSession session) {
@@ -63,6 +64,14 @@ public class DatosPartidaSesion {
 
     public void setPartidaGanada(Boolean partidaGanada) {
         session.setAttribute("partida_ganada", partidaGanada);
+    }
+
+    public Long getIdPartida() {
+        return (Long) session.getAttribute("idPartida");
+    }
+
+    public void setIdPartida(Long idPartida) {
+        session.setAttribute("idpartida", idPartida);
     }
 
     public void limpiarSesionPartida() {

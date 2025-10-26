@@ -33,11 +33,12 @@
 
   <div class="partida-finalizada text-center mt-4">
     <h1 class="titulo-final fw-bold">Perdiste!</h1>
-    <p class="fs-5" th:text="'No lograste escapar de ' + ${sala.nombre}"></p>
+    <p class="fs-5" th:text="${sala.nombre} + ' reclama una nueva victima,'"></p>
+    <p class="fs-5">lo único que permanece es el eco del fracaso.</p>
 
-    <div class="d-flex justify-content-center gap-3 mt-3">
-      <a th:href="@{/inicio/}" class="btn btn-success">Ir al inicio</a>
-      <a th:href="@{/partida/sala_{idSala}(idSala=${sala.id})}" class="btn btn-primary">Reintentar</a>
+    <div class="d-flex justify-content-center gap-3 mt-5">
+      <a th:href="@{/inicio/}" class="btn btn-inicio">Ir al inicio</a>
+      <a th:href="@{/partida/sala_{idSala}(idSala=${sala.id})}" class="btn btn-reintentar">Reintentar</a>
     </div>
 
   </div>

@@ -35,17 +35,15 @@
         <h1 class="titulo-final fw-bold">Felicidades!</h1>
         <p class="fs-5">Lograste salir con vida</p>
 
+        <h5 class="fs-6" th:if="${partida != null}" th:text="'Puntaje total: '+ ${partida.puntaje}"></h5>
+
         <div class="d-flex justify-content-center gap-3 mt-3">
-            <a th:href="@{/inicio/}" class="btn btn-success">Ir al inicio</a>
+            <a th:href="@{/inicio/}" class="btn btn-inicio">Ir al inicio</a>
         </div>
     </div>
 
 
 </main>
-
-<p class="nota mb-5 position-absolute bottom-0 start-50 translate-middle-x">
-    Te deseamos mejor suerte la proxima
-</p>
 
 </body>
 </html>

@@ -27,4 +27,6 @@ public interface ServicioPartida {
     Partida obtenerPartidaActivaPorIdUsuario(Long idUsuario);
 
     List<String> obtenerCategoriasDelAcertijoDragDrop(Long idAcertijo);
+
+    Partida buscarPartidaPorId(Long idPartida);
 }

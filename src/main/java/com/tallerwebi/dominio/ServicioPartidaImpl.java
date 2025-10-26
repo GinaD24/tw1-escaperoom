@@ -237,6 +237,11 @@ public class ServicioPartidaImpl implements ServicioPartida {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
+    public Partida buscarPartidaPorId(Long idPartida) {
+        return this.repositorioPartida.buscarPartidaPorId(idPartida);
+    }
 
 
     @Override

@@ -139,6 +139,7 @@ public class ControladorPartida {
         } 
 
         Partida partida = servicioPartida.obtenerPartidaActivaPorIdUsuario(id_usuario);
+        datosPartidaSesion.setIdPartida(partida.getId());
         modelo.put("partida", partida);
         modelo.put("salaElegida", sala);
         modelo.put("etapa", etapa);
@@ -173,11 +174,14 @@ public class ControladorPartida {
         Boolean ganada = datosPartidaSesion.getPartidaGanada();
         if (ganada == null) ganada = false;
 
+
         this.servicioPartida.finalizarPartida(idUsuario, ganada);
+        //Partida partida = this.servicioPartida.buscarPartidaPorId(datosPartidaSesion.getIdPartida());
 
         ModelMap modelo = new ModelMap();
         Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
         modelo.put("sala", sala);
+        //modelo.put("partida", partida);
 
         if (ganada) {
             return new ModelAndView("partidaGanada", modelo);
@@ -190,7 +194,9 @@ public class ControladorPartida {
 
     @GetMapping("/validarTiempo")
     private ModelAndView validarTiempo(@SessionAttribute("id_usuario") Long id_usuario) {
+        Partida partida = servicioPartida.obtenerPartidaActivaPorIdUsuario(id_usuario);
         datosPartidaSesion.setPartidaGanada(false);
+        datosPartidaSesion.setIdPartida(partida.getId());
         servicioPartida.validarTiempo(id_usuario);
         return new ModelAndView("redirect:/partida/finalizarPartida");
     }
