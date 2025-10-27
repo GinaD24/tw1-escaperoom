@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,97 +7,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-    <link th:href="@{/js/perfil.js}"/>
-    <!-- custom style -->
     <link rel="stylesheet" th:href="@{/css/perfilJugador.css}"/>
 
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
-
 <body>
 
 <header>
-    <nav class="navbar navbar-expand-lg ">
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <div class="">
-                <a th:href="@{/inicio/}">
-                    <img class="logo-escape ms-3" style="width: 60px " alt="logo" th:src="@{/img/Logo.png}">
-                </a>
-            </div>
-            <h1 class="navbar-brand mt-3 mx-auto" style="padding-left: 88px;">ESCAPE ROOM</h1>
+            <a th:href="@{/inicio/}">
+                <img class="logo-escape ms-3" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
+            </a>
+            <h1 class="navbar-brand mt-3 mx-auto" style="padding-left: 80px;">ESCAPE ROOM</h1>
             <div class="d-flex">
-                <div class="iconos-nav d-flex me-4">
-                    <a class="icono me-3" th:href="@{/ranking/}">
-                        <img th:src="@{/img/icono-ranking.png}" alt="img-ranking" style="width: 50px">
-                    </a>
-                </div>
-                <div class="iconos-nav d-flex">
-                    <a class="icono me-3" th:href="@{/cerrar-sesion}">
-                        <img th:src="@{/img/iconoLogOut.png}" alt="img-ranking" style="width: 50px">
-                    </a>
-                </div>
+                <a class="icono me-3" th:href="@{/ranking/}">
+                    <img th:src="@{/img/icono-ranking.png}" alt="img-ranking" style="width: 50px">
+                </a>
+                <a class="icono me-3" th:href="@{/cerrar-sesion}">
+                    <img th:src="@{/img/iconoLogOut.png}" alt="img-logout" style="width: 50px">
+                </a>
             </div>
         </div>
     </nav>
 </header>
 
-
 <main>
     <div class="contenedor">
 
-        <div id="previewContainer" class="contenedorFoto w-full aspect-square border-dotted border-4" style=" border: solid 4px #ffff00;">
+        <div id="previewContainer" class="contenedorFoto w-full aspect-square border-dotted border-4" style="border: solid 4px #ffff00;">
             <img src="" alt="" id="preview" class="w-full h-full object-fit object-center">
         </div>
 
-        <div  class="contenedorTitulo">
-            <h1  th:text="${perfil.nombreUsuario}"></h1>
-            <h3  th:text="${perfil.nombre} + ' ' +  ${perfil.apellido}"></h3>
-            <h3  th:text="${perfil.fechaNacimiento}"></h3>
+        <div class="contenedorTitulo">
+            <h1 th:text="${perfil.nombreUsuario}"></h1>
+            <h3 th:text="${perfil.nombre} + ' ' + ${perfil.apellido}"></h3>
+            <h3 th:text="${perfil.fechaNacimiento}"></h3>
         </div>
         <a class="btn btn-primary">Editar perfil</a><br>
-
+        <a  th:href="@{'/perfil/' + ${perfil.id} + '/historial'}" class="btn btn-primary mb-4">Ver Historial</a>
         <div id="fileUpload" class="w-full aspect-square border-dotted border-4 rounded-md p-8 flex items-center justify-center">
             <a class="btn btn-primary mb-4" id="botonCambiarFoto">Cambiar foto</a>
-            <input id="imagen" type="file" hidden name="imagen" accept=".png, .jpg, .jpeg" >
-
+            <input id="imagen" type="file" hidden name="imagen" accept=".png, .jpg, .jpeg">
             <div id="uploadContent" class="w-full text-center flex flex-col items-center justify-center gap-1">
-                <img src="/imagesPokedex/upload.svg" alt="">
                 <p class="text-sm text-gray-600">Solo archivos jpg, jpeg y png</p>
             </div>
         </div>
 
-
-
+        <a class="btn btn-primary" id="checkout-btn">Pagar</a>
     </div>
-
 </main>
 
+<script src="/spring/js/apiMercado.js"></script>
+<script src="/spring/js/perfi.js"></script>
 </body>
-
 </html>
-
-<script>
-    var fileUpload = document.getElementById("fileUpload")
-    var previewContainer = document.getElementById("previewContainer")
-    var inputFile = document.getElementById("imagen")
-    var preview = document.getElementById("preview")
-    var uploadContent = document.getElementById("uploadContent")
-    var botonCambiarFoto = document.getElementById("botonCambiarFoto")
-
-    previewContainer.style.display = "none"
-
-    imagen.addEventListener('change', (event) => {
-        var file = event.target.files[0]
-        if (file) {
-            const url = URL.createObjectURL(file)
-            preview.src = url
-            uploadContent.style.display = "none"
-            previewContainer.style.display = "block"
-        }
-    })
-
-    botonCambiarFoto.addEventListener('click', () => {
-        // Al hacer clic en el botón, hacemos clic programáticamente en el input de archivo oculto
-        inputFile.click();
-    })
-
-</script>

@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Partidas - Escape Room</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/perfilJugador.css}"/>
+    <link rel="stylesheet" th:href="@{/css/ranking-sala.css}"/>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
         .font-rajdhani {
@@ -22,117 +24,102 @@
     </style>
 </head>
 
-<body class="pt-12 flex flex-col items-center justify-center text-white p-4 min-h-screen relative overflow-x-hidden"
-      style="
-          background: linear-gradient(135deg, #2c0d5a 0%, #1a0b3d 30%, #0d1a4f 100%);
-          background-attachment: fixed;
-      ">
 
-<div class="fixed inset-0 z-0 pointer-events-none"
-     style=" background-image:
-                radial-gradient(circle at 20% 50%, rgba(255, 235, 59, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(30, 144, 255, 0.1) 0%, transparent 50%); ">
-</div>
-
-<header class="w-full fixed top-0 left-0 z-10 py-8" style="background-color: #1a1a3b;">
-    <div class="container-fluid flex justify-between items-center px-4 mx-auto">
-        <div>
+<header>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
             <a th:href="@{/inicio/}">
-                <img class="logo-escape" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
+                <img class="logo-escape ms-3" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
             </a>
+            <h1 class="navbar-brand mt-3 mx-auto" style="padding-left: 64px;">ESCAPE ROOM</h1>
+            <div class="d-flex gap-3">
+                <a class="icono" th:href="@{/perfil/verPerfil}">
+                    <img th:src="@{/img/icono-perfil.png}" alt="img-user" style="width: 50px">
+                </a>
+                <a class="icono me-3" th:href="@{/cerrar-sesion}">
+                    <img th:src="@{/img/iconoLogOut.png}" alt="img-logout" style="width: 50px">
+                </a>
+            </div>
         </div>
-        <a class="text-4xl sm:text-5xl font-bold text-center text-yellow-300 tracking-wider hover:text-blue-800 font-rajdhani"
-           href="#"
-           style="
-                   text-shadow: 0 0 10px rgba(255, 235, 59, 0.3);
-               ">
-            ESCAPE ROOM
-        </a>
-        <div class="h-6 flex gap-2 items-center">
-            <img th:src="@{/img/person (2).svg}" alt="Perfil" class="w-6 h-6 object-contain cursor-pointer hover:opacity-80 transition duration-200">
-            <img th:src="@{/img/hamburger-button.svg}" alt="Menú" class="w-6 h-6 object-contain cursor-pointer hover:opacity-80 transition duration-200">
-        </div>
-    </div>
+    </nav>
 </header>
 
-<div class="w-full max-w-4xl space-y-4 pt-8">
-    <h1 class="text-3xl font-bold text-yellow-300 mb-6 border-b border-gray-700 pb-2">Historial de Partidas</h1>
 
-    <div th:if="${#lists.isEmpty(historial)}" class="text-center py-10 bg-gray-800 rounded-lg shadow-xl">
-        <p class="text-xl text-gray-400">Aún no has finalizado ninguna partida.</p>
-        <p class="text-sm text-gray-500 mt-2">¡Es hora de poner a prueba tus habilidades!</p>
-    </div>
-
+<div class="container my-4">
     <div class="row justify-content-center mb-4">
         <div class="col-md-6">
-            <form th:action="@{/historial/filtrarHistorialPorSala}" method="get">
+            <form th:action="@{/historial/filtrarPorSala}" method="get">
                 <div class="input-group">
                     <select class="form-select rounded-pill me-2" name="filtroSalas" id="filtroSalas">
                         <option disabled>Filtrar por sala</option>
                         <option th:each="sala : ${salas}"
                                 th:value="${sala.id}"
-                                th:text="${sala.nombre}">
+                                th:text="${sala.nombre}"
+                                th:selected="${sala.id == salaSeleccionada.id}">
                         </option>
                     </select>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4">
-                        Filtrar Historial
+                    <button type="submit" class="btn rounded-pill px-4 text-black" style="background-color: #fafb63;">
+                        Filtrar
                     </button>
                 </div>
             </form>
+
         </div>
     </div>
 
-    <div id="match-list" class="space-y-3" th:unless="${#lists.isEmpty(historial)}">
-        <div th:each="partida : ${historial}"
-             class="match-item p-4 rounded-lg shadow-xl flex flex-col sm:flex-row justify-between items-center gap-4 transition duration-300 ease-in-out hover:scale-[1.01]"
+    <h1 class="text-3xl fw-bold mb-4 border-bottom border-secondary pb-2" style="color: #fafb63;">Historial de Partidas</h1>
 
-             th:classappend="${partida.ganada ? 'match-victory' : 'match-defeat'}">
+    <div th:if="${#lists.isEmpty(historial)}" class="text-center py-5 bg-dark text-white rounded shadow">
+        <p class="fs-5 text-secondary">Aún no has finalizado ninguna partida.</p>
+        <p class="text-muted mt-2">¡Es hora de poner a prueba tus habilidades!</p>
+    </div>
 
-            <div class="w-full sm:w-1/4 flex flex-col items-center sm:items-start text-center sm:text-left">
-                <span th:text="${partida.ganada ? 'VICTORIA' : 'DERROTA'}"
-                      class="match-resultado text-2xl font-bold uppercase"
-                      th:classappend="${partida.ganada ? 'text-green-400' : 'text-red-400'}">
+
+    <div id="match-list" class="d-grid gap-3" th:unless="${#lists.isEmpty(historial)}">
+        <div th:each="registro : ${historial}"
+             class="match-item p-3 rounded shadow d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 transition-hover"
+
+             th:classappend="${registro.gano ? 'match-victory' : 'match-defeat'}">
+
+            <div class="w-100 w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
+                <span th:text="${registro.gano ? 'VICTORIA' : 'DERROTA'}"
+                      class="match-resultado fs-4 fw-bold text-uppercase"
+                      th:classappend="${registro.gano ? 'text-success' : 'text-danger'}">
                     RESULTADO
                 </span>
 
-                <span th:text="${partida.sala.dificultad}"
-                      class="match-dificultad text-sm font-semibold mt-1 p-1 rounded-sm bg-gray-600 text-yellow-300">
-                    DIFICULTAD
+                <span th:text="|ID Sala: ${registro.idSala}|"
+                      class="match-dificultad badge bg-secondary text-warning fw-semibold mt-1">
+                    ID SALA
                 </span>
             </div>
 
-            <div class="w-full sm:w-1/4 flex flex-col items-center sm:items-start text-center sm:text-left">
-                <span th:text="${#temporals.format(partida.fechaCreacion, 'dd/MM/yyyy')}"
-                      class="match-datos text-sm text-gray-300">
+            <div class="w-100 w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
+                <span th:text="${#temporals.format(registro.fecha, 'dd/MM/yyyy HH:mm')}"
+                      class="match-datos text-sm text-secondary">
                     FECHA
                 </span>
 
-                <span th:text="|${partida.sala.duracion} min|"
-                      class="match-tiempo text-xl font-bold mt-1">
-                    00 min
+                <span th:text="${registro.jugador}"
+                      class="match-tiempo fs-5 fw-bold mt-1 text-white">
+                    NOMBRE JUGADOR
                 </span>
-                <span class="text-xs text-gray-400">Duración Estándar</span>
+                <span class="text-muted small">Jugador</span>
             </div>
 
-            <div class="w-full sm:w-1/4 flex flex-col items-center sm:items-start text-center sm:text-left">
-                <div class="match-clues text-xl font-bold">
-                    <span th:text="${partida.pistasUsadas}" class="clues-used text-yellow-300">X</span> /
-                    <span class="clues-total text-gray-400">5</span> </div>
-                <span class="text-xs text-gray-400">Pistas Utilizadas</span>
+            <div class="w-100 w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
+                <div class="match-clues fs-5 fw-bold">
+                    <span th:text="${registro.id}" class="clues-used text-warning">X</span> </div>
+                <span class="text-muted small">ID de Partida</span>
             </div>
 
-            <div class="w-full sm:w-1/4 flex justify-center sm:justify-end">
-                <div class="flex items-center space-x-2">
-                    <img th:src="@{${partida.sala.imagen}}"
-                         class="room-image w-14 h-18 pr-4 border-yellow-300"
-                         alt="Sala Jugada">
-
-                    <div class="flex flex-col">
-                        <span th:text="${partida.sala.nombre}" class="match-room-name text-lg font-semibold">
-                            Nombre de la Sala
+            <div class="w-100 w-sm-25 d-flex justify-content-center justify-content-sm-end">
+                <div class="d-flex align-items-center">
+                    <div class="d-flex flex-column">
+                        <span th:text="${salaSeleccionada.nombre}" class="match-room-name fs-6 fw-semibold text-white">
+                            Nombre de la Sala Seleccionada
                         </span>
-                        <span class="text-xs text-gray-400">Sala Jugada</span>
+                        <span class="text-muted small">Filtrado por Sala</span>
                     </div>
                 </div>
             </div>
@@ -140,87 +127,6 @@
     </div>
 </div>
 
-</div>
-
-<script>
-    const matches = [
-        {
-            resultado: 'VICTORIA',
-            datos: '05/09/2025',
-            tiempo: '6:46',
-            pistas_utilizadas: 1,
-            dificultad: 'PRINCIPIANTE',
-            nombre_sala: 'La Mansion Misteriosa',
-            sala_img: '/spring/img/puerta-1.png',
-        },
-        {
-            resultado: 'VICTORIA',
-            datos: '04/09/2025',
-            tiempo: '11:23',
-            pistas_utilizadas: 3,
-            dificultad: 'INTERMEDIO',
-            nombre_sala: 'El Laboratorio Secreto',
-            sala_img: '/spring/img/puerta-2.png'
-        },
-        {
-            resultado: 'DERROTA',
-            datos: '02/09/2025',
-            tiempo: '20:00',
-            pistas_utilizadas: 5,
-            dificultad: 'AVANZADO',
-            nombre_sala: 'La Carcel Abandonada',
-            sala_img: '/spring/img/puerta-3.png'
-        },
-        {
-            resultado: 'VICTORIA',
-            datos: '01/09/2025',
-            tiempo: '09:05',
-            pistas_utilizadas: 2,
-            dificultad: 'INTERMEDIO',
-            nombre_sala: 'El Laboratorio Secreto',
-            sala_img: '/spring/img/puerta-2.png',
-        }
-    ];
-
-    const listContainer = document.getElementById('match-list');
-    const template = document.getElementById('match-template');
-
-    matches.forEach(match => {
-        const matchElement = template.content.cloneNode(true).querySelector('.match-item');
-
-        // Determinar clases de color según el resultado
-        if (match.resultado === 'VICTORIA') {
-            matchElement.classList.add('match-victory');
-            matchElement.querySelector('.match-resultado').classList.add('text-green-400');
-        } else {
-            matchElement.classList.add('match-defeat');
-            matchElement.querySelector('.match-resultado').classList.add('text-red-400');
-        }
-
-        // Mapear dificultad a color para la etiqueta
-        let dificultadColor = '';
-        if (match.dificultad === 'PRINCIPIANTE') {
-            dificultadColor = 'bg-green-600';
-        } else if (match.dificultad === 'INTERMEDIO') {
-            dificultadColor = 'bg-yellow-600';
-        } else {
-            dificultadColor = 'bg-red-600';
-        }
-
-        // Llenar los datos
-        matchElement.querySelector('.match-resultado').textContent = match.resultado;
-        matchElement.querySelector('.match-datos').textContent = `Dia: ${match.datos}`;
-        matchElement.querySelector('.match-tiempo').textContent = match.tiempo;
-        matchElement.querySelector('.clues-used').textContent = match.pistas_utilizadas;
-        matchElement.querySelector('.match-dificultad').textContent = match.dificultad;
-        matchElement.querySelector('.match-dificultad').classList.add(dificultadColor);
-        matchElement.querySelector('.match-room-name').textContent = match.nombre_sala;
-
-        const salaImagen = matchElement.querySelector('.room-image');
-        salaImagen.src = match.sala_img;
-
-        listContainer.appendChild(matchElement);
-    });
-</script>
+<script th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
 </body>
 </html>
