@@ -63,7 +63,7 @@
         <div class="row justify-content-center g-4">
 
             <div class="col-md-5" th:each="sala : ${salas}" >
-                <a th:href="@{/inicio/sala/{id}(id=${sala.id})}" style="text-decoration: none;">
+                <a th:attr="id=${'sala-' + sala.id}" th:href="@{/inicio/sala/{id}(id=${sala.id})}" style="text-decoration: none;">
                     <div class="card text-center shadow sala-card">
                         <span class="lock-icon"><i class="bi bi-unlock"></i></span>
                         <div>
