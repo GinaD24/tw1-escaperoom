@@ -97,8 +97,8 @@ INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('No puedes tocarme,
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('SOMBRA', TRUE, 3);
 
 -- PISTAS Y RESPUESTAS PARA ACERTIJOS 10-12 (Etapa 4)
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Se esconde en el cajón más pequeño del escritorio, esperando abrir algo importante.', 1, 6);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LLAVE', TRUE, 6);
+    INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Se esconde en el cajón más pequeño del escritorio, esperando abrir algo importante.', 1, 6);
+    INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LLAVE', TRUE, 6);
 
 INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los detalles más pequeños son a menudo los más importantes.', 1, 7); -- Pista nueva
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LUPA', TRUE, 7); -- Respuesta nueva
@@ -193,5 +193,108 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
 (17, 'engranaje-nuevo.png', 'Nucleo'),
 (17, 'bateria-rota.png', 'Residuos');
 
+-- ------------------------------------------------------------------
+-- ETAPAS PARA LA SALA 3: 'La Carcel Abandonada' (id_sala = 3)
+-- ------------------------------------------------------------------
+INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
+('La Celda', 1, 'Despiertas en una celda fría y oscura. La puerta de barrotes está cerrada. Tu primer desafío es encontrar la forma de salir de aquí.', 3, 'etapa-celda.png'),
+('Pabellón A', 2, 'Has salido de tu celda, pero ahora te encuentras en el pasillo principal del pabellón. Las miradas vacías de otras celdas te observan. Debes encontrar la salida antes de que un guardia te descubra.', 3, 'etapa-pabellon.png'),
+('Comedor', 3, 'El desorden y los restos de una revuelta cubren el suelo del comedor. Entre las mesas y sillas volcadas se esconde la clave para acceder a las áreas de servicio.', 3, 'etapa-comedor.png'),
+('Enfermería', 4, 'Un olor a antiséptico inunda la enfermería. Entre historiales médicos y viejas medicinas, hay algo que te ayudará a neutralizar un obstáculo más adelante.', 3, 'etapa-enfermeria.png'),
+('Patio de Recreo', 5, 'Finalmente, un respiro de aire "libre", aunque rodeado por muros altos y alambre de púas. La libertad parece cerca, pero el camino a la salida está vigilado. Resuelve el acertijo del patio para no llamar la atención.', 3, 'etapa-patio.png'),
+('Sala de Guardias', 6, 'Una pequeña sala con monitores apagados y un tablero de llaves. Es tu oportunidad para conseguir acceso a la zona administrativa, pero cuidado con las alarmas silenciosas.', 3, 'etapa-sala-guardias.png'),
+('Lavandería', 7, 'El vapor y el ruido de las máquinas industriales llenan el ambiente. Un antiguo túnel de servicio se rumorea que conecta esta sala con el exterior. Encuentra la entrada.', 3, 'etapa-lavanderia.png'),
+('Sala de Visitas', 8, 'El cristal blindado que separa a los reclusos de sus familias ahora es un obstáculo para ti. Hay un mensaje críptico dejado en uno de los teléfonos.', 3, 'etapa-visitas.png'),
+('Oficina del Alcaide', 9, 'El corazón de la prisión. Aquí se guardan los secretos y, lo más importante, el control manual de la puerta principal. Resuelve el último enigma para tomar el control.', 3, 'etapa-oficina-alcaide.png'),
+('Puerta Principal', 10, 'Estás a un paso de la libertad. Has desactivado la seguridad desde la oficina del alcaide, pero la puerta principal tiene un último mecanismo de bloqueo. Resuélvelo y escapa.', 3, 'etapa-puerta.png');
 
+-- ------------------------------------------------------------------
+-- ACERTIJOS PARA LA SALA 3: 'La Carcel Abandonada'
+-- ------------------------------------------------------------------
 
+-- ACERTIJO ETAPA 1: La Celda (id_etapa = 14) - ADIVINANZA
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(18, 'ADIVINANZA', 'Te retengo sin tocarte, te observo sin tener ojos y aunque soy fuerte, un pequeño objeto es mi amo. ¿Qué soy?', 14);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Busca en la puerta de tu celda, es lo único que te impide salir.', 1, 18);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('CERRADURA', TRUE, 18);
+
+-- ACERTIJO ETAPA 2: Pabellón A (id_etapa = 15) - SECUENCIA
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(19, 'SECUENCIA', 'Una luz de emergencia parpadea en la oscuridad del pasillo. Replica la secuencia en el panel de seguridad para abrir la siguiente puerta.', 15);
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
+(19, 'luz-roja.png', 1),
+(19, 'luz-azul.png', 2),
+(19, 'luz-amarilla.png', 3),
+(19, 'luz-verde.png', 4);
+
+-- ACERTIJO ETAPA 3: Comedor (id_etapa = 16) - DRAG & DROP
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(20, 'DRAG_DROP', 'El motín dejó todo revuelto. Un guardia perdio una llave, debes limpiar el desorden para encontrarla. Clasifica los objetos entre "Vajilla" y "Contrabando".', 16);
+INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
+(20, 'item-bandeja-metalica.png', 'Vajilla'),
+(20, 'item-cuchara.png', 'Vajilla'),
+(20, 'item-vaso-plastico.png', 'Vajilla'),
+(20, 'item-tenedor-afilado.png', 'Contrabando'),
+(20, 'item-celular-escondido.png', 'Contrabando'),
+(20, 'item-ganzua-improvisada.png', 'Contrabando');
+
+-- ACERTIJO ETAPA 4: Enfermería (id_etapa = 17) - ORDENAR IMAGEN
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(21, 'ORDENAR_IMAGEN', 'En un manual de primeros auxilios encuentras los pasos para tratar una herida. Ordénalos correctamente para revelar el código de la siguiente sala.', 17);
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
+(21, 'aplicar-gasa.png', 3),
+(21, 'vendar.png', 4),
+(21, 'limpiar-herida.png', 1),
+(21, 'desinfectar.png', 2);
+-- ACERTIJO ETAPA 5: Patio de Recreo (id_etapa = 18) - ADIVINANZA
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(22, 'ADIVINANZA', 'Boto y reboto sin salir de este lugar, siempre rodeada de gente pero eternamente sola en mi viaje. Los guardias me vigilan, pero no me pueden encerrar. ¿Qué soy?', 18);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Piensa en el objeto más común para jugar en un patio.', 1, 22);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('PELOTA', TRUE, 22);
+
+-- ACERTIJO ETAPA 6: Sala de Guardias (id_etapa = 19) - SECUENCIA
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(23, 'SECUENCIA', 'El código de anulación de la alarma se muestra brevemente en un monitor. Memoriza la secuencia de símbolos y reprodúcela en el teclado numérico.', 19);
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
+(23, 'simbolo-triangulo.png', 1),
+(23, 'simbolo-cuadrado.png', 2),
+(23, 'simbolo-circulo.png', 3),
+(23, 'simbolo-rectangulo.png', 4),
+(23, 'simbolo-rombo.png', 5);
+
+-- ACERTIJO ETAPA 7: Lavandería (id_etapa = 20) - ORDENAR IMAGEN
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(24, 'ORDENAR_IMAGEN', 'Un cartel muestra el procedimiento correcto para usar las lavadoras industriales. Ordena las imágenes para encontrar la combinación que abre el conducto de ventilación.', 20);
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
+(24, 'agregar-jabon.png', 2),
+(24, 'cargar-ropa.png', 1),
+(24, 'iniciar.png', 4),
+(24, 'seleccionar-ciclo.png', 3);
+
+-- ACERTIJO ETAPA 8: Sala de Visitas (id_etapa = 21) - DRAG & DROP
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(25, 'DRAG_DROP', 'Los guardias han confiscado varios objetos durante las visitas. Ayuda a clasificarlos correctamente en "Permitido" y "Prohibido" para no levantar sospechas.', 21);
+INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
+(25, 'carta-familiar.png', 'Permitido'),
+(25, 'libro.png', 'Permitido'),
+(25, 'mapa-prision.png', 'Prohibido'),
+(25, 'telefono-pequenio.png', 'Prohibido'),
+(25, 'fotos-personales.png', 'Permitido'),
+(25, 'lima-metalica.png', 'Prohibido');
+
+-- ACERTIJO ETAPA 9: Oficina del Alcaide (id_etapa = 22) - DRAG & DROP
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(26, 'DRAG_DROP', 'El alcaide es un hombre de orden. Clasifica los objetos de su escritorio en sus cajas correspondientes: "Documentos Oficiales", "Afectos Personales" y "Equipo de Seguridad".', 22);
+INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
+(26, 'informe-recluso.png', 'Documentos Oficiales'),
+(26, 'foto-familiar.png', 'Efectos Personales'),
+(26, 'walkie-talkie.png', 'Equipo de Seguridad'),
+(26, 'orden-traslado.png', 'Documentos Oficiales'),
+(26, 'esposas.png', 'Equipo de Seguridad'),
+(26, 'pluma-fuente.png', 'Efectos Personales');
+
+-- ACERTIJO ETAPA 10: Puerta Principal (id_etapa = 23) - ADIVINANZA
+INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
+(27, 'ADIVINANZA', 'Todos me anhelan aquí dentro, pero no tengo peso ni forma. No se me puede ver ni tocar, pero se siente cuando se ha ido. Para conseguirme, debes resolverlo todo. ¿Qué soy?', 23);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Es lo que has estado buscando desde que despertaste en la celda.', 1, 27);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LIBERTAD', TRUE, 27);
