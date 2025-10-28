@@ -222,10 +222,12 @@ INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('CERRADURA',
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
 (19, 'SECUENCIA', 'Una luz de emergencia parpadea en la oscuridad del pasillo. Replica la secuencia en el panel de seguridad para abrir la siguiente puerta.', 15);
 INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
-(19, 'luz-roja.png', 1),
+(19, 'luz-roja.png', 5),
 (19, 'luz-azul.png', 2),
-(19, 'luz-amarilla.png', 3),
-(19, 'luz-verde.png', 4);
+(19, 'luz-amarilla.png', 6),
+(19, 'luz-verde.png', 3),
+(19, 'luz-violeta.png', 4),
+(19, 'luz-blanca.png', 1);
 
 -- ACERTIJO ETAPA 3: Comedor (id_etapa = 16) - DRAG & DROP
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
@@ -237,6 +239,7 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
 (20, 'item-tenedor-afilado.png', 'Contrabando'),
 (20, 'item-celular-escondido.png', 'Contrabando'),
 (20, 'item-ganzua-improvisada.png', 'Contrabando');
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los presos no deberian tener objetos puntiagudos.', 1, 20);
 
 -- ACERTIJO ETAPA 4: Enfermería (id_etapa = 17) - ORDENAR IMAGEN
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
@@ -246,11 +249,15 @@ INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
 (21, 'vendar.png', 4),
 (21, 'limpiar-herida.png', 1),
 (21, 'desinfectar.png', 2);
+
+
 -- ACERTIJO ETAPA 5: Patio de Recreo (id_etapa = 18) - ADIVINANZA
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
-(22, 'ADIVINANZA', 'Boto y reboto sin salir de este lugar, siempre rodeada de gente pero eternamente sola en mi viaje. Los guardias me vigilan, pero no me pueden encerrar. ¿Qué soy?', 18);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Piensa en el objeto más común para jugar en un patio.', 1, 22);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('PELOTA', TRUE, 22);
+    (22, 'ADIVINANZA', 'Siempre estoy cerca pero no me ves, observo cada movimiento y aunque todos me ignoran, nunca me pierdo nada. ¿Qué soy?', 18);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
+    ('Vigila sin moverse y está en todas partes en la carcel.', 1, 22);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('CÁMARA', TRUE, 22);
 
 -- ACERTIJO ETAPA 6: Sala de Guardias (id_etapa = 19) - SECUENCIA
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
@@ -281,6 +288,7 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
 (25, 'telefono-pequenio.png', 'Prohibido'),
 (25, 'fotos-personales.png', 'Permitido'),
 (25, 'lima-metalica.png', 'Prohibido');
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los contenedores tienen la misma cantidad de objetos.', 1, 25);
 
 -- ACERTIJO ETAPA 9: Oficina del Alcaide (id_etapa = 22) - DRAG & DROP
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
