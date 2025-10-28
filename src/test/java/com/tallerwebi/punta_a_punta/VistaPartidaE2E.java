@@ -31,7 +31,6 @@ public class VistaPartidaE2E {
                 new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(1000)
         );
 
-        // --- Inicia sesión solo una vez y guarda el estado ---
         BrowserContext loginContext = browser.newContext();
         Page loginPage = loginContext.newPage();
 
@@ -39,7 +38,7 @@ public class VistaPartidaE2E {
         loginPage.fill("#email", "test@unlam.edu.ar");
         loginPage.fill("#password", "test");
         loginPage.click("button[type=submit]");
-        // Guardar el estado autenticado
+
         loginContext.storageState(new BrowserContext.StorageStateOptions()
                 .setPath(Paths.get("estado-logueado.json")));
 
@@ -60,7 +59,7 @@ public class VistaPartidaE2E {
                 .setStorageStatePath(Paths.get("estado-logueado.json")));
         Page page = context.newPage();
 
-        vistaInicio = new VistaInicio(page); // navega a /inicio
+        vistaInicio = new VistaInicio(page);
         vistaSala = new VistaSala(page);
         vistaPartida = new VistaPartida(page);
     }
@@ -88,7 +87,6 @@ public class VistaPartidaE2E {
         dadoQueElUsuarioEstaEnLaVistaDeLaPartida();
         cuandoRespondeElPrimerAcertijoCorrectamente();
         entoncesLoRedirigeALaSiguienteEtapa(1, 2);
-
     }
 
     private void entoncesLoRedirigeALaSiguienteEtapa(Integer id_sala, Integer numero_etapa) throws MalformedURLException {
@@ -103,7 +101,6 @@ public class VistaPartidaE2E {
 
         vistaPartida.escribirRespuestaAcertijo(respuestaCorrecta);
         vistaPartida.darClickEnEnviar();
-
     }
 
     private void dadoQueElUsuarioEstaEnLaVistaDeLaPartida() throws MalformedURLException {

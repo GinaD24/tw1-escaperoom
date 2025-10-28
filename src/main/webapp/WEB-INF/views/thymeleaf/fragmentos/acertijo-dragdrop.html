@@ -20,7 +20,7 @@
                  class="drop-slot p-3 border rounded shadow-sm"
                  th:data-categoria="${cat}">
 
-                <h6 class="text-center mb-2 fw-bold text-secondary" th:text="${cat}"></h6>
+                <h6 class="text-center mb-2 fw-bold" th:text="${cat}"></h6>
                 <div class="d-flex flex-row flex-wrap g-2">
                     <div class="drop-items"></div>
                 </div>
@@ -30,7 +30,7 @@
         <input type="hidden" name="respuesta" id="respuestaDragDrop">
 
         <div>
-            <button type="submit" class="btn btn-enviar mt-3 ms-3">Enviar</button>
+            <button id="btn-enviar" type="submit" class="btn btn-enviar mt-3 ms-3">Enviar</button>
         </div>
     </form>
 </div>

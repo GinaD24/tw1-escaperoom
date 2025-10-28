@@ -17,14 +17,21 @@
                 background-repeat: no-repeat;|">
 <header>
     <nav class="navbar navbar-custom">
-        <div class="container-fluid">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
             <a class="navbar-brand">
                 <img class="logo-escape" th:src="@{/img/Logo.png}" alt="Logo Escape Room">
             </a>
 
             <h3 class="titulo-sala" th:text="${salaElegida.nombre}"></h3>
 
-            <div id="contador-tiempo" class="contador-timer"></div>
+            <div class="d-flex align-items-center gap-3">
+
+                <div id="puntaje" class="puntaje puntaje-container fs-3">
+                    Puntaje: <span id="valor-puntaje" th:text="${partida.puntaje}">0</span>
+                </div>
+
+                <div id="contador-tiempo" class="contador-timer"></div>
+            </div>
 
             <div id="datos-partida"
                  th:data-duracion-minutos="${salaElegida.duracion}"

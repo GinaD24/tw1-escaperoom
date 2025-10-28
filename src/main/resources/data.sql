@@ -257,7 +257,7 @@ INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
 INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
     ('Vigila sin moverse y está en todas partes en la carcel.', 1, 22);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
-    ('CÁMARA', TRUE, 22);
+    ('CAMARA', TRUE, 22);
 
 -- ACERTIJO ETAPA 6: Sala de Guardias (id_etapa = 19) - SECUENCIA
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
