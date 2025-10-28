@@ -36,7 +36,7 @@
     <div class="contenedor">
 
         <div id="previewContainer" class="contenedorFoto w-full aspect-square border-dotted border-4" style="border: solid 4px #ffff00;">
-            <img src="" alt="" id="preview" class="w-full h-full object-fit object-center">
+            <img th:src="@{/img/perfil-default.png}" alt="" id="preview" class="w-full h-full object-fit object-center">
         </div>
 
         <div class="contenedorTitulo">
@@ -44,7 +44,7 @@
             <h3 th:text="${perfil.nombre} + ' ' + ${perfil.apellido}"></h3>
             <h3 th:text="${perfil.fechaNacimiento}"></h3>
         </div>
-        <a class="btn btn-primary">Editar perfil</a><br>
+        <a class="btn btn-primary" th:href="@{/configuracion/editar}">Editar perfil</a><br>
         <a  th:href="@{'/perfil/' + ${perfil.id} + '/historial'}" class="btn btn-primary mb-4">Ver Historial</a>
         <div id="fileUpload" class="w-full aspect-square border-dotted border-4 rounded-md p-8 flex items-center justify-center">
             <a class="btn btn-primary mb-4" id="botonCambiarFoto">Cambiar foto</a>

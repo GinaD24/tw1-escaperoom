@@ -60,6 +60,7 @@ public class ControladorPerfilJugador {
             return new ModelAndView("perfil-jugador", modelo);
         }
     }
+
 }
 
 
