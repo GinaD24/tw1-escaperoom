@@ -46,13 +46,6 @@
         </div>
         <a class="btn btn-primary" th:href="@{/configuracion/editar}">Editar perfil</a><br>
         <a  th:href="@{'/perfil/' + ${perfil.id} + '/historial'}" class="btn btn-primary mb-4">Ver Historial</a>
-        <div id="fileUpload" class="w-full aspect-square border-dotted border-4 rounded-md p-8 flex items-center justify-center">
-            <a class="btn btn-primary mb-4" id="botonCambiarFoto">Cambiar foto</a>
-            <input id="imagen" type="file" hidden name="imagen" accept=".png, .jpg, .jpeg">
-            <div id="uploadContent" class="w-full text-center flex flex-col items-center justify-center gap-1">
-                <p class="text-sm text-gray-600">Solo archivos jpg, jpeg y png</p>
-            </div>
-        </div>
 
         <a class="btn btn-primary" id="checkout-btn">Pagar</a>
     </div>

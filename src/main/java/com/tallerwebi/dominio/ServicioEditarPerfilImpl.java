@@ -31,19 +31,12 @@ public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
 
     @Override
     public void actualizarPerfil(DatosEdicionPerfilDTO datos) throws UsuarioExistente {
-
         Usuario usuarioAEditar = buscarUsuarioPorId(datos.getId());
         if (usuarioAEditar == null) {
             throw new RuntimeException("Usuario a editar no encontrado.");
         }
 
-        if (!datos.getEmail().equalsIgnoreCase(usuarioAEditar.getEmail())) {
-            Usuario usuarioConMismoEmail = repositorioUsuario.buscar(datos.getEmail());
-            if (usuarioConMismoEmail != null) {
-                throw new UsuarioExistente("El email ya está registrado.");
-            }
-        }
-
+        // Solo verificar si el nombre de usuario cambia y ya existe
         if (!datos.getNombreUsuario().equalsIgnoreCase(usuarioAEditar.getNombreUsuario())) {
             Usuario usuarioConMismoNombre = repositorioUsuario.buscarPorNombreUsuario(datos.getNombreUsuario());
             if (usuarioConMismoNombre != null) {
@@ -52,8 +45,6 @@ public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
         }
 
         usuarioAEditar.setNombreUsuario(datos.getNombreUsuario());
-        usuarioAEditar.setEmail(datos.getEmail());
-        usuarioAEditar.setFechaNacimiento(datos.getFechaNacimiento());
         usuarioAEditar.setFotoPerfil(datos.getUrlFotoPerfil());
 
         repositorioUsuario.modificar(usuarioAEditar);

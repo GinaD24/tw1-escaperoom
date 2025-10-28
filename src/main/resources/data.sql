@@ -115,4 +115,3 @@ INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('FOTOGRAFIA'
 
 INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Has resuelto todo, solo queda un último paso: cruzar el umbral.', 1, 15);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('SALIDA', TRUE, 15);
-

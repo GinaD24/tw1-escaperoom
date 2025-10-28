@@ -12,8 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 
-import java.time.LocalDate;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
@@ -36,11 +34,8 @@ public class ControladorEditarPerfilTest {
         datosValidos = new DatosEdicionPerfilDTO();
         datosValidos.setId(1L);
         datosValidos.setNombreUsuario("usuario");
-        datosValidos.setEmail("test@email.com");
-        datosValidos.setFechaNacimiento(LocalDate.of(2000, 1, 1));
         datosValidos.setUrlFotoPerfil("/img/test.png");
     }
-
 
     @Test
     void dadoQueUsuarioEstaLogueadoCuandoAccedeAEditarPerfilDeberiaMostrarVistaConDatos() {
@@ -69,7 +64,6 @@ public class ControladorEditarPerfilTest {
         ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock);
 
         verify(servicioEditarPerfilMock, times(1)).actualizarPerfil(datosValidos);
-
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/perfil/verPerfil"));
     }
 
@@ -94,21 +88,21 @@ public class ControladorEditarPerfilTest {
 
     @Test
     void dadoQueValidacionFallaCuandoGuardaCambiosDeberiaVolverAEditarPerfilConError() throws UsuarioExistente {
-        doThrow(new ValidacionInvalidaException("Email inválido")).when(servicioEditarPerfilMock).actualizarPerfil(any());
+        doThrow(new ValidacionInvalidaException("Nombre inválido")).when(servicioEditarPerfilMock).actualizarPerfil(any());
 
         ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock);
 
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("editar-perfil"));
-        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase( "Error interno al actualizar: Email inválido"));
+        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Error interno al actualizar: Nombre inválido"));
     }
 
     @Test
     void dadoQueUsuarioYaExisteCuandoGuardaCambiosDeberiaVolverAEditarPerfilConError() throws UsuarioExistente {
-        doThrow(new UsuarioExistente("Email ya registrado")).when(servicioEditarPerfilMock).actualizarPerfil(any());
+        doThrow(new UsuarioExistente("Nombre ya registrado")).when(servicioEditarPerfilMock).actualizarPerfil(any());
 
         ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock);
 
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("editar-perfil"));
-        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Error de actualización: Email ya registrado"));
+        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Error de actualización: Nombre ya registrado"));
     }
 }
