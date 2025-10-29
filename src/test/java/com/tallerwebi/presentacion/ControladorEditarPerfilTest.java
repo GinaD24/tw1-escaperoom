@@ -10,6 +10,8 @@ import com.tallerwebi.dominio.interfaz.servicio.ServicioEditarPerfil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -23,6 +25,7 @@ public class ControladorEditarPerfilTest {
     private ControladorEditarPerfil controladorEditarPerfil;
     private ServicioEditarPerfil servicioEditarPerfilMock;
     private HttpSession sessionMock;
+    private RedirectAttributes redirectAttributesMock;
     private DatosEdicionPerfilDTO datosValidos;
 
     @BeforeEach
@@ -30,6 +33,7 @@ public class ControladorEditarPerfilTest {
         servicioEditarPerfilMock = mock(ServicioEditarPerfil.class);
         controladorEditarPerfil = new ControladorEditarPerfil(servicioEditarPerfilMock);
         sessionMock = mock(HttpSession.class);
+        redirectAttributesMock = new RedirectAttributesModelMap();
         when(sessionMock.getAttribute("id_usuario")).thenReturn(1L);
 
         datosValidos = new DatosEdicionPerfilDTO();
@@ -62,48 +66,54 @@ public class ControladorEditarPerfilTest {
         doNothing().when(servicioEditarPerfilMock).actualizarPerfil(any(DatosEdicionPerfilDTO.class));
         when(sessionMock.getAttribute("id_usuario")).thenReturn(1L);
 
-        ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock);
+        ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock, redirectAttributesMock);
 
         verify(servicioEditarPerfilMock, times(1)).actualizarPerfil(datosValidos);
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/perfil/verPerfil"));
+
+        assertThat(redirectAttributesMock.getFlashAttributes().containsKey("mensaje"), equalTo(true));
     }
 
     @Test
     void dadoQueUsuarioNoEstaLogueadoCuandoGuardaCambiosDeberiaRedirigirALogin() {
         when(sessionMock.getAttribute("id_usuario")).thenReturn(null);
 
-        ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock);
+        ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock, redirectAttributesMock);
 
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/login"));
     }
 
     @Test
     void dadoQueDatosSonIncompletosCuandoGuardaCambiosDeberiaVolverAEditarPerfilConError() throws UsuarioExistente, ContraseniaInvalidaException {
-        doThrow(new DatosIncompletosException("Nombre requerido")).when(servicioEditarPerfilMock).actualizarPerfil(any());
+        datosValidos.setNombreUsuario(null); // Provocamos la excepción DatosIncompletosException
 
-        ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock);
+        ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock, redirectAttributesMock);
 
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("editar-perfil"));
-        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Error interno al actualizar: Nombre requerido"));
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/configuracion/editar"));
+
+        assertThat(redirectAttributesMock.getFlashAttributes().containsKey("error"), equalTo(true));
+
+        datosValidos.setNombreUsuario("usuario");
     }
 
     @Test
     void dadoQueValidacionFallaCuandoGuardaCambiosDeberiaVolverAEditarPerfilConError() throws UsuarioExistente, ContraseniaInvalidaException {
-        doThrow(new ValidacionInvalidaException("Nombre inválido")).when(servicioEditarPerfilMock).actualizarPerfil(any());
+        doThrow(new RuntimeException("Error genérico")).when(servicioEditarPerfilMock).actualizarPerfil(any());
 
-        ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock);
+        ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock, redirectAttributesMock);
 
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("editar-perfil"));
-        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Error interno al actualizar: Nombre inválido"));
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/configuracion/editar"));
+
+        assertThat(redirectAttributesMock.getFlashAttributes().containsKey("error"), equalTo(true));
     }
 
     @Test
     void dadoQueUsuarioYaExisteCuandoGuardaCambiosDeberiaVolverAEditarPerfilConError() throws UsuarioExistente, ContraseniaInvalidaException {
         doThrow(new UsuarioExistente("Nombre ya registrado")).when(servicioEditarPerfilMock).actualizarPerfil(any());
 
-        ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock);
+        ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock, redirectAttributesMock);
 
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("editar-perfil"));
-        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Error de actualización: Nombre ya registrado"));
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/configuracion/editar"));
+        assertThat(redirectAttributesMock.getFlashAttributes().containsKey("error"), equalTo(true));
     }
 }

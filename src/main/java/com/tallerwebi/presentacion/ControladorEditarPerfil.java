@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 
@@ -49,8 +50,9 @@ public class ControladorEditarPerfil {
 
     @RequestMapping(path = "/editar", method = RequestMethod.POST)
     public ModelAndView guardarCambios(@ModelAttribute("datosPerfil") DatosEdicionPerfilDTO datos,
-                                       HttpSession session) {
-        ModelMap modelo = new ModelMap();
+                                       HttpSession session,
+                                       RedirectAttributes atributos) { // Agregado RedirectAttributes
+
         Long idUsuario = (Long) session.getAttribute("id_usuario");
 
         if (idUsuario == null) {
@@ -60,47 +62,66 @@ public class ControladorEditarPerfil {
         System.out.println("Iniciando proceso de guardar cambios para usuario ID: " + idUsuario);
         System.out.println("Datos recibidos - NombreUsuario: " + datos.getNombreUsuario() + ", UrlFotoPerfil: " + datos.getUrlFotoPerfil());
 
+        // --- 1. BLOQUE TRY-CATCH para VALIDACIONES de DTO ---
         try {
             System.out.println("Validando datos...");
             datos.validarDatos();
             System.out.println("Validación exitosa.");
-        } catch (DatosIncompletosException e) {
-            System.out.println("Excepción DatosIncompletosException: " + e.getMessage());
-            modelo.put("error", "Datos incompletos: " + e.getMessage());
-            modelo.put("datosPerfil", datos);
-            return new ModelAndView("editar-perfil", modelo);
-        } catch (ValidacionInvalidaException e) {
-            System.out.println("Excepción ValidacionInvalidaException: " + e.getMessage());
-            modelo.put("error", "Validación inválida: " + e.getMessage());
-            modelo.put("datosPerfil", datos);
-            return new ModelAndView("editar-perfil", modelo);
+        } catch (DatosIncompletosException | ValidacionInvalidaException e) {
+            System.out.println("Excepción de Validación: " + e.getMessage());
+            atributos.addFlashAttribute("error", "Error de validación: " + e.getMessage());
+            atributos.addFlashAttribute("datosPerfil", datos); // Devolvemos los datos ingresados
+            return new ModelAndView("redirect:/configuracion/editar");
         } catch (com.tallerwebi.dominio.excepcion.ContraseniaInvalidaException e) {
-            System.out.println("Excepción ContraseniaInvalidaException: " + e.getMessage());
-            modelo.put("error", "Error de contraseña: " + e.getMessage());
-            modelo.put("datosPerfil", datos);
-            return new ModelAndView("editar-perfil", modelo);
+            // Esta excepción es de la validación del DTO (contraseña nueva == actual)
+            System.out.println("Excepción ContraseniaInvalidaException (DTO): " + e.getMessage());
+            atributos.addFlashAttribute("error", "Error de contraseña: " + e.getMessage());
+            atributos.addFlashAttribute("datosPerfil", datos);
+            return new ModelAndView("redirect:/configuracion/editar");
         }
 
 
+        // --- 2. BLOQUE TRY-CATCH para ACTUALIZACIÓN de PERFIL (Servicio) ---
         try {
             System.out.println("Asignando ID y actualizando perfil...");
             datos.setId(idUsuario);
-            servicioEditarPerfil.actualizarPerfil(datos);
-            System.out.println("Perfil actualizado exitosamente.");
-            modelo.put("mensaje", "Perfil actualizado exitosamente.");
+            servicioEditarPerfil.actualizarPerfil(datos); // Este método lanza UsuarioExistente y ContraseniaInvalidaException
+
+            Usuario usuarioActualizado = servicioEditarPerfil.buscarUsuarioPorId(idUsuario);
+
+            // 2. Refrescar los atributos de la sesión (ajusta las CLAVES según tu proyecto)
+            session.setAttribute("id_usuario", usuarioActualizado.getId());
+            session.setAttribute("nombreUsuario", usuarioActualizado.getNombreUsuario()); // Asumiendo que usas esta clave para el nombre
+
+            // Esta clave es la más importante para tu perfil:
+            session.setAttribute("urlFotoPerfil", usuarioActualizado.getFotoPerfil()); // Asumiendo que usas esta clave para la foto
+
+            // Si guardas el objeto Usuario completo en la sesión (común en Spring MVC):
+            // session.setAttribute("usuario", usuarioActualizado);
+            // =========================================================
+
+            System.out.println("Perfil y Sesión actualizados exitosamente.");
+            atributos.addFlashAttribute("mensaje", "Perfil actualizado exitosamente.");
             return new ModelAndView("redirect:/perfil/verPerfil");
+
         } catch (UsuarioExistente e) {
             System.out.println("Excepción UsuarioExistente: " + e.getMessage());
-            modelo.put("error", "Error de actualización: " + e.getMessage());
-            modelo.put("datosPerfil", datos);
-            return new ModelAndView("editar-perfil", modelo);
+            atributos.addFlashAttribute("error", "Error de actualización: " + e.getMessage());
+            atributos.addFlashAttribute("datosPerfil", datos);
+            return new ModelAndView("redirect:/configuracion/editar");
+
+        } catch (ContraseniaInvalidaException e) {
+            // Esta excepción es lanzada por el SERVICIO (contraseña actual incorrecta)
+            System.out.println("Excepción ContraseniaInvalidaException (Servicio): " + e.getMessage());
+            atributos.addFlashAttribute("error", "Error de contraseña: " + e.getMessage());
+            atributos.addFlashAttribute("datosPerfil", datos);
+            return new ModelAndView("redirect:/configuracion/editar");
+
         } catch (RuntimeException e) {
             System.out.println("Excepción RuntimeException: " + e.getMessage());
-            modelo.put("error", "Error interno al actualizar: " + e.getMessage());
-            modelo.put("datosPerfil", datos);
-            return new ModelAndView("editar-perfil", modelo);
-        } catch (ContraseniaInvalidaException e) {
-            throw new RuntimeException(e);
+            atributos.addFlashAttribute("error", "Error interno al actualizar: " + e.getMessage());
+            atributos.addFlashAttribute("datosPerfil", datos);
+            return new ModelAndView("redirect:/configuracion/editar");
         }
     }
 }

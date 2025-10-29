@@ -71,15 +71,19 @@
             Mensaje de éxito.
         </div>
 
-        <form th:action="@{/configuracion/editar}" th:object="${datosPerfil}" method="POST" class="w-100">
+        <form th:action="@{/configuracion/editar}" th:object="${datosPerfil}" method="POST" class="w-100" enctype="multipart/form-data">
+
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{urlFotoPerfil}">
+
             <div id="previewContainer" class="contenedorFoto editable mx-auto">
-                <img th:src="${datosPerfil.urlFotoPerfil != null} ? ${datosPerfil.urlFotoPerfil} : '@{/img/perfil-default.png}'"
+                <img th:src="@{${datosPerfil.urlFotoPerfil != null} ? ${datosPerfil.urlFotoPerfil} : '/img/perfil-default.png'}"
                      alt="" id="preview">
             </div>
 
             <div id="fileUpload" class="w-full text-center">
                 <a class="btn btn-primary mb-4" id="botonCambiarFoto">Cambiar foto</a>
-                <input id="imagen" type="file" hidden name="imagen" accept=".png, .jpg, .jpeg">
+                <input id="imagen" type="file" style="display: none;" name="nuevaFoto" accept=".png, .jpg, .jpeg">
                 <p class="text-sm text-gray-600 error-message">Solo archivos jpg, jpeg y png</p>
             </div>
 
@@ -117,7 +121,7 @@
             <button type="submit" class="btn btn-primary w-50 mt-3">Guardar Cambios</button>
             <a th:href="@{/perfil/verPerfil}" class="btn btn-secondary w-50 mt-2">Cancelar</a>
 
-            <input type="hidden" th:field="*{urlFotoPerfil}">
+<!--            <input type="hidden" th:field="*{urlFotoPerfil}">-->
         </form>
     </div>
 </main>

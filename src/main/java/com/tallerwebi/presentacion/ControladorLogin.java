@@ -37,7 +37,13 @@ public class ControladorLogin {
 
         try{
             Usuario usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
+            System.out.println("DEBUG LOGIN: URL de foto de perfil leída: " + usuarioBuscado.getFotoPerfil());
+
             request.getSession().setAttribute("id_usuario", usuarioBuscado.getId());
+
+            request.getSession().setAttribute("nombreUsuario", usuarioBuscado.getNombreUsuario());
+            request.getSession().setAttribute("urlFotoPerfil", usuarioBuscado.getFotoPerfil());
+
             return new ModelAndView("redirect:/inicio/");
         }catch(CredencialesInvalidasException e){
             model.put("error", "Usuario o clave incorrecta");

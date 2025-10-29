@@ -4,6 +4,7 @@ import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.ContraseniaInvalidaException;
 import com.tallerwebi.dominio.excepcion.DatosIncompletosException;
 import com.tallerwebi.dominio.excepcion.ValidacionInvalidaException;
+import org.springframework.web.multipart.MultipartFile;
 
 public class DatosEdicionPerfilDTO {
 
@@ -12,6 +13,7 @@ public class DatosEdicionPerfilDTO {
     private String contrasenaActual;
     private String contrasenaNueva;
     private String urlFotoPerfil;
+    private MultipartFile nuevaFoto;
 
     public DatosEdicionPerfilDTO() {}
 
@@ -36,6 +38,10 @@ public class DatosEdicionPerfilDTO {
 
     public String getUrlFotoPerfil() { return urlFotoPerfil; }
     public void setUrlFotoPerfil(String urlFotoPerfil) { this.urlFotoPerfil = urlFotoPerfil; }
+
+    public MultipartFile getNuevaFoto() { return nuevaFoto; }
+
+    public void setNuevaFoto(MultipartFile nuevaFoto) { this.nuevaFoto = nuevaFoto; }
 
     public void validarDatos() throws DatosIncompletosException, ValidacionInvalidaException, ContraseniaInvalidaException {
         if (nombreUsuario == null || nombreUsuario.trim().isEmpty()) {

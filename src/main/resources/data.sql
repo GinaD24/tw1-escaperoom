@@ -8,7 +8,7 @@ VALUES (
              'clave123',
              '1998-03-12',
              'marcosl',
-             'pruebafoto.png');
+             '/img/pruebafoto.png');
 
 INSERT INTO Usuario (email,nombre,apellido,password,fechaNacimiento,nombreUsuario,fotoPerfil, rol)
 VALUES (
@@ -18,7 +18,7 @@ VALUES (
            'juan123',
            '1998-12-12',
            'juan_1',
-           'fotoPerfil_juan.png',
+           '/img/fotoPerfil_juan.png',
            'USUARIO');
 
 

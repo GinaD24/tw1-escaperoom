@@ -36,7 +36,11 @@
     <div class="contenedor">
 
         <div id="previewContainer" class="contenedorFoto w-full aspect-square border-dotted border-4" style="border: solid 4px #ffff00;">
-            <img th:src="@{/img/perfil-default.png}" alt="" id="preview" class="w-full h-full object-fit object-center">
+            <img th:src="@{${session.urlFotoPerfil} ?: ${perfil.fotoPerfil} ?: '/img/perfil-default.png'}"
+                 alt=""
+                 class="w-full h-full object-fit object-center"
+                 id="preview"
+            >
         </div>
 
         <div class="contenedorTitulo">
@@ -52,6 +56,5 @@
 </main>
 
 <script src="/spring/js/apiMercado.js"></script>
-<script src="/spring/js/perfi.js"></script>
 </body>
 </html>
