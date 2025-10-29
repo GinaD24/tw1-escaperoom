@@ -24,4 +24,16 @@ public class VistaPartida extends VistaWeb{
     public String obtenerTextoAcertijo() {
         return page.textContent("#texto-acertijo").trim();
     }
+
+    public void darClickEnBoton(Long idBoton){
+        this.darClickEnElElemento("#btn-" + idBoton);
+    }
+
+    public void darClickEnMostrarSecuencia() {
+        this.darClickEnElElemento("#btnMostrarSecuencia");
+    }
+
+    public void esperarSecuenciaMostrada() {
+        page.waitForSelector("#btnMostrarSecuencia:disabled");
+    }
 }

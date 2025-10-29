@@ -11,6 +11,7 @@
             <div th:each="img : ${acertijo.imagenes}"
                  class="boton-secuencia p-2 rounded"
                  th:data-id="${img.id}"
+                 th:id="'btn-' + ${img.id}"
                  th:data-orden="${img.ordenCorrecto}"
                  th:style="|background-image: url('@{/img/acertijo/{img}(img=${img.nombreArchivo})}');
                             width:130px; height:130px; background-size: cover; cursor:pointer; opacity:0.6;|">

@@ -28,7 +28,7 @@ public class VistaPartidaE2E {
     static void configurarPlaywrightYGuardarSesion() {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(
-                new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(1000)
+                new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(2000)
         );
 
         BrowserContext loginContext = browser.newContext();
@@ -79,12 +79,41 @@ public class VistaPartidaE2E {
     }
 
     @Test
-        void deberiaNavegarALaVistaDeLaPartida_ResponderCorrectamenteElPrimerAcertijoDeLaSala1_YSerRedirigidoALaEtapa2() throws MalformedURLException {
+        void deberiaNavegarALaVistaDeLaPartida_ResponderCorrectamenteElPrimerAcertijoDeTipoAdivinanzaDeLaSala1_YSerRedirigidoALaEtapa2() throws MalformedURLException {
         dadoQueElUsuarioYaInicioSesion("test@unlam.edu.ar", "test");
         dadoQueElUsuarioEstaEnLaVistaDeInicio();
         dadoQueElUsuarioEstaEnLaSala1();
         dadoQueElusuarioTocaElBotonEstoyListo();
         dadoQueElUsuarioEstaEnLaVistaDeLaPartida();
+        cuandoRespondeElPrimerAcertijoCorrectamente();
+        entoncesLoRedirigeALaSiguienteEtapa(1, 2);
+    }
+
+    @Test
+    void deberiaNavegarALaVistaDeLaPartida_ResponderCorrectamenteElSegundoAcertijoDeTipoSecuenciaDeLaSala1_YSerRedirigidoALaEtapa2() throws MalformedURLException {
+        dadoQueElUsuarioYaInicioSesion("test@unlam.edu.ar", "test");
+        dadoQueElUsuarioEstaEnLaVistaDeInicio();
+        dadoQueElUsuarioEstaEnLaSala1();
+        dadoQueElusuarioTocaElBotonEstoyListo();
+        dadoQueElUsuarioEstaEnLaVistaDeLaPartida();
+        dadoQueElUsuarioRespondioCorrectamenteElPrimerAcertijo();
+        cuandoRespondeElSegundoAcertijoCorrectamente();
+        entoncesLoRedirigeALaSiguienteEtapa(1, 3);
+    }
+
+    private void cuandoRespondeElSegundoAcertijoCorrectamente() {
+        vistaPartida.darClickEnMostrarSecuencia();
+        vistaPartida.esperarSecuenciaMostrada();
+        vistaPartida.darClickEnBoton(1L);
+        vistaPartida.darClickEnBoton(2L);
+        vistaPartida.darClickEnBoton(3L);
+        vistaPartida.darClickEnBoton(4L);
+        vistaPartida.darClickEnBoton(5L);
+        vistaPartida.darClickEnEnviar();
+
+    }
+
+    private void dadoQueElUsuarioRespondioCorrectamenteElPrimerAcertijo() throws MalformedURLException {
         cuandoRespondeElPrimerAcertijoCorrectamente();
         entoncesLoRedirigeALaSiguienteEtapa(1, 2);
     }
