@@ -62,16 +62,22 @@ public class ControladorEditarPerfilTest {
     }
 
     @Test
-    void dadoQueDatosSonValidosCuandoGuardaCambiosDeberiaActualizarYRedirigirAVerPerfil() throws UsuarioExistente, ContraseniaInvalidaException {
+    void dadoQueDatosSonValidosCuandoGuardaCambiosDeberiaActualizarEIrAPerfil() throws UsuarioExistente, ContraseniaInvalidaException {
         doNothing().when(servicioEditarPerfilMock).actualizarPerfil(any(DatosEdicionPerfilDTO.class));
+        Usuario usuarioActualizado = mock(Usuario.class);
+        when(usuarioActualizado.getId()).thenReturn(1L);
+        when(usuarioActualizado.getNombreUsuario()).thenReturn("usuario");
+        when(usuarioActualizado.getFotoPerfil()).thenReturn("/img/test.png");
+        when(servicioEditarPerfilMock.buscarUsuarioPorId(1L)).thenReturn(usuarioActualizado);
         when(sessionMock.getAttribute("id_usuario")).thenReturn(1L);
 
         ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock, redirectAttributesMock);
 
         verify(servicioEditarPerfilMock, times(1)).actualizarPerfil(datosValidos);
+        verify(sessionMock, times(1)).setAttribute("urlFotoPerfil", "/img/test.png");
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/perfil/verPerfil"));
-
         assertThat(redirectAttributesMock.getFlashAttributes().containsKey("mensaje"), equalTo(true));
+        assertThat(redirectAttributesMock.getFlashAttributes().get("mensaje"), equalTo("Perfil actualizado exitosamente."));
     }
 
     @Test
@@ -116,4 +122,34 @@ public class ControladorEditarPerfilTest {
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/configuracion/editar"));
         assertThat(redirectAttributesMock.getFlashAttributes().containsKey("error"), equalTo(true));
     }
+
+    @Test
+    void dadoQueContraseniaActualEsIncorrectaCuandoGuardaCambiosDeberiaVolverAEditarPerfilConError() throws UsuarioExistente, ContraseniaInvalidaException {
+        doThrow(new ContraseniaInvalidaException("La contraseña actual es incorrecta.")).when(servicioEditarPerfilMock).actualizarPerfil(any());
+
+        ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock, redirectAttributesMock);
+
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/configuracion/editar"));
+        assertThat(redirectAttributesMock.getFlashAttributes().containsKey("error"), equalTo(true));
+        assertThat(redirectAttributesMock.getFlashAttributes().get("error").toString(), equalTo("Error de contraseña: La contraseña actual es incorrecta."));
+    }
+    // NUEVO TEST PARA CONTRASEÑAS: Cubre el caso donde se cambia la contraseña exitosamente (sin errores)
+    @Test
+    void dadoQueContraseniaNuevaEsValidaCuandoGuardaCambiosDeberiaActualizarContraseniaYRedirigirAVerPerfil() throws UsuarioExistente, ContraseniaInvalidaException {
+        Usuario usuarioActualizado = mock(Usuario.class);
+        when(usuarioActualizado.getId()).thenReturn(1L);
+        when(usuarioActualizado.getNombreUsuario()).thenReturn("usuario");
+        when(usuarioActualizado.getFotoPerfil()).thenReturn("/img/test.png");
+        when(servicioEditarPerfilMock.buscarUsuarioPorId(1L)).thenReturn(usuarioActualizado);
+        doNothing().when(servicioEditarPerfilMock).actualizarPerfil(any(DatosEdicionPerfilDTO.class));
+
+        ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock, redirectAttributesMock);
+
+        verify(servicioEditarPerfilMock, times(1)).actualizarPerfil(datosValidos);
+        verify(sessionMock, times(1)).setAttribute("urlFotoPerfil", "/img/test.png");
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/perfil/verPerfil"));
+        assertThat(redirectAttributesMock.getFlashAttributes().containsKey("mensaje"), equalTo(true));
+    }
+
+
 }

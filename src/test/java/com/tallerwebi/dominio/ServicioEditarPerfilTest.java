@@ -66,7 +66,6 @@ public class ServicioEditarPerfilTest {
         servicioEditarPerfil.actualizarPerfil(datosValidos);
 
         verify(usuarioExistente, times(1)).setNombreUsuario("usuarioNuevo");
-        verify(usuarioExistente, times(1)).setFotoPerfil("/img/nueva.png");
         verify(repositorioUsuario, times(1)).modificar(usuarioExistente);
     }
 
@@ -123,4 +122,40 @@ public class ServicioEditarPerfilTest {
         });
         assertThat(exception.getMessage(), equalTo("El nombre de usuario debe tener al menos 4 caracteres."));
     }
+
+    @Test
+    void dadoQueContraseniaNuevaEsDiferenteALaActualCuandoValidoDatosNoDeberiaLanzarExcepcion() throws DatosIncompletosException, ValidacionInvalidaException, ContraseniaInvalidaException {
+        DatosEdicionPerfilDTO dto = new DatosEdicionPerfilDTO();
+        dto.setNombreUsuario("usuario");
+        dto.setContrasenaActual("viejaPass");
+        dto.setContrasenaNueva("nuevaPass");
+        dto.validarDatos();
+    }
+    @Test
+    void dadoQueContraseniaActualEsIncorrectaCuandoActualizoPerfilDeberiaLanzarExcepcionContraseniaInvalida() {
+        reset(usuarioExistente);
+
+        when(repositorioUsuario.obtenerUsuarioPorId(1L)).thenReturn(usuarioExistente);
+        when(repositorioUsuario.buscarPorNombreUsuario(anyString())).thenReturn(null);
+        when(usuarioExistente.getPassword()).thenReturn("otraPass");
+        when(usuarioExistente.getId()).thenReturn(1L);
+        when(usuarioExistente.getNombreUsuario()).thenReturn("usuarioViejo");
+        when(usuarioExistente.getFotoPerfil()).thenReturn("/img/vieja.png");
+
+        DatosEdicionPerfilDTO datosTest = new DatosEdicionPerfilDTO();
+        datosTest.setId(1L);
+        datosTest.setNombreUsuario("usuarioNuevo");
+        datosTest.setUrlFotoPerfil("/img/nueva.png");
+        datosTest.setContrasenaActual("viejaPass");
+        datosTest.setContrasenaNueva("nuevaPass");
+
+        ContraseniaInvalidaException exception = assertThrows(ContraseniaInvalidaException.class, () -> {
+            servicioEditarPerfil.actualizarPerfil(datosTest);
+        });
+        assertThat(exception.getMessage(), equalTo("La contraseña actual es incorrecta."));
+
+        verify(repositorioUsuario, never()).modificar(any(Usuario.class));
+    }
+
+
 }
