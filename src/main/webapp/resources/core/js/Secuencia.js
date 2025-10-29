@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Función para “iluminar” un botón
     const iluminar = (boton) => {
-        boton.style.opacity = 1;
+        boton.style.opacity = 3;
         setTimeout(() => boton.style.opacity = 0.6, 500);
     };
 
