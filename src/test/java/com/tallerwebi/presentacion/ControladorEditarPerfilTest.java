@@ -2,6 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.DatosEdicionPerfilDTO;
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.excepcion.ContraseniaInvalidaException;
 import com.tallerwebi.dominio.excepcion.DatosIncompletosException;
 import com.tallerwebi.dominio.excepcion.ValidacionInvalidaException;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
@@ -57,7 +58,7 @@ public class ControladorEditarPerfilTest {
     }
 
     @Test
-    void dadoQueDatosSonValidosCuandoGuardaCambiosDeberiaActualizarYRedirigirAVerPerfil() throws UsuarioExistente {
+    void dadoQueDatosSonValidosCuandoGuardaCambiosDeberiaActualizarYRedirigirAVerPerfil() throws UsuarioExistente, ContraseniaInvalidaException {
         doNothing().when(servicioEditarPerfilMock).actualizarPerfil(any(DatosEdicionPerfilDTO.class));
         when(sessionMock.getAttribute("id_usuario")).thenReturn(1L);
 
@@ -77,7 +78,7 @@ public class ControladorEditarPerfilTest {
     }
 
     @Test
-    void dadoQueDatosSonIncompletosCuandoGuardaCambiosDeberiaVolverAEditarPerfilConError() throws UsuarioExistente {
+    void dadoQueDatosSonIncompletosCuandoGuardaCambiosDeberiaVolverAEditarPerfilConError() throws UsuarioExistente, ContraseniaInvalidaException {
         doThrow(new DatosIncompletosException("Nombre requerido")).when(servicioEditarPerfilMock).actualizarPerfil(any());
 
         ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock);
@@ -87,7 +88,7 @@ public class ControladorEditarPerfilTest {
     }
 
     @Test
-    void dadoQueValidacionFallaCuandoGuardaCambiosDeberiaVolverAEditarPerfilConError() throws UsuarioExistente {
+    void dadoQueValidacionFallaCuandoGuardaCambiosDeberiaVolverAEditarPerfilConError() throws UsuarioExistente, ContraseniaInvalidaException {
         doThrow(new ValidacionInvalidaException("Nombre inválido")).when(servicioEditarPerfilMock).actualizarPerfil(any());
 
         ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock);
@@ -97,7 +98,7 @@ public class ControladorEditarPerfilTest {
     }
 
     @Test
-    void dadoQueUsuarioYaExisteCuandoGuardaCambiosDeberiaVolverAEditarPerfilConError() throws UsuarioExistente {
+    void dadoQueUsuarioYaExisteCuandoGuardaCambiosDeberiaVolverAEditarPerfilConError() throws UsuarioExistente, ContraseniaInvalidaException {
         doThrow(new UsuarioExistente("Nombre ya registrado")).when(servicioEditarPerfilMock).actualizarPerfil(any());
 
         ModelAndView modelAndView = controladorEditarPerfil.guardarCambios(datosValidos, sessionMock);

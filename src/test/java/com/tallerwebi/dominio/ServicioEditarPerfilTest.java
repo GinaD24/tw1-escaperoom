@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.excepcion.ContraseniaInvalidaException;
 import com.tallerwebi.dominio.excepcion.DatosIncompletosException;
 import com.tallerwebi.dominio.excepcion.ValidacionInvalidaException;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
@@ -58,7 +59,7 @@ public class ServicioEditarPerfilTest {
     }
 
     @Test
-    void dadoQueDatosSonValidosYUnicosCuandoActualizoPerfilDeberiaGuardarCambios() throws UsuarioExistente {
+    void dadoQueDatosSonValidosYUnicosCuandoActualizoPerfilDeberiaGuardarCambios() throws UsuarioExistente, ContraseniaInvalidaException {
         when(repositorioUsuario.obtenerUsuarioPorId(1L)).thenReturn(usuarioExistente);
         when(repositorioUsuario.buscarPorNombreUsuario("usuarioNuevo")).thenReturn(null);
 
@@ -81,7 +82,7 @@ public class ServicioEditarPerfilTest {
     }
 
     @Test
-    void dadoQueUsuarioNoExisteCuandoActualizoPerfilDeberiaActualizarDatosYGuardarCambios() {
+    void dadoQueUsuarioNoExisteCuandoActualizoPerfilDeberiaActualizarDatosYGuardarCambios() throws ContraseniaInvalidaException {
         when(repositorioUsuario.obtenerUsuarioPorId(1L)).thenReturn(usuarioExistente);
         when(repositorioUsuario.buscarPorNombreUsuario(anyString())).thenReturn(null);
 
@@ -97,7 +98,7 @@ public class ServicioEditarPerfilTest {
     }
 
     @Test
-    void dadoQueDatosSonCompletosYValidosCuandoValidoDatosNoDeberiaLanzarExcepcion() throws DatosIncompletosException, ValidacionInvalidaException {
+    void dadoQueDatosSonCompletosYValidosCuandoValidoDatosNoDeberiaLanzarExcepcion() throws DatosIncompletosException, ValidacionInvalidaException, ContraseniaInvalidaException {
         datosValidos.validarDatos();
     }
 

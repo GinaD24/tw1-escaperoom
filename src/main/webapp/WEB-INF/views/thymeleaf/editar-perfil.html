@@ -73,7 +73,7 @@
 
         <form th:action="@{/configuracion/editar}" th:object="${datosPerfil}" method="POST" class="w-100">
             <div id="previewContainer" class="contenedorFoto editable mx-auto">
-                <img th:src="${datosPerfil.urlFotoPerfil != null} ? ${datosPerfil.urlFotoPerfil} : @{/img/perfil-default.png}"
+                <img th:src="${datosPerfil.urlFotoPerfil != null} ? ${datosPerfil.urlFotoPerfil} : '@{/img/perfil-default.png}'"
                      alt="" id="preview">
             </div>
 
@@ -87,6 +87,27 @@
                 <label for="nombreUsuario" class="form-label">Nombre de Usuario</label>
                 <div class="input-group">
                     <input type="text" class="form-control" id="nombreUsuario" th:field="*{nombreUsuario}" required>
+                    <span class="input-group-text">
+                            <i class="bi bi-pencil"></i>
+                        </span>
+                </div>
+            </div>
+
+            <div class="mb-3 w-100">
+                <label for="contraseniaActual" class="form-label">Contraseña Actual</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="contraseniaActual" th:field="*{contrasenaActual}">
+                    <span class="input-group-text">
+                            <i class="bi bi-pencil"></i>
+                        </span>
+                </div>
+            </div>
+
+
+            <div class="mb-3 w-100">
+                <label for="contraseniaNueva" class="form-label">Contraseña nueva</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="contraseniaNueva" th:field="*{contrasenaNueva}">
                     <span class="input-group-text">
                             <i class="bi bi-pencil"></i>
                         </span>

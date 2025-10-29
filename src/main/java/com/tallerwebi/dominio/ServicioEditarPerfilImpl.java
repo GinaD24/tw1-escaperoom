@@ -1,12 +1,12 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.excepcion.ContraseniaInvalidaException;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioEditarPerfil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -30,13 +30,12 @@ public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
     }
 
     @Override
-    public void actualizarPerfil(DatosEdicionPerfilDTO datos) throws UsuarioExistente {
+    public void actualizarPerfil(DatosEdicionPerfilDTO datos) throws UsuarioExistente, ContraseniaInvalidaException {
         Usuario usuarioAEditar = buscarUsuarioPorId(datos.getId());
         if (usuarioAEditar == null) {
             throw new RuntimeException("Usuario a editar no encontrado.");
         }
 
-        // Solo verificar si el nombre de usuario cambia y ya existe
         if (!datos.getNombreUsuario().equalsIgnoreCase(usuarioAEditar.getNombreUsuario())) {
             Usuario usuarioConMismoNombre = repositorioUsuario.buscarPorNombreUsuario(datos.getNombreUsuario());
             if (usuarioConMismoNombre != null) {
@@ -44,10 +43,27 @@ public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
             }
         }
 
+
+        if (datos.getContrasenaNueva() != null && !datos.getContrasenaNueva().trim().isEmpty()) {
+
+
+            if (!usuarioAEditar.getPassword().equals(datos.getContrasenaActual())) {
+                throw new ContraseniaInvalidaException("La contraseña actual es incorrecta.");
+            }
+
+            System.out.println("LOG: Contraseña ACTUAL/VIEJA en el objeto antes de setear: " + usuarioAEditar.getPassword()); // LOG 1: Muestra el valor viejo (el de la DB)
+
+            usuarioAEditar.setPassword(datos.getContrasenaNueva());
+
+            System.out.println("LOG: Contraseña NUEVA en el objeto, lista para persistir: " + usuarioAEditar.getPassword()); // LOG 2: Muestra el nuevo valor
+        }
+
         usuarioAEditar.setNombreUsuario(datos.getNombreUsuario());
         usuarioAEditar.setFotoPerfil(datos.getUrlFotoPerfil());
 
+        System.out.println("LOG: Persistiendo cambios en la DB...");
         repositorioUsuario.modificar(usuarioAEditar);
+        System.out.println("LOG: ¡Cambios persistidos!");
     }
 
     @Override

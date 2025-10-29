@@ -2,6 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.DatosEdicionPerfilDTO;
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.excepcion.ContraseniaInvalidaException;
 import com.tallerwebi.dominio.excepcion.DatosIncompletosException;
 import com.tallerwebi.dominio.excepcion.ValidacionInvalidaException;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
@@ -27,7 +28,6 @@ public class ControladorEditarPerfil {
         this.servicioEditarPerfil = servicioEditarPerfil;
     }
 
-    // MUESTRA LA VISTA DE EDICIÓN (GET)
     @RequestMapping(path = "/editar", method = RequestMethod.GET)
     public ModelAndView vistaEditarPerfil(HttpSession session) {
         ModelMap modelo = new ModelMap();
@@ -47,7 +47,6 @@ public class ControladorEditarPerfil {
         }
     }
 
-    // PROCESA EL FORMULARIO DE EDICIÓN (POST)
     @RequestMapping(path = "/editar", method = RequestMethod.POST)
     public ModelAndView guardarCambios(@ModelAttribute("datosPerfil") DatosEdicionPerfilDTO datos,
                                        HttpSession session) {
@@ -61,7 +60,6 @@ public class ControladorEditarPerfil {
         System.out.println("Iniciando proceso de guardar cambios para usuario ID: " + idUsuario);
         System.out.println("Datos recibidos - NombreUsuario: " + datos.getNombreUsuario() + ", UrlFotoPerfil: " + datos.getUrlFotoPerfil());
 
-        // 1. VALIDACIÓN MANUAL CON EL DTO
         try {
             System.out.println("Validando datos...");
             datos.validarDatos();
@@ -76,9 +74,14 @@ public class ControladorEditarPerfil {
             modelo.put("error", "Validación inválida: " + e.getMessage());
             modelo.put("datosPerfil", datos);
             return new ModelAndView("editar-perfil", modelo);
+        } catch (com.tallerwebi.dominio.excepcion.ContraseniaInvalidaException e) {
+            System.out.println("Excepción ContraseniaInvalidaException: " + e.getMessage());
+            modelo.put("error", "Error de contraseña: " + e.getMessage());
+            modelo.put("datosPerfil", datos);
+            return new ModelAndView("editar-perfil", modelo);
         }
 
-        // 2. LÓGICA DE NEGOCIO (Actualizar)
+
         try {
             System.out.println("Asignando ID y actualizando perfil...");
             datos.setId(idUsuario);
@@ -96,6 +99,8 @@ public class ControladorEditarPerfil {
             modelo.put("error", "Error interno al actualizar: " + e.getMessage());
             modelo.put("datosPerfil", datos);
             return new ModelAndView("editar-perfil", modelo);
+        } catch (ContraseniaInvalidaException e) {
+            throw new RuntimeException(e);
         }
     }
 }
