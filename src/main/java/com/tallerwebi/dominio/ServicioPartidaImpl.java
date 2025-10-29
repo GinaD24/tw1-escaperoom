@@ -1,7 +1,6 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.*;
-import com.tallerwebi.dominio.enums.TipoAcertijo;
 import com.tallerwebi.dominio.excepcion.EtapaInexistente;
 import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
