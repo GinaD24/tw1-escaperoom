@@ -26,7 +26,6 @@ public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
         // Opcional pero recomendado: Crear el directorio al iniciar el servicio
         File uploadDir = new File(UPLOAD_DIR);
         if (!uploadDir.exists()) {
-            // .mkdirs() crea todos los directorios que no existan
             uploadDir.mkdirs();
         }
     }

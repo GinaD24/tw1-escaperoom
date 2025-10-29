@@ -36,11 +36,7 @@
     <div class="contenedor">
 
         <div id="previewContainer" class="contenedorFoto w-full aspect-square border-dotted border-4" style="border: solid 4px #ffff00;">
-            <img th:src="@{${session.urlFotoPerfil} ?: ${perfil.fotoPerfil} ?: '/img/perfil-default.png'}"
-                 alt=""
-                 class="w-full h-full object-fit object-center"
-                 id="preview"
-            >
+            <img th:src="@{${perfil.fotoPerfil} ?: '/img/perfil-default.png'}" alt="" class="w-full h-full object-fit object-center" id="preview">
         </div>
 
         <div class="contenedorTitulo">
