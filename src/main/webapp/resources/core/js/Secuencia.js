@@ -6,32 +6,32 @@ document.addEventListener('DOMContentLoaded', () => {
         .sort((a,b) => a.dataset.orden - b.dataset.orden)
         .map(b => b.dataset.id);
 
-    let permitirClic = false; // para saber si el jugador puede clicar
-    let secuenciaMostrada = false; // para evitar que se muestre más de una vez
+    let permitirClic = false;
+    let secuenciaMostrada = false;
 
-    // Botón para mostrar la secuencia
+
     const btnMostrar = document.getElementById('btnMostrarSecuencia');
 
-    // Función para “iluminar” un botón
+
     const iluminar = (boton) => {
         boton.style.opacity = 3;
         setTimeout(() => boton.style.opacity = 0.6, 500);
     };
 
-    // Mostrar secuencia automática
+
     const mostrarSecuencia = async () => {
-        if (secuenciaMostrada) return; // solo una vez
+        if (secuenciaMostrada) return;
         secuenciaMostrada = true;
 
         for (let id of secuenciaCorrecta) {
             let boton = botones.find(b => b.dataset.id === id);
             iluminar(boton);
-            await new Promise(r => setTimeout(r, 700)); // espera entre botones
+            await new Promise(r => setTimeout(r, 700));
         }
-        permitirClic = true; // ahora el jugador puede clicar
+        permitirClic = true;
     };
 
-    // Evento del botón “Mostrar Secuencia”
+
 
     btnMostrar.addEventListener('click', () => {
         mostrarSecuencia().then(() => {
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // Manejar clics del jugador
+
     botones.forEach(boton => {
         boton.addEventListener('click', () => {
             if (!permitirClic) return;
