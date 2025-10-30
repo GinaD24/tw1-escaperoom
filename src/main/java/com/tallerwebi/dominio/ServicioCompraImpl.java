@@ -61,7 +61,6 @@ public class ServicioCompraImpl implements ServicioCompra {
         return repositorioCompra.salaDesbloqueadaParaUsuario(usuario, sala);
     }
 
-    // En ServicioCompraImpl.java (implementación)
     @Override
     public String crearPreferenciaParaSala(Sala sala) {
         try {
@@ -69,7 +68,7 @@ public class ServicioCompraImpl implements ServicioCompra {
 
             PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
                     .id("test" + sala.getId().toString())
-                    .title("Acceso a sala: " + sala.getNombre())  // Usa el nombre sanitizado
+                    .title("Acceso a sala: " + sala.getNombre())
                     .description("Desbloquea sala en Escape Room")
                     .categoryId("entertainment")
                     .quantity(1)
@@ -80,7 +79,6 @@ public class ServicioCompraImpl implements ServicioCompra {
             List<PreferenceItemRequest> items = new ArrayList<>();
             items.add(itemRequest);
 
-            // BackUrls con localhost (sin autoReturn por ahora)
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
                     .success("https://b5c2b1539e2b.ngrok-free.app/spring/inicio/")
                     .failure("https://b5c2b1539e2b.ngrok-free.app/spring/compra/fallo")

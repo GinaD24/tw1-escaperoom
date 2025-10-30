@@ -66,7 +66,7 @@ public class ControladorCompraTest {
 
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/login"));
         verify(session, times(1)).getAttribute("id_usuario");
-        verifyNoInteractions(repositorioUsuario); // No debe llamar a servicios
+        verifyNoInteractions(repositorioUsuario);
     }
 
     @Test

@@ -17,13 +17,11 @@ import java.io.IOException;
 public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
 
     private final RepositorioUsuario repositorioUsuario;
-    // ¡RECUERDA! Esta ruta debe coincidir con la configurada en SpringWebConfig
     private static final String UPLOAD_DIR = "C:/uploads/imagenes_perfil/";
 
     @Autowired
     public ServicioEditarPerfilImpl(RepositorioUsuario repositorioUsuario) {
         this.repositorioUsuario = repositorioUsuario;
-        // Opcional pero recomendado: Crear el directorio al iniciar el servicio
         File uploadDir = new File(UPLOAD_DIR);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
@@ -46,7 +44,6 @@ public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
             throw new RuntimeException("Usuario a editar no encontrado.");
         }
 
-        // --- LÓGICA DE NOMBRE DE USUARIO ---
         if (!datos.getNombreUsuario().equalsIgnoreCase(usuarioAEditar.getNombreUsuario())) {
             Usuario usuarioConMismoNombre = repositorioUsuario.buscarPorNombreUsuario(datos.getNombreUsuario());
             if (usuarioConMismoNombre != null) {
@@ -55,7 +52,7 @@ public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
         }
         usuarioAEditar.setNombreUsuario(datos.getNombreUsuario());
 
-        // --- LÓGICA DE CONTRASEÑA ---
+        // --- logica de contrasenia ---
         if (datos.getContrasenaNueva() != null && !datos.getContrasenaNueva().trim().isEmpty()) {
             if (!usuarioAEditar.getPassword().equals(datos.getContrasenaActual())) {
                 throw new ContraseniaInvalidaException("La contraseña actual es incorrecta.");
@@ -65,7 +62,7 @@ public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
             System.out.println("LOG: Contraseña NUEVA en el objeto, lista para persistir: " + usuarioAEditar.getPassword());
         }
 
-        // --- LÓGICA DE FOTO DE PERFIL (CORREGIDA) ---
+        // --- logica de foto de perfil de usuario  ---
         if (datos.getNuevaFoto() != null && !datos.getNuevaFoto().isEmpty()) {
             try {
                 String nombreOriginal = datos.getNuevaFoto().getOriginalFilename();
@@ -75,12 +72,10 @@ public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
 
                 File archivoGuardado = new File(UPLOAD_DIR + nombreArchivo);
 
-                // Transferir el archivo a la ubicación física
                 datos.getNuevaFoto().transferTo(archivoGuardado);
 
-                // Guardar la URL relativa para el acceso web (DB)
                 String urlRelativa = "/img/uploads/" + nombreArchivo;
-                usuarioAEditar.setFotoPerfil(urlRelativa); // Se actualizará la URL en el objeto
+                usuarioAEditar.setFotoPerfil(urlRelativa);
 
                 System.out.println("LOG: Nueva foto guardada en: " + urlRelativa);
 
@@ -88,12 +83,9 @@ public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
                 throw new RuntimeException("Error al guardar el archivo de imagen.", e);
             }
         } else if (usuarioAEditar.getFotoPerfil() == null || usuarioAEditar.getFotoPerfil().isEmpty()) {
-            // Si no subió foto y no tenía una, asegurar que la URL sea NULL
             usuarioAEditar.setFotoPerfil(null);
         }
 
-        // --- PERSISTENCIA DE CAMBIOS (DEBE IR AL FINAL) ---
-        // usuarioAEditar ya tiene actualizados: nombreUsuario, password (si cambió), fotoPerfil (si cambió)
 
         System.out.println("LOG: Persistiendo cambios en la DB...");
         repositorioUsuario.modificar(usuarioAEditar);

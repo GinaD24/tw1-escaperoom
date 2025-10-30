@@ -133,7 +133,6 @@ public class ControladorEditarPerfilTest {
         assertThat(redirectAttributesMock.getFlashAttributes().containsKey("error"), equalTo(true));
         assertThat(redirectAttributesMock.getFlashAttributes().get("error").toString(), equalTo("Error de contraseña: La contraseña actual es incorrecta."));
     }
-    // NUEVO TEST PARA CONTRASEÑAS: Cubre el caso donde se cambia la contraseña exitosamente (sin errores)
     @Test
     void dadoQueContraseniaNuevaEsValidaCuandoGuardaCambiosDeberiaActualizarContraseniaYRedirigirAVerPerfil() throws UsuarioExistente, ContraseniaInvalidaException {
         Usuario usuarioActualizado = mock(Usuario.class);

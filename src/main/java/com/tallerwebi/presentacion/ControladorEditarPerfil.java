@@ -51,7 +51,7 @@ public class ControladorEditarPerfil {
     @RequestMapping(path = "/editar", method = RequestMethod.POST)
     public ModelAndView guardarCambios(@ModelAttribute("datosPerfil") DatosEdicionPerfilDTO datos,
                                        HttpSession session,
-                                       RedirectAttributes atributos) { // Agregado RedirectAttributes
+                                       RedirectAttributes atributos) {
 
         Long idUsuario = (Long) session.getAttribute("id_usuario");
 
@@ -62,7 +62,7 @@ public class ControladorEditarPerfil {
         System.out.println("Iniciando proceso de guardar cambios para usuario ID: " + idUsuario);
         System.out.println("Datos recibidos - NombreUsuario: " + datos.getNombreUsuario() + ", UrlFotoPerfil: " + datos.getUrlFotoPerfil());
 
-        // --- 1. BLOQUE TRY-CATCH para VALIDACIONES de DTO ---
+        // bloque try-catch para validaciones DTO
         try {
             System.out.println("Validando datos...");
             datos.validarDatos();
@@ -70,10 +70,9 @@ public class ControladorEditarPerfil {
         } catch (DatosIncompletosException | ValidacionInvalidaException e) {
             System.out.println("Excepción de Validación: " + e.getMessage());
             atributos.addFlashAttribute("error", "Error de validación: " + e.getMessage());
-            atributos.addFlashAttribute("datosPerfil", datos); // Devolvemos los datos ingresados
+            atributos.addFlashAttribute("datosPerfil", datos);
             return new ModelAndView("redirect:/configuracion/editar");
         } catch (com.tallerwebi.dominio.excepcion.ContraseniaInvalidaException e) {
-            // Esta excepción es de la validación del DTO (contraseña nueva == actual)
             System.out.println("Excepción ContraseniaInvalidaException (DTO): " + e.getMessage());
             atributos.addFlashAttribute("error", "Error de contraseña: " + e.getMessage());
             atributos.addFlashAttribute("datosPerfil", datos);
@@ -81,24 +80,18 @@ public class ControladorEditarPerfil {
         }
 
 
-        // --- 2. BLOQUE TRY-CATCH para ACTUALIZACIÓN de PERFIL (Servicio) ---
+        //  bloque try-catch para actualizar el perfil
         try {
             System.out.println("Asignando ID y actualizando perfil...");
             datos.setId(idUsuario);
-            servicioEditarPerfil.actualizarPerfil(datos); // Este método lanza UsuarioExistente y ContraseniaInvalidaException
+            servicioEditarPerfil.actualizarPerfil(datos);
 
             Usuario usuarioActualizado = servicioEditarPerfil.buscarUsuarioPorId(idUsuario);
 
-            // 2. Refrescar los atributos de la sesión (ajusta las CLAVES según tu proyecto)
             session.setAttribute("id_usuario", usuarioActualizado.getId());
-            session.setAttribute("nombreUsuario", usuarioActualizado.getNombreUsuario()); // Asumiendo que usas esta clave para el nombre
+            session.setAttribute("nombreUsuario", usuarioActualizado.getNombreUsuario());
 
-            // Esta clave es la más importante para tu perfil:
-            session.setAttribute("urlFotoPerfil", usuarioActualizado.getFotoPerfil()); // Asumiendo que usas esta clave para la foto
-
-            // Si guardas el objeto Usuario completo en la sesión (común en Spring MVC):
-            // session.setAttribute("usuario", usuarioActualizado);
-            // =========================================================
+            session.setAttribute("urlFotoPerfil", usuarioActualizado.getFotoPerfil());
 
             System.out.println("Perfil y Sesión actualizados exitosamente.");
             atributos.addFlashAttribute("mensaje", "Perfil actualizado exitosamente.");
@@ -111,7 +104,6 @@ public class ControladorEditarPerfil {
             return new ModelAndView("redirect:/configuracion/editar");
 
         } catch (ContraseniaInvalidaException e) {
-            // Esta excepción es lanzada por el SERVICIO (contraseña actual incorrecta)
             System.out.println("Excepción ContraseniaInvalidaException (Servicio): " + e.getMessage());
             atributos.addFlashAttribute("error", "Error de contraseña: " + e.getMessage());
             atributos.addFlashAttribute("datosPerfil", datos);

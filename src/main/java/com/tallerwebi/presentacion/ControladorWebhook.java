@@ -25,11 +25,9 @@ public class ControladorWebhook {
                 Map<String, Object> data = (Map<String, Object>) payload.get("data");
                 String paymentId = data.get("id").toString();
 
-                // Confirma el pago (actualiza la compra en DB)
                 servicioCompra.confirmarPago(paymentId);
             }
         } catch (Exception e) {
-            // Log error
             System.err.println("Error procesando webhook: " + e.getMessage());
         }
     }

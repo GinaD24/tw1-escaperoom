@@ -42,31 +42,23 @@ public class ControladorCompra {
         }
 
         servicioCompra.iniciarCompra(usuario, sala);
-        // Obtén el init_point del servicio
         String initPoint = servicioCompra.crearPreferenciaParaSala(sala);
 
-        // Redirige directamente a Mercado Pago
         return new ModelAndView("redirect:" + initPoint);
     }
 
-    // Endpoint para éxito en el pago (backUrl.success)
     @GetMapping("/exito")
     public ModelAndView exito(RedirectAttributes redirectAttributes) {
-        // Aquí podrías confirmar el pago si Mercado Pago pasa params (ej. payment_id)
-        // Ejemplo: String paymentId = request.getParameter("payment_id");
-        // servicioCompra.confirmarPago(paymentId);
         redirectAttributes.addFlashAttribute("mensaje", "¡Pago exitoso! La sala ha sido desbloqueada.");
         return new ModelAndView("redirect:/inicio/");
     }
 
-    // Endpoint para fallo en el pago (backUrl.failure)
     @GetMapping("/fallo")
     public ModelAndView fallo(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("mensaje", "El pago falló. Inténtalo de nuevo.");
         return new ModelAndView("redirect:/inicio/");
     }
 
-    // Endpoint para pago pendiente (backUrl.pending)
     @GetMapping("/pendiente")
     public ModelAndView pendiente(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("mensaje", "El pago está pendiente de aprobación.");
