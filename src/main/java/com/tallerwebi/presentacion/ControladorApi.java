@@ -88,16 +88,16 @@ public class ControladorApi {
             // Logging y URLs con contexto /spring
             System.err.println("Creando backUrls con contexto /spring...");
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success("http://localhost:8080/spring/compra/exito")  // Incluye /spring
-                    .failure("http://localhost:8080/spring/compra/fallo")
-                    .pending("http://localhost:8080/spring/compra/pendiente")
+                    .success("https://b5c2b1539e2b.ngrok-free.app/spring/inicio/")  // Incluye /spring
+                    .failure("https://b5c2b1539e2b.ngrok-free.app/spring/compra/fallo")
+                    .pending("https://b5c2b1539e2b.ngrok-free.app/spring/compra/pendiente")
                     .build();
             System.err.println("backUrls creadas: success=" + backUrls.getSuccess());
 
             PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                     .items(items)
                     .backUrls(backUrls)
-                    //.autoReturn("approved")
+                    .autoReturn("approved")
                     .build();
 
             PreferenceClient client = new PreferenceClient();

@@ -22,12 +22,14 @@ public class Compra {
     private LocalDateTime fechaCompra;
 
     @Column(nullable = false)
-    private Boolean pagada;  // true si el pago fue confirmado
+    private Boolean pagada;
 
-    // Constructor vacío
+    @Column(name = "payment_id")
+    private String paymentId;
+
+    // Constructor vacío (requerido por Hibernate)
     public Compra() {}
 
-    // Constructor con parámetros
     public Compra(Usuario usuario, Sala sala, LocalDateTime fechaCompra, Boolean pagada) {
         this.usuario = usuario;
         this.sala = sala;
@@ -50,4 +52,7 @@ public class Compra {
 
     public Boolean getPagada() { return pagada; }
     public void setPagada(Boolean pagada) { this.pagada = pagada; }
+
+    public String getPaymentId() { return paymentId; }
+    public void setPaymentId(String paymentId) { this.paymentId = paymentId; }
 }

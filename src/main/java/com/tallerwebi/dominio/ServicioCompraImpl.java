@@ -42,12 +42,10 @@ public class ServicioCompraImpl implements ServicioCompra {
     @Override
     @Transactional
     public void confirmarPago(String paymentId) {
-        // Busca la compra por paymentId y marca como pagada
         Compra compra = repositorioCompra.obtenerCompraPorPaymentId(paymentId);
         if (compra != null) {
             compra.setPagada(true);
             repositorioCompra.guardarCompra(compra);
-            // Opcional: Desbloquear sala para el usuario
         }
     }
 
@@ -84,15 +82,15 @@ public class ServicioCompraImpl implements ServicioCompra {
 
             // BackUrls con localhost (sin autoReturn por ahora)
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success("http://localhost:8080/spring/compra/exito")
-                    .failure("http://localhost:8080/spring/compra/fallo")
-                    .pending("http://localhost:8080/spring/compra/pendiente")
+                    .success("https://b5c2b1539e2b.ngrok-free.app/spring/inicio/")
+                    .failure("https://b5c2b1539e2b.ngrok-free.app/spring/compra/fallo")
+                    .pending("https://b5c2b1539e2b.ngrok-free.app/spring/compra/pendiente")
                     .build();
 
             PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                     .items(items)
                     .backUrls(backUrls)
-                    // .autoReturn("approved")  // Comentado para desarrollo
+                    .autoReturn("approved")
                     .build();
 
             PreferenceClient client = new PreferenceClient();
@@ -103,4 +101,6 @@ public class ServicioCompraImpl implements ServicioCompra {
             throw new RuntimeException("Error al crear preferencia: " + e.getMessage());
         }
     }
+
+
 }
