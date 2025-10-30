@@ -1,7 +1,6 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.Historial;
-import com.tallerwebi.dominio.entidad.Ranking;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioHistorial;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioHistorial;

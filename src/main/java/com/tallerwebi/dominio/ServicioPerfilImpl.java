@@ -1,7 +1,6 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.Usuario;
-import com.tallerwebi.dominio.interfaz.repositorio.RankingRepository;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioLogro;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPerfil;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
