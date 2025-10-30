@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.dominio.enums.Dificultad;
+import com.tallerwebi.dominio.enums.TipoAcertijo;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPartida;
 import com.tallerwebi.infraestructura.config.HibernateTestInfraestructuraConfig;
 import org.hibernate.SessionFactory;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -80,10 +82,13 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo1 = new Acertijo( "a1");
         acertijo1.setEtapa(etapa);
+        acertijo1.setTipo(TipoAcertijo.ADIVINANZA);
         Acertijo acertijo2 = new Acertijo( "a2");
         acertijo2.setEtapa(etapa);
+        acertijo2.setTipo(TipoAcertijo.ADIVINANZA);
         Acertijo acertijo3 = new Acertijo( "a3");
         acertijo3.setEtapa(etapa);
+        acertijo3.setTipo(TipoAcertijo.ADIVINANZA);
 
         this.sessionFactory.getCurrentSession().save(acertijo1);
         this.sessionFactory.getCurrentSession().save(acertijo2);
@@ -104,6 +109,7 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
 
         Pista pista1 = new Pista("pista", 1);
@@ -132,6 +138,7 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
 
         Respuesta respuesta = new Respuesta("Respuesta");
@@ -151,6 +158,7 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
 
         Usuario usuario = new Usuario();
@@ -170,6 +178,7 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
 
         Usuario usuario = new Usuario();
@@ -197,9 +206,11 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
         Acertijo acertijo2 = new Acertijo( "a2");
         acertijo2.setEtapa(etapa);
+        acertijo2.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo2);
 
         AcertijoUsuario acertijoUsuario = new AcertijoUsuario(acertijo, usuario);
@@ -225,9 +236,11 @@ public class RepositorioPartidaImplTest {
 
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
         Acertijo acertijo2 = new Acertijo( "a2");
         acertijo2.setEtapa(etapa);
+        acertijo2.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo2);
 
         AcertijoUsuario acertijoUsuario = new AcertijoUsuario(acertijo, usuario);
@@ -253,6 +266,7 @@ public class RepositorioPartidaImplTest {
         this.sessionFactory.getCurrentSession().save(etapa);
         Acertijo acertijo = new Acertijo( "a1");
         acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
         this.sessionFactory.getCurrentSession().save(acertijo);
 
         Acertijo acertijoObtenido = this.repositorioPartida.buscarAcertijoPorId(acertijo.getId());
@@ -318,5 +332,98 @@ public class RepositorioPartidaImplTest {
         assertNotNull(partida.getFin());
         assertNotNull(partida.getTiempoTotal());
     }
+
+    @Test
+    public void deberiaRegistrarPistaEnPartidaCadaVezQueSePideUna(){
+        Usuario usuario = new Usuario();
+        this.sessionFactory.getCurrentSession().save(usuario);
+
+        Partida partida = new Partida(LocalDateTime.now());
+        partida.setUsuario(usuario);
+        partida.setEsta_activa(true);
+        partida.setPistasUsadas(0);
+        this.sessionFactory.getCurrentSession().save(partida);
+
+        this.repositorioPartida.registrarPistaEnPartida(usuario.getId());
+
+        sessionFactory.getCurrentSession().flush();
+        sessionFactory.getCurrentSession().refresh(partida);
+
+        Integer pistasUsadas = partida.getPistasUsadas();
+
+        assertThat(pistasUsadas, equalTo(1));
+    }
+
+
+
+    @Test
+    public void deberiaObtenerElOrdenDeImgCorrectoDeLasImagenesDeUnAcertijoDetipo_ORDENAR_IMAGEN(){
+        Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
+        this.sessionFactory.getCurrentSession().save(etapa);
+
+        Acertijo acertijo = new Acertijo( "a1");
+        acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ORDENAR_IMAGEN);
+        this.sessionFactory.getCurrentSession().save(acertijo);
+
+        ImagenAcertijo imagen1 = new ImagenAcertijo(acertijo, "i1");
+        imagen1.setOrdenCorrecto(1);
+        ImagenAcertijo imagen2 = new ImagenAcertijo(acertijo, "i2");
+        imagen2.setOrdenCorrecto(2);
+        ImagenAcertijo imagen3 = new ImagenAcertijo(acertijo, "i3");
+        imagen3.setOrdenCorrecto(3);
+
+        this.sessionFactory.getCurrentSession().save(imagen1);
+        this.sessionFactory.getCurrentSession().save(imagen2);
+        this.sessionFactory.getCurrentSession().save(imagen3);
+
+        List<Long> ordenCorrecto = this.repositorioPartida.obtenerOrdenDeImgCorrecto(acertijo.getId());
+
+        assertThat(ordenCorrecto, equalTo(List.of(imagen1.getId(),imagen2.getId(),imagen3.getId())));
+    }
+
+    @Test
+    public void deberiaObtenerLosItemsDragDropDeUnAcertijo(){
+        Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
+        this.sessionFactory.getCurrentSession().save(etapa);
+
+        Acertijo acertijo = new Acertijo( "a1");
+        acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.ORDENAR_IMAGEN);
+        this.sessionFactory.getCurrentSession().save(acertijo);
+
+        DragDropItem item1 = new DragDropItem(acertijo, "i1", "cat1");
+        DragDropItem item2 = new DragDropItem(acertijo, "i1", "cat1");
+        DragDropItem item3 = new DragDropItem(acertijo, "i1", "cat1");
+        this.sessionFactory.getCurrentSession().save(item1);
+        this.sessionFactory.getCurrentSession().save(item2);
+        this.sessionFactory.getCurrentSession().save(item3);
+
+        List<DragDropItem> items = this.repositorioPartida.obtenerItemsDragDrop(acertijo.getId());
+
+        assertThat(items, equalTo(List.of(item1,item2,item3)));
+    }
+
+    @Test
+    public void deberiaObtenerUnaPartidaPorId(){
+        Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
+                true, 10,"puerta-mansion.png");
+        sala.setCantidadDeEtapas(5);
+        this.sessionFactory.getCurrentSession().save(sala);
+
+        Usuario usuario = new Usuario();
+        this.sessionFactory.getCurrentSession().save(usuario);
+
+        Partida partida = new Partida(LocalDateTime.now());
+        partida.setUsuario(usuario);
+        partida.setSala(sala);
+        partida.setEsta_activa(true);
+        this.sessionFactory.getCurrentSession().save(partida);
+
+        Partida partidaObtenida = this.repositorioPartida.buscarPartidaPorId(partida.getId());
+
+        assertThat(partidaObtenida, equalTo(partida));
+    }
+
 
 }

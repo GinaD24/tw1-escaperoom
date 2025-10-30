@@ -34,4 +34,10 @@ public interface RepositorioPartida {
     void finalizarPartida(Partida partida);
 
     void registrarPistaEnPartida(Long idUsuario);
+
+    List<Long> obtenerOrdenDeImgCorrecto(Long idAcertijo);
+
+    List<DragDropItem> obtenerItemsDragDrop(Long idAcertijo);
+
+    Partida buscarPartidaPorId(Long idPartida);
 }

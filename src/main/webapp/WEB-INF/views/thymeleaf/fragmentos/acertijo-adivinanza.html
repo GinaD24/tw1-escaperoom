@@ -1,0 +1,21 @@
+<div th:fragment="adivinanza">
+
+
+
+  <div class="d-flex flex-column justify-content-center align-items-center mb-4">
+
+    <form th:action="@{/partida/validar/{idSala}/{numeroEtapa}
+              (idSala=${salaElegida.id},
+              numeroEtapa=${etapa.numero})}"
+          method="post" class="w-100 text-center" style="max-width: 600px;">
+
+      <div class="input-group rounded-pill overflow-hidden w-100">
+        <input id="input-respuesta" type="text" name="respuesta" class="form-control input-respuesta border-0"
+               placeholder="Escriba su respuesta aquí">
+        <button id="btn-enviar" type="submit" class="btn btn-enviar">Enviar</button>
+      </div>
+
+
+    </form>
+  </div>
+</div>

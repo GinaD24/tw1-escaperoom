@@ -39,7 +39,7 @@
         <p class="historia" th:text="${SalaObtenida.historia}"> </p>
 
         <div class="d-flex flex-column align-items-center">
-            <a class="btn btn-primary" th:href="@{/partida/sala_{idSala}(idSala=${SalaObtenida.id})}">ESTOY LISTO</a>
+            <a id="btn-estoyListo" class="btn btn-primary" th:href="@{/partida/sala_{idSala}(idSala=${SalaObtenida.id})}">ESTOY LISTO</a>
             <a class="btn btn-danger w-25" th:href="@{/inicio/}">ELEGIR OTRA SALA</a>
         </div>
 

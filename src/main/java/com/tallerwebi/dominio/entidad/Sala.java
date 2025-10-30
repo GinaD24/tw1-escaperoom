@@ -31,10 +31,16 @@ public class Sala {
     private Integer duracion;
 
     @Column
-    private String imagen;
+    private String imagenPuerta;
 
     @Column
     private String imagenSala;
+
+    @Column
+    private String imagenPerdida;
+
+    @Column
+    private String imagenGanada;
 
    @Column (nullable = false)
    private Integer cantidadDeEtapas;
@@ -43,7 +49,7 @@ public class Sala {
     }
 
     public Sala(Integer id, String nombre, Dificultad dificultad, String escenario, String historia,
-                Boolean esta_habilitada, Integer duracion, String imagen) {
+                Boolean esta_habilitada, Integer duracion, String imagenPuerta) {
         this.id = id;
         this.nombre = nombre;
         this.dificultad = dificultad;
@@ -51,7 +57,7 @@ public class Sala {
         this.historia = historia;
         this.esta_habilitada = esta_habilitada;
         this.duracion = duracion;
-        this.imagen = imagen;
+        this.imagenPuerta = imagenPuerta;
     }
 
     public Integer getId() {
@@ -110,12 +116,12 @@ public class Sala {
         this.duracion = duracion;
     }
 
-    public String getImagen() {
-        return imagen;
+    public String getImagenPuerta() {
+        return imagenPuerta;
     }
 
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
+    public void setImagenPuerta(String imagen) {
+        this.imagenPuerta = imagen;
     }
 
     public Integer getCantidadDeEtapas() {
@@ -132,5 +138,21 @@ public class Sala {
 
     public void setImagenSala(String imagenSala) {
         this.imagenSala = imagenSala;
+    }
+
+    public String getImagenGanada() {
+        return imagenGanada;
+    }
+
+    public void setImagenGanada(String imagenGanada) {
+        this.imagenGanada = imagenGanada;
+    }
+
+    public String getImagenPerdida() {
+        return imagenPerdida;
+    }
+
+    public void setImagenPerdida(String imagenPerdida) {
+        this.imagenPerdida = imagenPerdida;
     }
 }

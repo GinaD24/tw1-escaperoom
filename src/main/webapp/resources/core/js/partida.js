@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
     const btnPista = document.getElementById("btnPista");
+    const animacionPuntos = document.getElementById("animacion-puntos");
+    const valorPuntaje = document.getElementById("valor-puntaje");
+
     if (btnPista) {
         btnPista.addEventListener("click", function() {
             const idAcertijo = this.dataset.acertijo;
@@ -7,11 +10,33 @@ document.addEventListener("DOMContentLoaded", function() {
             fetch(`/spring/partida/acertijo/${idAcertijo}/pista`)
                 .then(response => response.text())
                 .then(text => {
-                    document.getElementById("pista").innerText = text;
+                    const pistaDiv = document.getElementById("pista");
+                    pistaDiv.innerText = text;
+
+                    if (text.trim() !== "Ya no quedan pistas.") {
+                        mostrarAnimacionPuntos();
+                        actualizarPuntaje(-25);
+                    }
                 });
         });
     }
+
+    function mostrarAnimacionPuntos() {
+        animacionPuntos.textContent = "-25";
+        animacionPuntos.classList.add("mostrar");
+
+        setTimeout(() => {
+            animacionPuntos.classList.remove("mostrar");
+        }, 2000);
+    }
+
+    function actualizarPuntaje(valor) {
+        let puntajeActual = parseInt(valorPuntaje.textContent);
+        let nuevoPuntaje = Math.max(0, puntajeActual + valor);
+        valorPuntaje.textContent = nuevoPuntaje;
+    }
 });
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const btnSalir = document.getElementById("btnSalir");

@@ -1,6 +1,10 @@
 # Usa la imagen base de OpenJDK 11
 FROM openjdk:11
 
+# Configura la zona horaria argentina
+ENV TZ=America/Argentina/Buenos_Aires
+RUN apt-get update && apt-get install -y tzdata
+
 # Define una variable para la versión de Jetty
 ENV JETTY_VERSION=9.4.56.v20240826
 ENV JETTY_HOME=/opt/jetty

@@ -1,10 +1,12 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.entidad.*;
+import com.tallerwebi.dominio.enums.TipoAcertijo;
 import com.tallerwebi.dominio.excepcion.EtapaInexistente;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioDatosPartida;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +16,24 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping("/partida")
 public class ControladorPartida {
 
-    ServicioSala servicioSala;
-    ServicioPartida servicioPartida;
+    private final ServicioSala servicioSala;
+    private final ServicioPartida servicioPartida;
+    private final ServicioDatosPartida servicioDatosPartida;
+    private final DatosPartidaSesion datosPartidaSesion;
+
 
     @Autowired
-    public ControladorPartida(ServicioSala servicioSala, ServicioPartida servicioPartida) {
+    public ControladorPartida(ServicioSala servicioSala, ServicioPartida servicioPartida, ServicioDatosPartida servicioDatosPartida, DatosPartidaSesion datosPartidaSesion) {
         this.servicioSala = servicioSala;
         this.servicioPartida = servicioPartida;
+        this.servicioDatosPartida = servicioDatosPartida;
+        this.datosPartidaSesion = datosPartidaSesion;
     }
 
     @GetMapping("/sala_{idSala}")
@@ -45,14 +53,16 @@ public class ControladorPartida {
             }
 
             try{
-                Long idUsuarioSesion = (Long) request.getSession().getAttribute("id_usuario");
-                this.servicioPartida.guardarPartida(partida, idUsuarioSesion, idSala);
+                Long id_usuario = (Long) request.getSession().getAttribute("id_usuario");
+                datosPartidaSesion.limpiarSesionPartida();
+                this.servicioPartida.guardarPartida(partida, id_usuario, idSala);
+                datosPartidaSesion.setIdPartida(partida.getId());
             } catch(SesionDeUsuarioExpirada | UsuarioInexistente e){
                 return new ModelAndView("redirect:/login");
             }
 
-            request.getSession().setAttribute("id_sala_actual", idSala);
-            request.getSession().setAttribute("numero_etapa_actual", 1);
+            datosPartidaSesion.setIdSalaActual(idSala);
+            datosPartidaSesion.setNumeroEtapaActual(1);
 
             return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa1");
         } catch (SalaInexistente e) {
@@ -60,67 +70,45 @@ public class ControladorPartida {
         }
     }
 
-
     @GetMapping("/sala{idSala}/etapa{numeroEtapa}")
-    public ModelAndView mostrarPartida(@PathVariable Integer idSala, @PathVariable Integer numeroEtapa,
-                                       @SessionAttribute("id_usuario") Long id_usuario, HttpServletRequest request) {
+    public ModelAndView mostrarPartida(
+            @PathVariable Integer idSala,
+            @PathVariable Integer numeroEtapa,
+            @SessionAttribute("id_usuario") Long idUsuario) {
 
         ModelMap modelo = new ModelMap();
-        Integer idSalaSesion = (Integer) request.getSession().getAttribute("id_sala_actual");
-        Integer numeroEtapaSesion = (Integer) request.getSession().getAttribute("numero_etapa_actual");
-        Sala sala = null;
-        try{
-        sala = this.servicioSala.obtenerSalaPorId(idSala);
-        }catch (SalaInexistente e){
-            return new ModelAndView("redirect:/partida/sala" + idSalaSesion + "/etapa" + numeroEtapaSesion);
-        }
-        Etapa etapa;
-        Acertijo acertijo;
 
-        if (idSalaSesion == null || !idSalaSesion.equals(idSala) ||
-                numeroEtapaSesion == null ||  !numeroEtapaSesion.equals(numeroEtapa)) {
-            return new ModelAndView("redirect:/partida/sala" + idSalaSesion + "/etapa" + numeroEtapaSesion);
-        }
-
-
-        Long idEtapaSesion = (Long) request.getSession().getAttribute("id_etapa");
         try {
-
-            if (idEtapaSesion == null) {
-                etapa = this.servicioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
-                request.getSession().setAttribute("id_etapa", etapa.getId());
-
-            } else {
-                etapa = this.servicioPartida.obtenerEtapaPorId(idEtapaSesion);
-
-                if (!etapa.getNumero().equals(numeroEtapa)) {
-                    request.getSession().removeAttribute("id_etapa");
-                    request.getSession().removeAttribute("id_acertijo");
-                    etapa = this.servicioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
-                    request.getSession().setAttribute("id_etapa", etapa.getId());
-                }
+            if (!esSesionValida(datosPartidaSesion, idSala, numeroEtapa)) {
+                return redirigirASalaYEtapaActual();
             }
 
-        }catch (EtapaInexistente e) {
-            modelo.put("SalaObtenida", sala);
-            modelo.put("error", "Sala en construcción!");
-            return new ModelAndView("sala", modelo);
+            DatosPartidaDTO dtoDatosPartida = servicioDatosPartida.obtenerDatosDePartida(idSala, numeroEtapa, idUsuario);
+
+            if(datosPartidaSesion.getIdAcertijo() != null && datosPartidaSesion.getIdEtapa().equals(dtoDatosPartida.getEtapa().getId())){
+                validarAcertijoEnSesion(dtoDatosPartida);
+            }
+
+            actualizarSesion(datosPartidaSesion, dtoDatosPartida);
+
+            if(dtoDatosPartida.getAcertijo().getTipo().equals(TipoAcertijo.DRAG_DROP)){
+                List<String> categorias = this.servicioPartida.obtenerCategoriasDelAcertijoDragDrop(dtoDatosPartida.getAcertijo().getId());
+                modelo.put("categorias", categorias);
+            }
+
+            Partida partida = servicioPartida.obtenerPartidaActivaPorIdUsuario(idUsuario);
+            modelo.put("partida", partida);
+            modelo.put("salaElegida", dtoDatosPartida.getSala());
+            modelo.put("etapa", dtoDatosPartida.getEtapa());
+            modelo.put("acertijo", dtoDatosPartida.getAcertijo());
+
+            return new ModelAndView("partida", modelo);
+
+        } catch (SalaInexistente | EtapaInexistente e) {
+            return redirigirASalaYEtapaActual();
         }
-
-
-        Long idAcertijoSesion = (Long) request.getSession().getAttribute("id_acertijo");
-        if (idAcertijoSesion == null) {
-            acertijo = this.servicioPartida.obtenerAcertijo(etapa.getId(), id_usuario);
-            request.getSession().setAttribute("id_acertijo", acertijo.getId());
-        } else {
-            acertijo = this.servicioPartida.buscarAcertijoPorId(idAcertijoSesion);
-        }
-
-        modelo.put("salaElegida", sala);
-        modelo.put("etapa", etapa);
-        modelo.put("acertijo", acertijo);
-        return new ModelAndView("partida", modelo);
     }
+
 
     @GetMapping("/acertijo/{idAcertijo}/pista")
     @ResponseBody
@@ -133,19 +121,30 @@ public class ControladorPartida {
         }else{
            pistaTexto = pista.getDescripcion();
         }
-
         return pistaTexto;
     }
 
 
     @PostMapping("/validar/{idSala}/{numeroEtapa}")
     public ModelAndView validarRespuesta(@PathVariable Integer idSala, @PathVariable Integer numeroEtapa,
-            @SessionAttribute("id_acertijo") Long id_acertijo, @RequestParam String respuesta, HttpServletRequest request) {
+            @SessionAttribute("id_acertijo") Long id_acertijo, @RequestParam String respuesta, @SessionAttribute("id_usuario") Long id_usuario) {
         ModelMap modelo = new ModelMap();
+
+        Partida partida = servicioPartida.obtenerPartidaActivaPorIdUsuario(id_usuario);
+        if(tiempoValido(partida) == false){
+            return new ModelAndView("redirect:/partida/finalizarPartida");
+        }
 
         Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
         Etapa etapa = this.servicioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
         Acertijo acertijo = this.servicioPartida.buscarAcertijoPorId(id_acertijo);
+
+        if(acertijo.getTipo().equals(TipoAcertijo.DRAG_DROP)){
+            List<String> categorias = this.servicioPartida.obtenerCategoriasDelAcertijoDragDrop(id_acertijo);
+            modelo.put("categorias", categorias);
+        }
+
+        modelo.put("partida", partida);
         modelo.put("salaElegida", sala);
         modelo.put("etapa", etapa);
         modelo.put("acertijo", acertijo);
@@ -153,47 +152,46 @@ public class ControladorPartida {
         if (respuesta.isEmpty()) {
             modelo.put("error", "Completa este campo para continuar.");
 
-        } else if (this.servicioPartida.validarRespuesta(id_acertijo, respuesta).equals(false)) {
+        } else if (this.servicioPartida.validarRespuesta(id_acertijo, respuesta, id_usuario).equals(false)) {
             modelo.put("error", "Respuesta incorrecta. Intenta nuevamente.");
 
         } else {
-
             Integer cantidadDeEtapasTotales = sala.getCantidadDeEtapas();
             if (cantidadDeEtapasTotales.equals(numeroEtapa)) {
-                Boolean ganada = this.servicioPartida.validarRespuesta(id_acertijo, respuesta);
-                request.getSession().setAttribute("partida_ganada", ganada);
+                datosPartidaSesion.setPartidaGanada(true);
                 return new ModelAndView("redirect:/partida/finalizarPartida");
             }
-
-            request.getSession().setAttribute("numero_etapa_actual", numeroEtapa + 1);
+            datosPartidaSesion.setNumeroEtapaActual(numeroEtapa + 1);
             return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa" + (numeroEtapa + 1));
         }
         return new ModelAndView("partida", modelo);
     }
 
 
-
     @GetMapping("/finalizarPartida")
     public ModelAndView finalizarPartida(HttpServletRequest request) {
-        Integer idSala = (Integer) request.getSession().getAttribute("id_sala_actual");
+        Integer idSala = datosPartidaSesion.getIdSalaActual();
         Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");
 
-        Boolean ganada = (Boolean) request.getSession().getAttribute("partida_ganada");
+        Boolean ganada = datosPartidaSesion.getPartidaGanada();
         if (ganada == null) ganada = false;
 
         this.servicioPartida.finalizarPartida(idUsuario, ganada);
-        request.getSession().removeAttribute("partida_ganada");
+        Partida partida = this.servicioPartida.buscarPartidaPorId(datosPartidaSesion.getIdPartida());
+
+        ModelMap modelo = new ModelMap();
+        Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
+        modelo.put("sala", sala);
+        modelo.put("partida", partida);
 
         if (ganada) {
-            ModelMap modelo = new ModelMap();
-            Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
-            modelo.put("sala", sala);
             return new ModelAndView("partidaGanada", modelo);
 
         } else {
-            return new ModelAndView("redirect:/inicio/");
+            return new ModelAndView("partidaPerdida", modelo);
         }
     }
+
 
     @GetMapping("/validar/{idSala}/{numeroEtapa}")
     public ModelAndView accesoInvalido(@PathVariable Integer idSala,
@@ -202,4 +200,52 @@ public class ControladorPartida {
     }
 
 
+    private ModelAndView redirigirASalaYEtapaActual() {
+        Integer idSalaSesion = datosPartidaSesion.getIdSalaActual();
+        Integer numeroEtapaSesion = datosPartidaSesion.getNumeroEtapaActual();
+        return new ModelAndView("redirect:/partida/sala" + idSalaSesion + "/etapa" + numeroEtapaSesion);
+    }
+
+    private Boolean tiempoValido(Partida partida) {
+        boolean tiempoValido = true;
+        if (servicioPartida.tiempoExpirado(partida)) {
+            tiempoValido = false;
+            datosPartidaSesion.setPartidaGanada(false);
+        }
+        return tiempoValido;
+    }
+
+    private boolean esSesionValida(DatosPartidaSesion datosPartida, Integer idSala, Integer numeroEtapa) {
+        Integer idSalaSesion = datosPartida.getIdSalaActual();
+        Integer numeroEtapaSesion = datosPartida.getNumeroEtapaActual();
+
+        return idSalaSesion != null
+                && idSalaSesion.equals(idSala)
+                && numeroEtapaSesion != null
+                && numeroEtapaSesion.equals(numeroEtapa);
+    }
+
+    private void actualizarSesion(DatosPartidaSesion datosPartidaSesion, DatosPartidaDTO dto) {
+        if (datosPartidaSesion.getIdEtapa() == null ||
+                !dto.getEtapa().getId().equals(datosPartidaSesion.getIdEtapa())) {
+            datosPartidaSesion.limpiarSesionIdEtapaAcertijo();
+            datosPartidaSesion.setIdEtapa(dto.getEtapa().getId());
+        }
+
+        if (datosPartidaSesion.getIdAcertijo() == null ||
+                !dto.getAcertijo().getId().equals(datosPartidaSesion.getIdAcertijo())) {
+            datosPartidaSesion.setIdAcertijo(dto.getAcertijo().getId());
+        }
+
+
+    }
+
+    private void validarAcertijoEnSesion(DatosPartidaDTO dtoDatosPartida) {
+        Long idAcertijoObtenido = dtoDatosPartida.getAcertijo().getId();
+        Long idAcertijoEnSesion = datosPartidaSesion.getIdAcertijo();
+        Acertijo acertijoEnSesion = servicioPartida.buscarAcertijoPorId(idAcertijoEnSesion);
+        if(!idAcertijoObtenido.equals(idAcertijoEnSesion)){
+            dtoDatosPartida.setAcertijo(acertijoEnSesion);
+        }
+    }
 }

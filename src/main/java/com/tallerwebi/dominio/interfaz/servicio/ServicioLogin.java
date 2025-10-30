@@ -10,4 +10,9 @@ import com.tallerwebi.dominio.excepcion.ValidacionInvalidaException;
 public interface ServicioLogin {
     Usuario consultarUsuario(String email, String password);
     void registrar(Usuario usuario) throws UsuarioExistente, EdadInvalidaException, DatosIncompletosException, CredencialesInvalidasException, ValidacionInvalidaException;
+
+    Usuario buscarUsuarioPorId(Long idUsuario);
+
+
+    void actualizarUsuarioActivo(Usuario usuario, Boolean activo);
 }

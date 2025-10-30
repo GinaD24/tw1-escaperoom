@@ -1,0 +1,36 @@
+<div th:fragment="dragdrop">
+    <form th:action="@{/partida/validar/{idSala}/{numeroEtapa}(idSala=${salaElegida.id}, numeroEtapa=${etapa.numero})}"
+          method="post" class="d-flex flex-column align-items-center">
+
+        <!-- Elementos draggable -->
+        <div id="drag-items" class="d-flex gap-3 flex-wrap justify-content-center mb-4">
+            <div th:each="item : ${acertijo.dragDropItems}"
+                 class="drag-item p-2 shadow-sm text-center "
+                 draggable="true"
+                 th:data-id="${item.id}"
+                 th:data-correcta="${item.categoriaCorrecta}">
+                <img th:src="@{'/img/acertijo/' + ${item.contenido}}" >
+            </div>
+        </div>
+
+        <!-- Contenedores drop -->
+        <div id="drop-container" class="d-flex gap-4 flex-row flex-wrap justify-content-center mb-3">
+
+            <div th:each="cat : ${categorias}"
+                 class="drop-slot p-3 border rounded shadow-sm"
+                 th:data-categoria="${cat}">
+
+                <h6 class="text-center mb-2 fw-bold" th:text="${cat}"></h6>
+                <div class="d-flex flex-row flex-wrap g-2">
+                    <div class="drop-items"></div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="respuesta" id="respuestaDragDrop">
+
+        <div>
+            <button id="btn-enviar" type="submit" class="btn btn-enviar mt-3 ms-3">Enviar</button>
+        </div>
+    </form>
+</div>
