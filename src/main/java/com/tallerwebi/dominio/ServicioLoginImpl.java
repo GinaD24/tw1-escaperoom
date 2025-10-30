@@ -32,13 +32,7 @@ public class ServicioLoginImpl implements ServicioLogin {
             throw new CredencialesInvalidasException("Las credenciales ingresadas son inválidas.");
         }
 
-        // VERIFICACION CREDENCIALES VACIAS
-        String emailUsuario = usuarioBuscado.getEmail();
-        String passwordUsuario = usuarioBuscado.getPassword();
 
-        if((passwordUsuario == null || passwordUsuario.isEmpty()) || (emailUsuario == null || emailUsuario.isEmpty())){
-            throw new CredencialesInvalidasException("Se debe completar las credenciales");
-        }
 
         return usuarioBuscado;
     }
@@ -92,6 +86,18 @@ public class ServicioLoginImpl implements ServicioLogin {
 
         repositorioUsuario.guardar(usuario);
     }
+
+    @Override
+    public Usuario buscarUsuarioPorId(Long idUsuario) {
+        return repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+    }
+
+    @Override
+    public void actualizarUsuarioActivo(Usuario usuario, Boolean activo) {
+        usuario.setActivo(activo);
+        repositorioUsuario.modificar(usuario);
+    }
+
 
     //VALIDAICONES
     private void validarCamposObligatorios(Usuario usuario) throws DatosIncompletosException {

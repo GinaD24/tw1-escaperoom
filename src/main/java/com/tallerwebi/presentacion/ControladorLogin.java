@@ -6,12 +6,14 @@ import com.tallerwebi.dominio.excepcion.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class ControladorLogin {
@@ -37,13 +39,8 @@ public class ControladorLogin {
 
         try{
             Usuario usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
-            System.out.println("DEBUG LOGIN: URL de foto de perfil leída: " + usuarioBuscado.getFotoPerfil());
-
+            servicioLogin.actualizarUsuarioActivo(usuarioBuscado, true);
             request.getSession().setAttribute("id_usuario", usuarioBuscado.getId());
-
-            request.getSession().setAttribute("nombreUsuario", usuarioBuscado.getNombreUsuario());
-            request.getSession().setAttribute("urlFotoPerfil", usuarioBuscado.getFotoPerfil());
-
             return new ModelAndView("redirect:/inicio/");
         }catch(CredencialesInvalidasException e){
             model.put("error", "Usuario o clave incorrecta");
@@ -86,6 +83,16 @@ public class ControladorLogin {
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ModelAndView inicio() {
         return new ModelAndView("redirect:/login");
+    }
+
+    @GetMapping("/cerrarSesion")
+    public ModelAndView cerrarSesion(HttpSession session) {
+        if(session.getAttribute("id_usuario") != null) {
+            Usuario usuario = servicioLogin.buscarUsuarioPorId((Long) session.getAttribute("id_usuario"));
+            servicioLogin.actualizarUsuarioActivo(usuario, false);
+            session.invalidate();
+        }
+        return new  ModelAndView("redirect:/login");
     }
 }
 

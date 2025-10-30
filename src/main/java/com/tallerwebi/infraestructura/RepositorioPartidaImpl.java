@@ -35,8 +35,13 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
 
     @Override
     public List<Acertijo> obtenerListaDeAcertijos(Long idEtapa) {
-        String hql = "SELECT a FROM Acertijo a WHERE a.etapa.id = :idEtapa";
-        Query<Acertijo> query = this.sessionFactory.getCurrentSession().createQuery(hql, Acertijo.class);
+        String hql = "SELECT DISTINCT a FROM Acertijo a " +
+                "LEFT JOIN FETCH a.imagenes " +
+                "LEFT JOIN FETCH a.dragDropItems " +
+                "WHERE a.etapa.id = :idEtapa";
+        Query<Acertijo> query = this.sessionFactory
+                .getCurrentSession()
+                .createQuery(hql, Acertijo.class);
         query.setParameter("idEtapa", idEtapa);
         return query.getResultList();
     }
@@ -63,7 +68,7 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
     }
 
     @Override
-    public Integer obtenerPistasUsadas(Long idAcertijo, Long id_usuario) {
+    public Integer obtenerPistasUsadas(Long idAcertijo, Long  id_usuario) {
         String hql = "SELECT au.pistasUsadas FROM AcertijoUsuario au WHERE au.acertijo.id = :idAcertijo AND au.usuario.id = :id_usuario";
         Query<Integer> query = this.sessionFactory.getCurrentSession().createQuery(hql, Integer.class);
         query.setParameter("idAcertijo", idAcertijo);
@@ -77,7 +82,7 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
                 "SET au.pistasUsadas = au.pistasUsadas + 1 " +
                 "WHERE au.acertijo.id = :idAcertijo AND au.usuario.id = :idUsuario";
 
-        int updated = sessionFactory.getCurrentSession()
+         int updated = sessionFactory.getCurrentSession()
                 .createQuery(hql)
                 .setParameter("idAcertijo", idAcertijo)
                 .setParameter("idUsuario", idUsuario)
@@ -104,8 +109,13 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
 
     @Override
     public Acertijo buscarAcertijoPorId(Long idAcertijo) {
-        String hql = "SELECT a FROM Acertijo a WHERE a.id = :idAcertijo";
-        Query<Acertijo> query = this.sessionFactory.getCurrentSession().createQuery(hql, Acertijo.class);
+        String hql = "SELECT a FROM Acertijo a " +
+                "LEFT JOIN FETCH a.imagenes " +
+                "LEFT JOIN FETCH a.dragDropItems " +
+                "WHERE a.id = :idAcertijo";
+        Query<Acertijo> query = this.sessionFactory
+                .getCurrentSession()
+                .createQuery(hql, Acertijo.class);
         query.setParameter("idAcertijo", idAcertijo);
         return query.getSingleResult();
     }
@@ -144,12 +154,30 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
                 .executeUpdate();
     }
 
+
     @Override
-    public List<Partida> obtenerHistorialDePartida(Long idUsuario) {
-        String hql = "SELECT p FROM Partida p JOIN FETCH p.sala s WHERE p.usuario.id = :idUsuario" +
-                " AND p.esta_activa = false";
-        Query<Partida> query = this.sessionFactory.getCurrentSession().createQuery(hql, Partida.class);
-        query.setParameter("idUsuario", idUsuario);
+    public List<Long> obtenerOrdenDeImgCorrecto(Long idAcertijo) {
+        String hql = "SELECT ia.id FROM ImagenAcertijo ia WHERE ia.acertijo.id = :idAcertijo ORDER BY ia.ordenCorrecto ASC";
+        Query<Long> query = this.sessionFactory.getCurrentSession().createQuery(hql, Long.class);
+        query.setParameter("idAcertijo", idAcertijo);
         return query.getResultList();
     }
+
+    public List<DragDropItem> obtenerItemsDragDrop(Long idAcertijo) {
+        String hql = "FROM DragDropItem d WHERE d.acertijo.id = :idAcertijo";
+        return sessionFactory.getCurrentSession()
+                .createQuery(hql, DragDropItem.class)
+                .setParameter("idAcertijo", idAcertijo)
+                .getResultList();
+    }
+
+    @Override
+    public Partida buscarPartidaPorId(Long idPartida) {
+        String hql = "SELECT p FROM Partida p WHERE p.id = :idPartida";
+        Query<Partida> query = this.sessionFactory.getCurrentSession().createQuery(hql, Partida.class);
+        query.setParameter("idPartida", idPartida);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+
 }

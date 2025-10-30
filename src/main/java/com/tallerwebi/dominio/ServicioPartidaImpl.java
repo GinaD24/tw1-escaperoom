@@ -1,8 +1,8 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.*;
+import com.tallerwebi.dominio.enums.TipoAcertijo;
 import com.tallerwebi.dominio.excepcion.EtapaInexistente;
-import com.tallerwebi.dominio.excepcion.IDUsuarioInvalido;
 import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPartida;
@@ -18,7 +18,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 
@@ -76,19 +78,72 @@ public class ServicioPartidaImpl implements ServicioPartida {
             }
 
         }
-        this.repositorioPartida.registrarPistaEnPartida(id_usuario);
+        if (pistaSeleccionada != null) {
+            this.repositorioPartida.registrarPistaEnPartida(id_usuario);
+            Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(id_usuario);
+            partida.setPuntaje(partida.getPuntaje() - 25);
+        }
+
         return pistaSeleccionada;
     }
 
     @Override
     @Transactional
-    public Boolean validarRespuesta(Long idAcertijo, String respuesta) {
+    public Boolean validarRespuesta(Long idAcertijo, String respuesta, Long idUsuario) {
+        Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
         boolean esCorrecta = false;
-        Respuesta correcta =this.repositorioPartida.obtenerRespuestaCorrecta(idAcertijo);
-        String[] palabrasIngresadas = respuesta.toLowerCase().split("\\s+");
 
-        if(Arrays.asList(palabrasIngresadas).contains(correcta.getRespuesta().toLowerCase())){
-            esCorrecta = true;
+        Acertijo acertijo = this.repositorioPartida.buscarAcertijoPorId(idAcertijo);
+
+        switch(acertijo.getTipo()){
+            case ADIVINANZA:
+                String[] palabrasIngresadas = respuesta.toLowerCase().split("\\s+");
+
+                Respuesta correcta =this.repositorioPartida.obtenerRespuestaCorrecta(idAcertijo);
+                if(Arrays.asList(palabrasIngresadas).contains(correcta.getRespuesta().toLowerCase())){
+                    esCorrecta = true;
+                    partida.setPuntaje(partida.getPuntaje() + 100);
+                }
+                break;
+
+            case ORDENAR_IMAGEN:
+
+            case SECUENCIA:
+
+                List<Long> ordenSeleccionado = Arrays.stream(respuesta.split(","))
+                        .map(Long::valueOf)
+                        .collect(Collectors.toList());
+
+                List<Long> ordenCorrecto = this.repositorioPartida.obtenerOrdenDeImgCorrecto(idAcertijo);
+
+                if (ordenSeleccionado.equals(ordenCorrecto)) {
+                    esCorrecta = true;
+                    partida.setPuntaje(partida.getPuntaje() + 100);
+                }
+                break;
+
+            case DRAG_DROP:
+                Map<Long, String> respuestaUsuario = Arrays.stream(respuesta.split(","))
+                        .map(pair -> pair.split(":"))
+                        .filter(arr -> arr.length == 2)
+                        .collect(Collectors.toMap(
+                                arr -> Long.valueOf(arr[0]),
+                                arr -> arr[1]
+                        ));
+
+                List<DragDropItem> itemsCorrectos = this.repositorioPartida.obtenerItemsDragDrop(idAcertijo);
+
+                boolean todoCorrecto = itemsCorrectos.stream()
+                        .allMatch(item ->
+                                respuestaUsuario.containsKey(item.getId()) &&
+                                        respuestaUsuario.get(item.getId()).equals(item.getCategoriaCorrecta())
+                        );
+                if (todoCorrecto) {
+                    esCorrecta = true;
+                    partida.setPuntaje(partida.getPuntaje() + 100);
+                }
+                break;
+
         }
 
         return esCorrecta;
@@ -123,9 +178,39 @@ public class ServicioPartidaImpl implements ServicioPartida {
                 Long duracionSegundos = Duration.between(inicio, fin).getSeconds();
                 partida.setTiempoTotal(duracionSegundos);
             }
+            if(partida.getPuntaje() < 0){
+                partida.setPuntaje(0);
+            }
+
             this.repositorioPartida.finalizarPartida(partida);
         }
     }
+
+
+    @Override
+    @Transactional
+    public Partida obtenerPartidaActivaPorIdUsuario(Long idUsuario) {
+        return this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
+    }
+
+    @Override
+    @Transactional
+    public List<String> obtenerCategoriasDelAcertijoDragDrop(Long idAcertijo) {
+        Acertijo acertijo = this.repositorioPartida.buscarAcertijoPorId(idAcertijo);
+
+        return acertijo.getDragDropItems()
+                .stream()
+                .map(DragDropItem::getCategoriaCorrecta)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public Partida buscarPartidaPorId(Long idPartida) {
+        return this.repositorioPartida.buscarPartidaPorId(idPartida);
+    }
+
 
     @Override
     @Transactional
@@ -178,10 +263,10 @@ public class ServicioPartidaImpl implements ServicioPartida {
         return acertijoSeleccionado;
     }
 
-    public List<Partida> obtenerHistorialDePartida(Long idUsuario) {
-        if (idUsuario == null) {
-            throw new IDUsuarioInvalido();
-        }
-        return repositorioPartida.obtenerHistorialDePartida(idUsuario);
+    public boolean tiempoExpirado(Partida partida) {
+        Integer duracionMinutos = partida.getSala().getDuracion();
+        LocalDateTime finEsperado = partida.getInicio().plusMinutes(duracionMinutos);
+        return LocalDateTime.now().isAfter(finEsperado);
     }
+
 }

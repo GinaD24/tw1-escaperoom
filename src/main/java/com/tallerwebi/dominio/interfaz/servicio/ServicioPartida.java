@@ -1,9 +1,6 @@
 package com.tallerwebi.dominio.interfaz.servicio;
 
-import com.tallerwebi.dominio.entidad.Acertijo;
-import com.tallerwebi.dominio.entidad.Etapa;
-import com.tallerwebi.dominio.entidad.Partida;
-import com.tallerwebi.dominio.entidad.Pista;
+import com.tallerwebi.dominio.entidad.*;
 
 import java.util.List;
 
@@ -17,7 +14,7 @@ public interface ServicioPartida {
 
     Pista obtenerSiguientePista(Long idAcertijo, Long id_usuario);
 
-    Boolean validarRespuesta(Long idAcertijo , String respuesta);
+    Boolean validarRespuesta(Long idAcertijo , String respuesta, Long idUsuario);
 
     Acertijo buscarAcertijoPorId(Long idAcertijo);
 
@@ -25,5 +22,11 @@ public interface ServicioPartida {
 
     void finalizarPartida(Long idUsuario, Boolean ganada);
 
-    List<Partida> obtenerHistorialDePartida(Long idUsuario);
+    boolean tiempoExpirado(Partida partida);
+
+    Partida obtenerPartidaActivaPorIdUsuario(Long idUsuario);
+
+    List<String> obtenerCategoriasDelAcertijoDragDrop(Long idAcertijo);
+
+    Partida buscarPartidaPorId(Long idPartida);
 }

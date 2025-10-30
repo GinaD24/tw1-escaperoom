@@ -36,6 +36,12 @@ public class Sala {
     @Column
     private String imagenSala;
 
+    @Column
+    private String imagenPerdida;
+
+    @Column
+    private String imagenGanada;
+
    @Column (nullable = false)
    private Integer cantidadDeEtapas;
 
@@ -132,5 +138,21 @@ public class Sala {
 
     public void setImagenSala(String imagenSala) {
         this.imagenSala = imagenSala;
+    }
+
+    public String getImagenGanada() {
+        return imagenGanada;
+    }
+
+    public void setImagenGanada(String imagenGanada) {
+        this.imagenGanada = imagenGanada;
+    }
+
+    public String getImagenPerdida() {
+        return imagenPerdida;
+    }
+
+    public void setImagenPerdida(String imagenPerdida) {
+        this.imagenPerdida = imagenPerdida;
     }
 }

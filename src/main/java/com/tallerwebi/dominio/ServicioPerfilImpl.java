@@ -12,15 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ServicioPerfilImpl implements ServicioPerfil {
 
     private final RepositorioUsuario repositorioUsuario;
-    private final RankingRepository rankingRepository;
     private final RepositorioLogro repositorioLogro;
     private final RepositorioPerfil repositorioPerfil;
 
     @Autowired
-    public ServicioPerfilImpl(RepositorioUsuario repositorioUsuario, RankingRepository rankingRepository,
+    public ServicioPerfilImpl(RepositorioUsuario repositorioUsuario,
                               RepositorioLogro repositorioLogro, RepositorioPerfil repositorioPerfil) {
         this.repositorioUsuario = repositorioUsuario;
-        this.rankingRepository = rankingRepository;
         this.repositorioLogro = repositorioLogro;
         this.repositorioPerfil = repositorioPerfil;
     }

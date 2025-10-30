@@ -176,20 +176,6 @@ public class ServicioLoginTest {
         verify(repositorioUsuarioMock, never()).guardar(any(Usuario.class));
     }
 
-    @Test
-    public void dadoQueTengoUnServicioLoginNoPuedoIniciarSesionSiLasCredencialesEstanVacias(){
-        Usuario usuarioExistente = new Usuario();
-        usuarioExistente.setEmail(null);
-        usuarioExistente.setPassword(null);
-
-        when(repositorioUsuarioMock.buscarUsuario(null,  null)).thenReturn(usuarioExistente);
-
-        assertThrows(CredencialesInvalidasException.class, () -> {
-            servicioLogin.consultarUsuario(usuarioExistente.getEmail(), usuarioExistente.getPassword());
-        });
-
-        verify(repositorioUsuarioMock, never()).guardar(any(Usuario.class));
-    }
 
     @Test
     public void dadoQueNombreUsuarioTieneMenosDe4CaracteresNoPuedoRegistrar() {
