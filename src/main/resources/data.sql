@@ -21,13 +21,11 @@ VALUES (
            '/img/fotoPerfil_juan.png',
            'USUARIO');
 
-INSERT INTO Sala (nombre, dificultad, escenario, historia, esta_habilitada, duracion, imagen, imagenSala, cantidadDeEtapas) VALUES
+INSERT INTO Sala (nombre, dificultad, escenario, historia, esta_habilitada, duracion, imagenPuerta, imagenSala, cantidadDeEtapas) VALUES
                                                                                           ('La Mansion Misteriosa', 'PRINCIPIANTE', 'Mansion', 'Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.', TRUE, 10,'puerta-mansion.png', 'mansion-misteriosa.png', 5),
                                                                                           ('El Laboratorio Secreto', 'INTERMEDIO', 'Laboratorio', 'Un cientifico desaparecido dejo pistas en su laboratorio. Podras descubrir que tramaba?', TRUE, 15, 'puerta-laboratorio.png', 'laboratorio-secreto.png', 8),
-                                                                                          ('La Carcel Abandonada', 'AVANZADO', 'Prision', 'Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podras escapar.', TRUE, 20,'puerta-prision.png', 'carcel-abandonada.png', 10),
-                                                                                          ('El Castillo Encantado', 'PRINCIPIANTE', 'Castillo', 'Un antiguo castillo lleno de magia oscura. Podras escapar antes de que el hechizo te atrape?', TRUE, 12, 'puerta-mansion.png', 'mansion-misteriosa.png', 4),
-                                                                                          ('La Nave Espacial Perdida', 'INTERMEDIO', 'Espacio', 'Atrapado en una nave abandonada en el espacio profundo. Resuelve los codigos para volver a casa.', TRUE, 18, 'puerta-laboratorio.png', 'laboratorio-secreto.png', 6),
-                                                                                          ('El Laberinto del Tiempo', 'AVANZADO', 'Tiempo', 'Viajas a traves de eras confusas. Cada decision altera el futuro. Encontraras la salida?', TRUE, 25, 'puerta-1.png', 'carcel-abandonada.png', 8);
+                                                                                          ('La Carcel Abandonada', 'AVANZADO', 'Prision', 'Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podras escapar.', TRUE, 20,'puerta-prision.png', 'carcel-abandonada.png', 10);
+
 
 -- ETAPAS PARA LA SALA 'La Mansión Misteriosa' (id_sala = 1)
 INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES

@@ -31,7 +31,7 @@ public class Sala {
     private Integer duracion;
 
     @Column
-    private String imagen;
+    private String imagenPuerta;
 
     @Column
     private String imagenSala;
@@ -43,7 +43,7 @@ public class Sala {
     }
 
     public Sala(Integer id, String nombre, Dificultad dificultad, String escenario, String historia,
-                Boolean esta_habilitada, Integer duracion, String imagen) {
+                Boolean esta_habilitada, Integer duracion, String imagenPuerta) {
         this.id = id;
         this.nombre = nombre;
         this.dificultad = dificultad;
@@ -51,7 +51,7 @@ public class Sala {
         this.historia = historia;
         this.esta_habilitada = esta_habilitada;
         this.duracion = duracion;
-        this.imagen = imagen;
+        this.imagenPuerta = imagenPuerta;
     }
 
     public Integer getId() {
@@ -110,12 +110,12 @@ public class Sala {
         this.duracion = duracion;
     }
 
-    public String getImagen() {
-        return imagen;
+    public String getImagenPuerta() {
+        return imagenPuerta;
     }
 
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
+    public void setImagenPuerta(String imagen) {
+        this.imagenPuerta = imagen;
     }
 
     public Integer getCantidadDeEtapas() {
