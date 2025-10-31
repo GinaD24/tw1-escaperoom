@@ -2,6 +2,10 @@ package com.tallerwebi.punta_a_punta.vistas;
 
 import com.microsoft.playwright.Page;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class VistaPartida extends VistaWeb{
 
     public VistaPartida(Page page) {
@@ -35,5 +39,20 @@ public class VistaPartida extends VistaWeb{
 
     public void esperarSecuenciaMostrada() {
         page.waitForSelector("#btnMostrarSecuencia:disabled");
+    }
+
+    public String obtenerSecuenciaMostrada() {
+        return page.inputValue("#ordenCorrecto").trim();
+    }
+
+    public void darClickEnBotones(String secuenciaMostrada) {
+        List<Long> ordenSecuencia = Arrays.stream(secuenciaMostrada.split(","))
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+        this.darClickEnElElemento("#btn-" + ordenSecuencia.get(0));
+        this.darClickEnElElemento("#btn-" + ordenSecuencia.get(1));
+        this.darClickEnElElemento("#btn-" + ordenSecuencia.get(2));
+        this.darClickEnElElemento("#btn-" + ordenSecuencia.get(3));
+        this.darClickEnElElemento("#btn-" + ordenSecuencia.get(4));
     }
 }

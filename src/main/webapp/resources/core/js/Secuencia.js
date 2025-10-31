@@ -1,10 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const botones = Array.from(document.querySelectorAll('.boton-secuencia'));
+    const contenedor = document.getElementById('secuencia-botones');
+    let botones = Array.from(contenedor.children);
+
+    // Mezclar botones en el DOM
+    for (let i = botones.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [botones[i], botones[j]] = [botones[j], botones[i]];
+    }
+    botones.forEach(boton => contenedor.appendChild(boton));
+
+    // Ahora tomamos los botones ya mezclados
+    botones = Array.from(document.querySelectorAll('.boton-secuencia'));
+
     const respuestaInput = document.getElementById('respuestaSecuencia');
     let secuenciaJugador = [];
-    let secuenciaCorrecta = botones
+    let secuenciaCorrecta = [...botones]
         .sort((a,b) => a.dataset.orden - b.dataset.orden)
         .map(b => b.dataset.id);
+
+    document.getElementById('ordenCorrecto').value = secuenciaCorrecta.join(',');
 
     let permitirClic = false;
     let secuenciaMostrada = false;

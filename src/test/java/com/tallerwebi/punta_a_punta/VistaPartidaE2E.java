@@ -104,11 +104,9 @@ public class VistaPartidaE2E {
     private void cuandoRespondeElSegundoAcertijoCorrectamente() {
         vistaPartida.darClickEnMostrarSecuencia();
         vistaPartida.esperarSecuenciaMostrada();
-        vistaPartida.darClickEnBoton(1L);
-        vistaPartida.darClickEnBoton(2L);
-        vistaPartida.darClickEnBoton(3L);
-        vistaPartida.darClickEnBoton(4L);
-        vistaPartida.darClickEnBoton(5L);
+        String secuenciaMostrada = vistaPartida.obtenerSecuenciaMostrada();
+
+        vistaPartida.darClickEnBotones(secuenciaMostrada);
         vistaPartida.darClickEnEnviar();
 
     }

@@ -47,12 +47,12 @@ INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
 
 -- Acertijo 4 sala 1
 -- SECUENCIA
-INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
-                                                                           (4, 'boton-rojo.png', 1),
-                                                                           (4, 'boton-amarillo.png', 2),
-                                                                           (4, 'boton-verde.png', 3),
-                                                                           (4, 'boton-azul.png', 4),
-                                                                           (4, 'boton-naranja.png', 5);
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+                                                                           (4, 'boton-rojo.png'),
+                                                                           (4, 'boton-amarillo.png'),
+                                                                           (4, 'boton-verde.png'),
+                                                                           (4, 'boton-azul.png'),
+                                                                           (4, 'boton-naranja.png');
 -- ACERTIJO ETAPA 3: Salón (id_etapa = 3)
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
     ('ORDENAR_IMAGEN', 'Ordena las tarjetas de los objetos del salón según su tamaño de menor a mayor.', 3);
@@ -224,13 +224,13 @@ INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('CERRADURA',
 -- ACERTIJO ETAPA 2: Pabellón A (id_etapa = 15) - SECUENCIA
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
 (19, 'SECUENCIA', 'Una luz de emergencia parpadea en la oscuridad del pasillo. Replica la secuencia en el panel de seguridad para abrir la siguiente puerta.', 15);
-INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
-(19, 'luz-roja.png', 5),
-(19, 'luz-azul.png', 2),
-(19, 'luz-amarilla.png', 6),
-(19, 'luz-verde.png', 3),
-(19, 'luz-violeta.png', 4),
-(19, 'luz-blanca.png', 1);
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+(19, 'luz-roja.png'),
+(19, 'luz-azul.png'),
+(19, 'luz-amarilla.png'),
+(19, 'luz-verde.png'),
+(19, 'luz-violeta.png'),
+(19, 'luz-blanca.png');
 
 -- ACERTIJO ETAPA 3: Comedor (id_etapa = 16) - DRAG & DROP
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
@@ -265,12 +265,12 @@ INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
 -- ACERTIJO ETAPA 6: Sala de Guardias (id_etapa = 19) - SECUENCIA
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
 (23, 'SECUENCIA', 'El código de anulación de la alarma se muestra brevemente en un monitor. Memoriza la secuencia de símbolos y reprodúcela en el teclado numérico.', 19);
-INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
-(23, 'simbolo-triangulo.png', 1),
-(23, 'simbolo-cuadrado.png', 2),
-(23, 'simbolo-circulo.png', 3),
-(23, 'simbolo-rectangulo.png', 4),
-(23, 'simbolo-rombo.png', 5);
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+(23, 'simbolo-triangulo.png' ),
+(23, 'simbolo-cuadrado.png'),
+(23, 'simbolo-circulo.png'),
+(23, 'simbolo-rectangulo.png'),
+(23, 'simbolo-rombo.png');
 
 -- ACERTIJO ETAPA 7: Lavandería (id_etapa = 20) - ORDENAR IMAGEN
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES

@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.*;
+import com.tallerwebi.dominio.enums.TipoAcertijo;
 import com.tallerwebi.dominio.excepcion.EtapaInexistente;
 import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
 import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
@@ -10,15 +11,13 @@ import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,7 +87,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
     @Override
     @Transactional
-    public Boolean validarRespuesta(Long idAcertijo, String respuesta, Long idUsuario) {
+    public Boolean validarRespuesta(Long idAcertijo, String respuesta, Long idUsuario, @Nullable String ordenSecuenciaCorrecto) {
         Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
         boolean esCorrecta = false;
 
@@ -106,9 +105,6 @@ public class ServicioPartidaImpl implements ServicioPartida {
                 break;
 
             case ORDENAR_IMAGEN:
-
-            case SECUENCIA:
-
                 List<Long> ordenSeleccionado = Arrays.stream(respuesta.split(","))
                         .map(Long::valueOf)
                         .collect(Collectors.toList());
@@ -116,6 +112,26 @@ public class ServicioPartidaImpl implements ServicioPartida {
                 List<Long> ordenCorrecto = this.repositorioPartida.obtenerOrdenDeImgCorrecto(idAcertijo);
 
                 if (ordenSeleccionado.equals(ordenCorrecto)) {
+                    esCorrecta = true;
+                    partida.setPuntaje(partida.getPuntaje() + 100);
+                }
+                break;
+
+            case SECUENCIA:
+
+                if (ordenSecuenciaCorrecto == null) {
+                    throw new IllegalArgumentException("Se requiere el orden correcto para acertijo SECUENCIA");
+                }
+
+                List<Long> ordenSeleccionadoSecuencia = Arrays.stream(respuesta.split(","))
+                        .map(Long::valueOf)
+                        .collect(Collectors.toList());
+
+                List<Long> ordenCorrectoList = Arrays.stream(ordenSecuenciaCorrecto.split(","))
+                        .map(Long::valueOf)
+                        .collect(Collectors.toList());
+
+                if (ordenSeleccionadoSecuencia.equals(ordenCorrectoList)) {
                     esCorrecta = true;
                     partida.setPuntaje(partida.getPuntaje() + 100);
                 }
@@ -208,6 +224,13 @@ public class ServicioPartidaImpl implements ServicioPartida {
     @Transactional
     public Partida buscarPartidaPorId(Long idPartida) {
         return this.repositorioPartida.buscarPartidaPorId(idPartida);
+    }
+
+    @Override
+    public List<ImagenAcertijo> obtenerSecuenciaAleatoria(Acertijo acertijo) {
+        List<ImagenAcertijo> imagenesAcertijo = new ArrayList<>(acertijo.getImagenes());
+        Collections.shuffle(imagenesAcertijo);
+        return imagenesAcertijo;
     }
 
 
