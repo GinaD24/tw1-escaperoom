@@ -1,8 +1,10 @@
 package com.tallerwebi.dominio.interfaz.servicio;
 
 import com.tallerwebi.dominio.entidad.*;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ServicioPartida {
 
@@ -14,7 +16,7 @@ public interface ServicioPartida {
 
     Pista obtenerSiguientePista(Long idAcertijo, Long id_usuario);
 
-    Boolean validarRespuesta(Long idAcertijo , String respuesta, Long idUsuario);
+    Boolean validarRespuesta(Long idAcertijo , String respuesta, Long idUsuario,  @Nullable String ordenSecuenciaCorrecto);
 
     Acertijo buscarAcertijoPorId(Long idAcertijo);
 
@@ -29,4 +31,6 @@ public interface ServicioPartida {
     List<String> obtenerCategoriasDelAcertijoDragDrop(Long idAcertijo);
 
     Partida buscarPartidaPorId(Long idPartida);
+
+    List<ImagenAcertijo> obtenerSecuenciaAleatoria(Acertijo acertijo);
 }

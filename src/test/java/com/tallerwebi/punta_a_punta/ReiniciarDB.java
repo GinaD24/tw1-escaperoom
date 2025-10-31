@@ -26,7 +26,7 @@ public class ReiniciarDB {
                     + "SET FOREIGN_KEY_CHECKS = 1;";
 
             String comando = String.format(
-                    "docker exec tallerwebi-mysql mysql -u%s -p%s %s -e \"%s\"",
+                    "docker exec mysql-container mysql -u%s -p%s %s -e \"%s\"",
                     dbUser, dbPassword, dbName, sqlCommands
             );
 
