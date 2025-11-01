@@ -12,11 +12,14 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+
 @Controller
 @RequestMapping("/perfil")
 public class ControladorPerfilJugador {
 
     private final ServicioPerfil servicioPerfil;
+
+
     @Autowired
     public ControladorPerfilJugador(ServicioPerfil servicioPerfil) { // <-- 2. Inyección en Constructor
         this.servicioPerfil = servicioPerfil;
@@ -28,7 +31,7 @@ public class ControladorPerfilJugador {
         try {
             Long idUsuario = (Long) session.getAttribute("id_usuario");
             Usuario usuario = servicioPerfil.obtenerPerfil(idUsuario);
-            modelo.put("perfil", usuario);
+            modelo.put("usuario", usuario);
             return new ModelAndView("perfil-jugador", modelo);
         } catch (IDUsuarioInvalido e) {
             return new ModelAndView("redirect:/inicio/");

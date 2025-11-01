@@ -4,26 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Partidas - Escape Room</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/perfilJugador.css}"/>
     <link rel="stylesheet" th:href="@{/css/ranking-sala.css}"/>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
-        .font-rajdhani {
-            font-family: 'Rajdhani', sans-serif;
-        }
 
-        .match-victory {
-            border-left: 6px solid #4CAF50; /* Verde */
-            background-color: #2b332c; /* Fondo oscuro sutil para victoria */
-        }
-        .match-defeat {
-            border-left: 6px solid #f44336; /* Rojo */
-            background-color: #332b2b; /* Fondo oscuro sutil para derrota */
-        }
     </style>
 </head>
-
 
 <header>
     <nav class="navbar navbar-expand-lg">
@@ -48,26 +37,11 @@
 <div class="container my-4">
     <div class="row justify-content-center mb-4">
         <div class="col-md-6">
-            <form th:action="@{/historial/filtrarPorSala}" method="get">
-                <div class="input-group">
-                    <select class="form-select rounded-pill me-2" name="filtroSalas" id="filtroSalas">
-                        <option disabled>Filtrar por sala</option>
-                        <option th:each="sala : ${salas}"
-                                th:value="${sala.id}"
-                                th:text="${sala.nombre}"
-                                th:selected="${sala.id == salaSeleccionada.id}">
-                        </option>
-                    </select>
-                    <button type="submit" class="btn rounded-pill px-4 text-black" style="background-color: #fafb63;">
-                        Filtrar
-                    </button>
-                </div>
-            </form>
 
         </div>
     </div>
 
-    <h1 class="text-3xl fw-bold mb-4 border-bottom border-secondary pb-2" style="color: #fafb63;">Historial de Partidas</h1>
+    <h1 class="titulo-historial text-3xl fw-bold mb-4 border-bottom border-secondary pb-2" style="color: #fafb63;">Historial de Partidas</h1>
 
     <div th:if="${#lists.isEmpty(historial)}" class="text-center py-5 bg-dark text-white rounded shadow">
         <p class="fs-5 text-secondary">Aún no has finalizado ninguna partida.</p>
@@ -76,53 +50,56 @@
 
 
     <div id="match-list" class="d-grid gap-3" th:unless="${#lists.isEmpty(historial)}">
-        <div th:each="registro : ${historial}"
-             class="match-item p-3 rounded shadow d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 transition-hover"
+        <div th:each="partida : ${historial}"
+             class="fondo-historial match-item p-3 rounded shadow d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 transition-hover"
 
-             th:classappend="${registro.gano ? 'match-victory' : 'match-defeat'}">
+             th:classappend="${partida.ganada ? 'match-victory' : 'match-defeat'}">
 
-            <div class="w-100 w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
-                <span th:text="${registro.gano ? 'VICTORIA' : 'DERROTA'}"
+            <div class="w-100  w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
+                <span th:text="${partida.ganada ? 'VICTORIA' : 'DERROTA'}"
                       class="match-resultado fs-4 fw-bold text-uppercase"
-                      th:classappend="${registro.gano ? 'text-success' : 'text-danger'}">
+                      th:classappend="${partida.ganada ? 'text-success' : 'text-danger'}">
                     RESULTADO
                 </span>
 
-                <span th:text="|ID Sala: ${registro.idSala}|"
-                      class="match-dificultad badge bg-secondary text-warning fw-semibold mt-1">
-                    ID SALA
+
+            </div>
+
+            <div class="w-100 me-2 w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
+
+                <span class="text-muted small">Sala</span>
+                <span th:text="${partida.sala.nombre}"
+                      class="match-tiempo fs-5 fw-bold mt-1 texto-sala-historial">
                 </span>
+
+            </div>
+
+            <div class="w-100 ms-5 w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
+                <span class="text-muted small">Fecha y hora</span>
+                <span th:text="${partida.fin != null ? partida.fin.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm')) : ''}"
+                        class="match-tiempo fs-5 fw-bold mt-1 text-white">
+                    </span>
+
+
             </div>
 
             <div class="w-100 w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
-                <span th:text="${#temporals.format(registro.fecha, 'dd/MM/yyyy HH:mm')}"
-                      class="match-datos text-sm text-secondary">
-                    FECHA
-                </span>
+                <span class="text-muted small">Tiempo</span>
+                <span th:text="${partida.tiempoTotal != null ? (partida.tiempoTotal / 60) + ' min ' + (partida.tiempoTotal % 60) + ' s' : ''}"
+                        class="match-tiempo fs-5 fw-bold mt-1 text-white">
+                    </span>
 
-                <span th:text="${registro.jugador}"
-                      class="match-tiempo fs-5 fw-bold mt-1 text-white">
-                    NOMBRE JUGADOR
-                </span>
-                <span class="text-muted small">Jugador</span>
             </div>
 
             <div class="w-100 w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
-                <div class="match-clues fs-5 fw-bold">
-                    <span th:text="${registro.id}" class="clues-used text-warning">X</span> </div>
-                <span class="text-muted small">ID de Partida</span>
+
+                <span class="text-muted small">Puntaje</span>
+                <span th:text="${partida.puntaje}"
+                      class="match-tiempo fs-4 fw-bold mt-1 text-success">
+                </span>
+
             </div>
 
-            <div class="w-100 w-sm-25 d-flex justify-content-center justify-content-sm-end">
-                <div class="d-flex align-items-center">
-                    <div class="d-flex flex-column">
-                        <span th:text="${salaSeleccionada.nombre}" class="match-room-name fs-6 fw-semibold text-white">
-                            Nombre de la Sala Seleccionada
-                        </span>
-                        <span class="text-muted small">Filtrado por Sala</span>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
