@@ -34,5 +34,10 @@ public class ServicioPerfilImpl implements ServicioPerfil {
         return usuario;
     }
 
+    @Override
+    public Usuario buscarPorEmail(String email) {
+        Usuario usuario = repositorioUsuario.buscarPorEmail(email);
+        return usuario;
     }
+}
 
