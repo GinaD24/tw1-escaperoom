@@ -60,6 +60,15 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
         return sessionFactory.getCurrentSession().get(Usuario.class, id);
     }
 
+    @Override
+    public Usuario buscarPorEmail(String email) {
+        return null;
+    }
+
+    @Override
+    public Usuario buscarPorId(Long id) {
+        return null;
+    }
 
 
 }

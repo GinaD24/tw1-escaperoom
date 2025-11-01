@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequestMapping("/perfil")
 public class ControladorPerfilJugador {
 
     private final ServicioPerfil servicioPerfil;
-
     @Autowired
-    public ControladorPerfilJugador(ServicioPerfil servicioPerfil) {
+    public ControladorPerfilJugador(ServicioPerfil servicioPerfil) { // <-- 2. Inyección en Constructor
         this.servicioPerfil = servicioPerfil;
     }
 

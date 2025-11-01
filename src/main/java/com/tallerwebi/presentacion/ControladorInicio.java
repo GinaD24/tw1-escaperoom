@@ -19,7 +19,7 @@ import java.util.List;
 public class ControladorInicio {
 
     private ServicioSala servicioSala;
-    
+
     @Autowired
     public ControladorInicio(ServicioSala servicioSala) {
         this.servicioSala = servicioSala;
