@@ -20,7 +20,18 @@ public class DatosEdicionPerfilDTO {
     public DatosEdicionPerfilDTO(Usuario usuario) {
         this.id = usuario.getId();
         this.nombreUsuario = usuario.getNombreUsuario();
-        this.urlFotoPerfil = usuario.getFotoPerfil();
+
+        String fotoBD = usuario.getFotoPerfil();
+
+        if (fotoBD != null && !fotoBD.isEmpty()) {
+            if (fotoBD.startsWith("/img/uploads/")) {
+                this.urlFotoPerfil = fotoBD;
+            } else {
+                this.urlFotoPerfil = "/img/uploads/" + fotoBD;
+            }
+        } else {
+            this.urlFotoPerfil = null;
+        }
     }
 
     public Long getId() { return id; }
@@ -34,7 +45,6 @@ public class DatosEdicionPerfilDTO {
 
     public String getContrasenaNueva() { return contrasenaNueva; }
     public void setContrasenaNueva(String contrasenaNueva){ this.contrasenaNueva = contrasenaNueva; }
-
 
     public String getUrlFotoPerfil() { return urlFotoPerfil; }
     public void setUrlFotoPerfil(String urlFotoPerfil) { this.urlFotoPerfil = urlFotoPerfil; }
@@ -59,7 +69,5 @@ public class DatosEdicionPerfilDTO {
                 (contrasenaActual == null || contrasenaActual.trim().isEmpty())) {
             throw new DatosIncompletosException("Para cambiar la contraseña, debe ingresar la Contraseña Actual.");
         }
-
-
     }
 }

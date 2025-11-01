@@ -48,9 +48,8 @@ public class SpringWebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/js/**").addResourceLocations("/resources/core/js/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
 
-        // 1. Mapeo ESPECÍFICO para archivos subidos (¡DEBE IR PRIMERO!)
         registry.addResourceHandler("/img/uploads/**")
-                .addResourceLocations("file:/" + UPLOAD_DIR_CONFIG);
+                .addResourceLocations("file:///" + UPLOAD_DIR_CONFIG);
 
         // 2. Mapeo GENERAL para el resto de imágenes estáticas (corregido - ¡sin duplicados!)
         registry.addResourceHandler("/img/**").addResourceLocations("/resources/core/img/");
