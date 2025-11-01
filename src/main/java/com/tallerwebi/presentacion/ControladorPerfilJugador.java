@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 
 @Controller
@@ -20,7 +21,7 @@ public class ControladorPerfilJugador {
 
 
     @Autowired
-    public ControladorPerfilJugador(ServicioPerfil servicioPerfil) {
+    public ControladorPerfilJugador(ServicioPerfil servicioPerfil) { // <-- 2. Inyección en Constructor
         this.servicioPerfil = servicioPerfil;
     }
 

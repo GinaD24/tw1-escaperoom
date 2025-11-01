@@ -178,6 +178,4 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         query.setParameter("idPartida", idPartida);
         return query.getResultList().stream().findFirst().orElse(null);
     }
-
-
 }

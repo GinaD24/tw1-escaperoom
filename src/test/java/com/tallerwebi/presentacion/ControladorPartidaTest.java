@@ -177,12 +177,12 @@ public class ControladorPartidaTest {
        when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
        when(servicioPartida.buscarAcertijoPorId(datosPartidaSesion.getIdAcertijo())).thenReturn(acertijo);
 
-       when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta(), idUsuario)).thenReturn(true);
+       when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta(), idUsuario, null)).thenReturn(true);
 
-       ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), idUsuario);
+       ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), idUsuario, null);
 
        assertThat(modelAndView.getViewName(), equalTo("redirect:/partida/sala" + sala.getId() + "/etapa" + (etapa.getNumero() + 1)));
-       verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta(),idUsuario);
+       verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta(),idUsuario, null);
        verify(servicioSala).obtenerSalaPorId(sala.getId());
        verify(servicioPartida).obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
        verify(servicioPartida).buscarAcertijoPorId(datosPartidaSesion.getIdAcertijo());
@@ -202,11 +202,11 @@ public class ControladorPartidaTest {
         mockDatosPartidaSesion(datosPartidaSesion, sala.getId(), etapa.getNumero(), null, acertijo.getId());
         when(servicioPartida.buscarAcertijoPorId(datosPartidaSesion.getIdAcertijo())).thenReturn(acertijo);
 
-        when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta(),idUsuario )).thenReturn(false);
-        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), idUsuario );
+        when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta(),idUsuario, null )).thenReturn(false);
+        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), idUsuario, null );
 
         assertThat(modelAndView.getModel().get("error"), equalTo("Respuesta incorrecta. Intenta nuevamente."));
-        verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta(), idUsuario);
+        verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta(), idUsuario, null);
     }
 
     @Test

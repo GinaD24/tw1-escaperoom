@@ -85,6 +85,11 @@ public class ControladorPartida {
 
             DatosPartidaDTO dtoDatosPartida = servicioDatosPartida.obtenerDatosDePartida(idSala, numeroEtapa, idUsuario);
 
+            if(dtoDatosPartida.getAcertijo().getTipo().equals(TipoAcertijo.SECUENCIA)){
+                List<ImagenAcertijo> imagenesDeSecuencia = this.servicioPartida.obtenerSecuenciaAleatoria(dtoDatosPartida.getAcertijo());
+                modelo.put("imagenesDeSecuencia", imagenesDeSecuencia);
+            }
+
             if(datosPartidaSesion.getIdAcertijo() != null && datosPartidaSesion.getIdEtapa().equals(dtoDatosPartida.getEtapa().getId())){
                 validarAcertijoEnSesion(dtoDatosPartida);
             }
@@ -127,7 +132,7 @@ public class ControladorPartida {
 
     @PostMapping("/validar/{idSala}/{numeroEtapa}")
     public ModelAndView validarRespuesta(@PathVariable Integer idSala, @PathVariable Integer numeroEtapa,
-            @SessionAttribute("id_acertijo") Long id_acertijo, @RequestParam String respuesta, @SessionAttribute("id_usuario") Long id_usuario) {
+            @SessionAttribute("id_acertijo") Long id_acertijo, @RequestParam String respuesta, @SessionAttribute("id_usuario") Long id_usuario, @RequestParam(required = false) String secuenciaCorrecta) {
         ModelMap modelo = new ModelMap();
 
         Partida partida = servicioPartida.obtenerPartidaActivaPorIdUsuario(id_usuario);
@@ -144,6 +149,11 @@ public class ControladorPartida {
             modelo.put("categorias", categorias);
         }
 
+        if(acertijo.getTipo().equals(TipoAcertijo.SECUENCIA)){
+            List<ImagenAcertijo> imagenesDeSecuencia = this.servicioPartida.obtenerSecuenciaAleatoria(acertijo);
+            modelo.put("imagenesDeSecuencia", imagenesDeSecuencia);
+        }
+
         modelo.put("partida", partida);
         modelo.put("salaElegida", sala);
         modelo.put("etapa", etapa);
@@ -152,7 +162,7 @@ public class ControladorPartida {
         if (respuesta.isEmpty()) {
             modelo.put("error", "Completa este campo para continuar.");
 
-        } else if (this.servicioPartida.validarRespuesta(id_acertijo, respuesta, id_usuario).equals(false)) {
+        } else if (this.servicioPartida.validarRespuesta(id_acertijo, respuesta, id_usuario, secuenciaCorrecta).equals(false)) {
             modelo.put("error", "Respuesta incorrecta. Intenta nuevamente.");
 
         } else {

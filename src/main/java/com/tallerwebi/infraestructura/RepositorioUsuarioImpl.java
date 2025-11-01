@@ -72,45 +72,10 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
         return null;
     }
 
-//    @Transactional
-//    public Usuario obtenerUsuarioDePrueba() {
-//        Session session = sessionFactory.getCurrentSession();
-//
-//
-//        Logro logro1 = new Logro("Escapista Novato", "Completó su primera sala");
-//        Logro logro2 = new Logro("Velocista", "Terminó una sala en menos de 10 minutos");
-//        Logro logro3 = new Logro("Coleccionista", "Obtuvo todos los logros disponibles");
-//
-//        session.saveOrUpdate(logro1);
-//        session.saveOrUpdate(logro2);
-//        session.saveOrUpdate(logro3);
-//
-//
-//        Usuario usuario = new Usuario();
-//
-//        usuario.setId(1L);
-//        usuario.setNombre("Juan");
-//        usuario.setApellido("Pérez");
-//        usuario.setEmail("juan@prueba.com");
-//        usuario.setPassword("123456789");
-//        usuario.setNombreUsuario("Jugador.Prueba");
-//        usuario.setRol("JUGADOR");
-//        usuario.setActivo(true);
-//        usuario.setFotoPerfil("pruebafoto.png");
-//        usuario.setFechaNacimiento(java.time.LocalDate.of(1995, 5, 10));
-//
-//
-//        List<Logro> logros = new ArrayList<>();
-//        logros.add(logro1);
-//        logros.add(logro2);
-//        usuario.setLogrosFavoritos(logros);
-//
-//        return usuario;
-//    }
-
-
-
-
+    @Override
+    public Usuario buscarPorId(Long id) {
+        return null;
+    }
 
 
 }

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Editar Perfil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/perfilJugador.css}"/>
+
+    <style>
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid #fac020;
+            color: #fff;
+        }
+        .input-group-text {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid #fac020;
+            color: #fff;
+        }
+        .form-label {
+            color: #fff;
+            font-weight: 500;
+        }
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: #fafb63;
+            color: #fff;
+        }
+        .error-message {
+            color: #ff4d4d;
+            font-size: 0.9em;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .contenedorFoto.editable {
+            border: solid 4px #fafb63;
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a th:href="@{/inicio/}">
+                <img class="logo-escape ms-3" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
+            </a>
+            <h1 class="navbar-brand mt-3 mx-auto" style="padding-left: 80px;">ESCAPE ROOM</h1>
+            <div class="d-flex">
+                <a class="icono me-3" th:href="@{/ranking/}">
+                    <img th:src="@{/img/icono-ranking.png}" alt="img-ranking" style="width: 50px">
+                </a>
+                <a class="icono me-3" th:href="@{/cerrar-sesion}">
+                    <img th:src="@{/img/iconoLogOut.png}" alt="img-logout" style="width: 50px">
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+<main>
+    <div class="contenedor">
+        <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}">
+            Mensaje de error.
+        </div>
+        <div th:if="${mensaje}" class="alert alert-success" role="alert" th:text="${mensaje}">
+            Mensaje de éxito.
+        </div>
+
+        <form th:action="@{/configuracion/editar}" th:object="${datosPerfil}" method="POST" class="w-100" enctype="multipart/form-data">
+
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{urlFotoPerfil}">
+
+            <div id="previewContainer" class="contenedorFoto editable mx-auto">
+                <img th:src="@{${datosPerfil.urlFotoPerfil != null} ? ${datosPerfil.urlFotoPerfil} : '/img/perfil-default.png'}"
+                     alt="" id="preview">
+            </div>
+
+            <div id="fileUpload" class="w-full text-center">
+                <a class="btn btn-primary mb-4" id="botonCambiarFoto">Cambiar foto</a>
+                <input id="imagen" type="file" style="display: none;" name="nuevaFoto" accept=".png, .jpg, .jpeg">
+                <p class="text-sm text-gray-600 error-message">Solo archivos jpg, jpeg y png</p>
+            </div>
+
+            <div class="mb-3 w-100">
+                <label for="nombreUsuario" class="form-label">Nombre de Usuario</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="nombreUsuario" th:field="*{nombreUsuario}" required>
+                    <span class="input-group-text">
+                            <i class="bi bi-pencil"></i>
+                        </span>
+                </div>
+            </div>
+
+            <div class="mb-3 w-100">
+                <label for="contraseniaActual" class="form-label">Contraseña Actual</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="contraseniaActual" th:field="*{contrasenaActual}">
+                    <span class="input-group-text">
+                            <i class="bi bi-pencil"></i>
+                        </span>
+                </div>
+            </div>
+
+
+            <div class="mb-3 w-100">
+                <label for="contraseniaNueva" class="form-label">Contraseña nueva</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="contraseniaNueva" th:field="*{contrasenaNueva}">
+                    <span class="input-group-text">
+                            <i class="bi bi-pencil"></i>
+                        </span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-50 mt-3">Guardar Cambios</button>
+            <a th:href="@{/perfil/verPerfil}" class="btn btn-secondary w-50 mt-2">Cancelar</a>
+
+<!--            <input type="hidden" th:field="*{urlFotoPerfil}">-->
+        </form>
+    </div>
+</main>
+<script th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
+<script src="/spring/js/perfi.js"></script>
+</body>
+</html>
