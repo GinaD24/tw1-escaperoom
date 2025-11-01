@@ -9,7 +9,7 @@
    previewContainer.style.display = "block";
 
    if (!preview.src || preview.src === "") {
-       preview.src = ""; // o una imagen de placeholder si querés
+       preview.src = "";
        preview.style.backgroundColor = "#ffff00";
        preview.style.objectFit = "contain";
        preview.style.opacity = "0.3";
@@ -22,7 +22,7 @@
            preview.src = url;
            uploadContent.style.display = "none";
            previewContainer.style.display = "block";
-           preview.style.opacity = "1"; // volver a opaco al tener imagen
+           preview.style.opacity = "1";
        }
    });
 

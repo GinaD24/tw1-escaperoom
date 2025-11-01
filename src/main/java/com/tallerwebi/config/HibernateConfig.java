@@ -27,8 +27,8 @@ public class HibernateConfig {
         if (dbHost == null) dbHost = "localhost";
         if (dbPort == null) dbPort = "3306";
         if (dbName == null) dbName = "tallerwebi";
-        if (dbUser == null) dbUser = "root";
-        if (dbPassword == null) dbPassword = "";
+        if (dbUser == null) dbUser = "user";
+        if (dbPassword == null) dbPassword = "user";
 
 
         String url = String.format("jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",
@@ -60,9 +60,7 @@ public class HibernateConfig {
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
         properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("hibernate.format_sql", "true");
-        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-        properties.setProperty("hibernate.hbm2ddl.before_auto_script", "SET FOREIGN_KEY_CHECKS = 0");
-        properties.setProperty("hibernate.hbm2ddl.after_auto_script", "SET FOREIGN_KEY_CHECKS = 1");
+        properties.setProperty("hibernate.hbm2ddl.auto", "create");
         properties.setProperty("hibernate.connection.characterEncoding", "utf8");
         properties.setProperty("hibernate.connection.CharSet", "utf8");
         properties.setProperty("hibernate.connection.useUnicode", "true");

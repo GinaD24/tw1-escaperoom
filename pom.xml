@@ -21,12 +21,7 @@
         <playwright.version>1.36.0</playwright.version>
         <hsqldb.version>2.3.2</hsqldb.version>
     </properties>
-    <repositories>
-        <repository>
-            <id>mercadopago</id>
-            <url>https://artifacts.mercadopago.com/repository/maven/</url>
-        </repository>
-    </repositories>
+
     <dependencies>
 
         <dependency>
@@ -130,11 +125,6 @@
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>5.3.1</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.mercadopago</groupId>
-            <artifactId>sdk-java</artifactId>
-            <version>2.1.27</version>
         </dependency>
         <!-- compile only, deployed container will provide this -->
         <!--

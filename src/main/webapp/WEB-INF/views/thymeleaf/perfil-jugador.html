@@ -8,8 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/perfilJugador.css}"/>
-
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
 <body>
 
@@ -35,30 +33,39 @@
 <main>
     <div class="contenedor">
 
-        <div id="previewContainer" class="contenedorFoto w-full aspect-square border-dotted border-4" style="border: solid 4px #ffff00;">
-            <img src="" alt="" id="preview" class="w-full h-full object-fit object-center">
-        </div>
+        <div class="perfil-header mt-5">
 
-        <div class="contenedorTitulo">
-            <h1 th:text="${perfil.nombreUsuario}"></h1>
-            <h3 th:text="${perfil.nombre} + ' ' + ${perfil.apellido}"></h3>
-            <h3 th:text="${perfil.fechaNacimiento}"></h3>
-        </div>
-        <a class="btn btn-primary">Editar perfil</a><br>
-        <a  th:href="@{'/perfil/' + ${perfil.id} + '/historial'}" class="btn btn-primary mb-4">Ver Historial</a>
-        <div id="fileUpload" class="w-full aspect-square border-dotted border-4 rounded-md p-8 flex items-center justify-center">
-            <a class="btn btn-primary mb-4" id="botonCambiarFoto">Cambiar foto</a>
-            <input id="imagen" type="file" hidden name="imagen" accept=".png, .jpg, .jpeg">
-            <div id="uploadContent" class="w-full text-center flex flex-col items-center justify-center gap-1">
-                <p class="text-sm text-gray-600">Solo archivos jpg, jpeg y png</p>
+            <div class="perfil-foto-area">
+                <div id="previewContainer" class="contenedorFoto">
+                    <img th:src="@{/img/{img}(img=${usuario.fotoPerfil})}" alt="" id="preview">
+                </div>
+
+                <div id="fileUpload" class="mt-2 text-center">
+                    <a class="btn btn-sm btn-editar" id="botonCambiarFoto">Cambiar foto</a>
+                    <input id="imagen" type="file" hidden name="imagen" accept=".png, .jpg, .jpeg">
+                </div>
             </div>
+
+            <div class="perfil-info-area">
+                <h1 class="nombre-usuario" th:text="${usuario.nombreUsuario}"></h1>
+
+                <p class="perfil-dato-completo" th:text="${usuario.nombre} + ' ' + ${usuario.apellido}"></p>
+                <p class="perfil-dato-completo" th:text="'Fecha de Nac: ' + ${usuario.fechaNacimiento}"></p>
+
+                <a class="btn btn-sm btn-editar mt-3">Editar perfil</a>
+            </div>
+
+        </div>
+        <hr class="perfil-divisor">
+
+        <div class="d-flex justify-content-center">
+            <a  th:href="@{/historial/}" class="btn btn-historial btn-lg mt-4 text-center">Ver Historial</a>
         </div>
 
-        <a class="btn btn-primary" id="checkout-btn">Pagar</a>
     </div>
 </main>
 
-<script src="/spring/js/apiMercado.js"></script>
-<script src="/spring/js/perfi.js"></script>
+
+<script th:src="@{/js/perfil.js}"></script>
 </body>
 </html>

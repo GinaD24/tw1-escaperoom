@@ -1,6 +1,6 @@
 package com.tallerwebi.dominio.interfaz.repositorio;
 
-import com.tallerwebi.dominio.entidad.Historial;
+import com.tallerwebi.dominio.entidad.Partida;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -8,8 +8,6 @@ import java.util.List;
 @Transactional
 
 public interface RepositorioHistorial {
-    void guardar(Historial historial);
-    List<Historial> obtenerTodas();
-    List<Historial> obtenerPorJugador(String jugador);
-    List<Historial> ObtenerHistorialPorSala(Integer idSala);
+    List<Partida> obtenerPartidasPorJugador(Long idUsuario);
+
 }
