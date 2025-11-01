@@ -12,23 +12,48 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @EnableWebMvc
 @Configuration
 @ComponentScan({"com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura"})
 public class SpringWebConfig implements WebMvcConfigurer {
 
+    private static final String UPLOAD_DIR_CONFIG = "C:/uploads/imagenes_perfil/";
+
     // Spring + Thymeleaf need this
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+
+        // 5 MB = 5 * 1024 * 1024 bytes
+        long maxUploadSize = 5 * 1024 * 1024;
+
+        // Establece el tamaño máximo permitido para cualquier archivo subido (en bytes)
+        multipartResolver.setMaxUploadSize(maxUploadSize);
+
+        // Establece el tamaño máximo permitido para toda la solicitud multipart/form-data (en bytes)
+        multipartResolver.setMaxInMemorySize(1048576); // 1MB
+
+        return multipartResolver;
+    }
+
+
     @Override
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/img/**").addResourceLocations("/resources/core/img/");
         registry.addResourceHandler("/css/**").addResourceLocations("/resources/core/css/");
-        registry.addResourceHandler("/img/**").addResourceLocations("/resources/core/img/");
         registry.addResourceHandler("/js/**").addResourceLocations("/resources/core/js/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
+
+        // 1. Mapeo ESPECÍFICO para archivos subidos (¡DEBE IR PRIMERO!)
+        registry.addResourceHandler("/img/uploads/**")
+                .addResourceLocations("file:/" + UPLOAD_DIR_CONFIG);
+
+        // 2. Mapeo GENERAL para el resto de imágenes estáticas (corregido - ¡sin duplicados!)
+        registry.addResourceHandler("/img/**").addResourceLocations("/resources/core/img/");
     }
 
     // https://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html

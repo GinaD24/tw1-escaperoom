@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,52 +7,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-
-    <!-- custom style -->
     <link rel="stylesheet" th:href="@{/css/perfilJugador.css}"/>
 
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
-
 <body>
 
 <header>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <div >
-                <a th:href="@{/inicio/}">
-                    <img class="logo-escape ms-3" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
-                </a>
-            </div>
-            <h1 class="navbar-brand mt-3">ESCAPE ROOM</h1>
-            <div class="iconos-nav d-flex me-4">
+            <a th:href="@{/inicio/}">
+                <img class="logo-escape ms-3" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
+            </a>
+            <h1 class="navbar-brand mt-3 mx-auto" style="padding-left: 80px;">ESCAPE ROOM</h1>
+            <div class="d-flex">
                 <a class="icono me-3" th:href="@{/ranking/}">
                     <img th:src="@{/img/icono-ranking.png}" alt="img-ranking" style="width: 50px">
+                </a>
+                <a class="icono me-3" th:href="@{/cerrar-sesion}">
+                    <img th:src="@{/img/iconoLogOut.png}" alt="img-logout" style="width: 50px">
                 </a>
             </div>
         </div>
     </nav>
 </header>
 
-
 <main>
     <div class="contenedor">
 
-        <div class="contenedorFoto">
-            <img th:src="@{'/img/' + ${perfil.fotoPerfil}}" alt="Foto de perfil" width="120" height="120">
+        <div id="previewContainer" class="contenedorFoto w-full aspect-square border-dotted border-4" style="border: solid 4px #ffff00;">
+            <img th:src="@{${perfil.fotoPerfil} ?: '/img/perfil-default.png'}" alt="" class="w-full h-full object-fit object-center" id="preview">
         </div>
 
-
-        <div  class="contenedorTitulo">
-            <h1  th:text="${perfil.nombreUsuario}"></h1>
-            <h3  th:text="${perfil.nombre} + ' ' +  ${perfil.apellido}"></h3>
-            <h3  th:text="${perfil.fechaNacimiento}"></h3>
+        <div class="contenedorTitulo">
+            <h1 th:text="${perfil.nombreUsuario}"></h1>
+            <h3 th:text="${perfil.nombre} + ' ' + ${perfil.apellido}"></h3>
+            <h3 th:text="${perfil.fechaNacimiento}"></h3>
         </div>
-        <a class="btn btn-primary">Editar perfil</a><br>
-        <a class="btn btn-primary">Cambiar foto</a>
+        <a class="btn btn-primary" th:href="@{/configuracion/editar}">Editar perfil</a><br>
     </div>
-
 </main>
 
-</body>
 
+</body>
 </html>

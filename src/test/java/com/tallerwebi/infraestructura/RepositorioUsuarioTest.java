@@ -71,7 +71,6 @@ public class RepositorioUsuarioTest {
         this.repositorioUsuario.guardar(usuario1);
         this.repositorioUsuario.guardar(usuario2);
 
-        // EXCEPCION UsuarioExistente CAMBIADA POR NonUniqueResultException (INDICA POR EL IDE)
         assertThrows(NonUniqueResultException.class, () -> {
             repositorioUsuario.buscarPorNombreUsuario(nombreUsuario);
         });
@@ -179,5 +178,47 @@ public class RepositorioUsuarioTest {
         assertThat(buscarUsuario, nullValue());
     }
 
+    @Test
+    public void dadoUnUsuarioGuardadoDeberiaPoderObtenerloPorSuId() {
+        Usuario usuario = new Usuario();
+        usuario.setEmail("test@id.com");
+        usuario.setPassword("pass");
+        this.repositorioUsuario.guardar(usuario);
 
+        Usuario usuarioEncontrado = this.repositorioUsuario.obtenerUsuarioPorId(usuario.getId());
+
+        assertThat(usuarioEncontrado, equalTo(usuario));
+    }
+
+    @Test
+    public void dadoUnIdInexistenteAlBuscarUsuarioDebeDevolverNull() {
+        Long idInexistente = 9999L;
+
+        Usuario usuarioNoEncontrado = this.repositorioUsuario.obtenerUsuarioPorId(idInexistente);
+
+        assertThat(usuarioNoEncontrado, nullValue());
+    }
+
+    @Test
+    public void dadoUnUsuarioExistentePuedoModificarSuNombreYFechaDeNacimiento() {
+        Usuario usuario = new Usuario();
+        usuario.setEmail("perfil@edit.com");
+        usuario.setNombreUsuario("NombreAntiguo");
+        usuario.setFechaNacimiento(java.time.LocalDate.of(1990, 1, 1));
+        this.repositorioUsuario.guardar(usuario);
+
+        String nuevoNombre = "NombreNuevo";
+        java.time.LocalDate nuevaFecha = java.time.LocalDate.of(2000, 12, 31);
+
+        usuario.setNombreUsuario(nuevoNombre);
+        usuario.setFechaNacimiento(nuevaFecha);
+
+        this.repositorioUsuario.modificar(usuario);
+
+        Usuario usuarioModificado = this.repositorioUsuario.obtenerUsuarioPorId(usuario.getId());
+
+        assertThat(usuarioModificado.getNombreUsuario(), equalTo(nuevoNombre));
+        assertThat(usuarioModificado.getFechaNacimiento(), equalTo(nuevaFecha));
+        assertThat(usuarioModificado.getEmail(), equalTo("perfil@edit.com"));
+    }
 }
