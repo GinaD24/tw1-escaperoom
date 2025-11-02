@@ -10,7 +10,5 @@ public interface RepositorioUsuario {
     void modificar(Usuario usuario);
     Usuario buscarPorNombreUsuario(String nombreUsuario);
     Usuario obtenerUsuarioPorId(Long id);
-    Usuario buscarPorEmail(String email);
-    Usuario buscarPorId(Long id);
 }
 
