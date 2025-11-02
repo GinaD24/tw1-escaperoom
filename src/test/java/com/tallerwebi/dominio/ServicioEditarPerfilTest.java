@@ -54,7 +54,7 @@ public class ServicioEditarPerfilTest {
 
         assertNotNull(resultado);
         assertThat(resultado.getNombreUsuario(), equalTo("usuarioViejo"));
-        assertThat(resultado.getUrlFotoPerfil(), equalTo("/img/uploads//img/vieja.png"));
+        assertThat(resultado.getUrlFotoPerfil(), equalTo("/img/vieja.png"));
         verify(repositorioUsuario, times(1)).obtenerUsuarioPorId(1L);
     }
 

@@ -30,6 +30,10 @@ public class ControladorPerfilJugador {
         ModelMap modelo = new ModelMap();
         try {
             Long idUsuario = (Long) session.getAttribute("id_usuario");
+            if(idUsuario == null) {
+                return new ModelAndView("redirect:/login");
+            }
+
             Usuario usuario = servicioPerfil.obtenerPerfil(idUsuario);
             modelo.put("usuario", usuario);
             return new ModelAndView("perfil-jugador", modelo);

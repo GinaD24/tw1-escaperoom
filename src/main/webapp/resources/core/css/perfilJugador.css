@@ -87,9 +87,8 @@ main {
     width: 220px;
     height: 220px;
     margin: 0;
-    border-rounded: 3px solid #fac020;
+    position: relative;
 }
-
 
 #botonCambiarFoto {
     padding: 5px 10px;
@@ -102,37 +101,48 @@ main {
     object-fit: cover;
     border-radius: 50%;
 }
+.fileUpload {
+    position:relative;
+    transform: translate(0%, -60%);
+    z-index: 10;
+
+}
+.contenedor-cambio-foto{
+    position:relative;
+    transform: translate(47%, -50%);
+    z-index: 10;
+}
 
 
 
 .perfil-info-area h1 {
-    /* Nombre de usuario más grande y llamativo */
-    color: #fafb63; /* Cambiado a un amarillo más brillante */
+
+    color: #fafb63;
     font-size: 3.5em;
     margin-bottom: 5px;
     letter-spacing: 3px;
 }
 
 .perfil-dato-completo {
-    /* Estilo para Nombre Completo y Fecha de Nacimiento */
+
     color: #ccc;
     font-size: 1.1em;
     margin-bottom: 3px;
 }
-/* 1. Contenedor Superior (Foto + Info) */
+
 .perfil-header {
-    display: flex; /* Habilitar distribución flexible (lateral) */
-    align-items: flex-start; /* Alinear arriba */
-    gap: 40px; /* Espacio entre la foto y la info */
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
     padding-bottom: 20px;
 }
 
-/* 2. Área de la Foto y Botón */
+
 .perfil-foto-area {
-    /* Asegura que la foto y el botón estén alineados verticalmente */
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 0;
 }
 
 /* Divisor visual */
@@ -160,6 +170,25 @@ main {
     font-size: 1.0rem;
     padding: 3px 28px;
     margin: 0.5rem;
+}
+.btn-foto{
+    background-color: rgba(145, 145, 145, 0.72);
+    border-radius: 50%;
+    width:50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn-foto:hover{
+    background-color: rgba(145, 145, 145, 0.41);
+    border-radius: 50%;
+    width:50px;
+    height: 50px;
+    border: 2px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Botón principal más grande */

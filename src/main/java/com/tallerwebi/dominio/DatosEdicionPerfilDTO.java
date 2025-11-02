@@ -24,11 +24,7 @@ public class DatosEdicionPerfilDTO {
         String fotoBD = usuario.getFotoPerfil();
 
         if (fotoBD != null && !fotoBD.isEmpty()) {
-            if (fotoBD.startsWith("/img/uploads/")) {
-                this.urlFotoPerfil = fotoBD;
-            } else {
-                this.urlFotoPerfil = "/img/uploads/" + fotoBD;
-            }
+            this.urlFotoPerfil = fotoBD;
         } else {
             this.urlFotoPerfil = null;
         }
