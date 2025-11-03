@@ -171,6 +171,7 @@ public class ControladorPartida {
                 datosPartidaSesion.setPartidaGanada(true);
                 return new ModelAndView("redirect:/partida/finalizarPartida");
             }
+
             datosPartidaSesion.setNumeroEtapaActual(numeroEtapa + 1);
             return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa" + (numeroEtapa + 1));
         }

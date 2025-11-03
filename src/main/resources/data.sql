@@ -25,7 +25,9 @@ VALUES (
 INSERT INTO Sala (nombre, dificultad, escenario, historia, esta_habilitada, duracion, imagenPuerta, imagenSala, cantidadDeEtapas, imagenGanada, imagenPerdida)VALUES
                                                                                           ('La Mansión Misteriosa', 'PRINCIPIANTE', 'Mansion', 'Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.', TRUE, 5,'puerta-mansion.png', 'mansion-misteriosa.png', 5, 'mansion-ganada.png', 'mansion-perdida.png'),
                                                                                           ('El Laboratorio Secreto', 'INTERMEDIO', 'Laboratorio', 'Un científico desaparecido dejo pistas en su laboratorio. ¿Podras descubrir que tramaba?', TRUE, 10, 'puerta-laboratorio.png', 'laboratorio-secreto.png', 8, 'laboratorio-ganado.png', 'laboratorio-perdido.png'),
-                                                                                          ('La Carcel Abandonada', 'AVANZADO', 'Prision', 'Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podras escapar.', TRUE, 12,'puerta-prision.png', 'carcel-abandonada.png', 10, 'carcel-ganada.png', 'carcel-perdida.png');
+                                                                                          ('La Carcel Abandonada', 'AVANZADO', 'Prision', 'Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podras escapar.', TRUE, 12,'puerta-prision.png', 'carcel-abandonada.png', 10, 'carcel-ganada.png', 'carcel-perdida.png'),
+                                                                                          ('El campamento maldito', 'PRINCIPIANTE', 'Campamento', 'Estás perdido en un campamento de verano olvidado, envuelto en una densa niebla. Hay pistas de un ritual a medio terminar y debes buscar la llave del predio y encontrar el camino antes de que ''algo'' te encuentre.', TRUE, 5, 'puerta-campamento.png', 'campamento-maldito.png', 5, 'campamento-ganado.png', 'campamento-perdido.png'),
+                                                                                          ('El hospital psiquiatrico', 'AVANZADO', 'Hospital', 'Te han encerrado en el ala de contención de un hospital clausurado. Los antiguos pacientes no se han ido, y debes encontrar la llave de la morgue para escapar antes de que la medianoche te convierta en uno de ellos.', TRUE, 12, 'puerta-psiquiatrico.png', 'hospital-psiquiatrico.png', 10, 'psiquiatrico-ganado.png', 'psiquiatrico-perdido.png');
 
 -- ETAPAS PARA LA SALA 'La Mansión Misteriosa' (id_sala = 1)
 INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
@@ -309,3 +311,83 @@ INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
 (27, 'ADIVINANZA', 'Todos me anhelan aquí dentro, pero no tengo peso ni forma. No se me puede ver ni tocar, pero se siente cuando se ha ido. Para conseguirme, debes resolverlo todo. ¿Qué soy?', 23);
 INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Es lo que has estado buscando desde que despertaste en la celda.', 1, 27);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LIBERTAD', TRUE, 27);
+
+
+-- ------------------------------------------------------------------
+-- ETAPAS PARA LA SALA 5: 'El campamento maldito'
+-- ------------------------------------------------------------------
+INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
+                                                 ('La Cabaña de Intrusos', 1, 'Te despiertas encerrado en una pequeña cabaña abandonada. La cerradura de la puerta tiene 7 botones marcados con números.', 4, 'etapa-cabana-intrusos.png'), -- Secuencia sencilla de números (contar nudos).
+                                                 ('El Fuego Muerto', 2, 'Llegas al área de la fogata. Está apagada, pero hay cenizas y una hoja escrita con un acertijo. Resolvelo para continuar', 4, 'etapa-fuego-muerto.png'),
+                                                 ('El Muelle', 3, 'Un muelle deteriorado se adentra en el lago. La niebla es tan espesa que solo ves siluetas. En la barandilla hay cuatro fotos viejas de un campista. Debes ordenarlas cronológicamente para revelar la combinación grabada debajo del muelle.', 4, 'etapa-muelle.png'),
+                                                 ('Cabaña de Vigilancia', 4, 'La casa del guardián. El sistema de comunicación está roto. 5 interruptores controlan las luces exteriores. Debes encender las luces en el orden correcto.', 4, 'etapa-cabana-vigilancia.png'),
+                                                 ('El Borde del Bosque', 5, 'El portón está sellado con tres símbolos de elementos: FUEGO, TIERRA y AGUA. Tienes seis objetos que recogiste. Arrastra los objetos que pertenecen a cada elemento correspondiente para abrir la salida.', 4, 'etapa-borde-bosque-elemental.png');
+
+-- ACERTIJO ETAPA 1: La Cabaña de Intrusos  - SECUENCIA
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('SECUENCIA', 'El código de la cerradura se muestra brevemente. Memoriza la secuencia y reprodúcela en el teclado numérico.', 24);
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+                                                            (28, 'btn-numero-1.png' ),
+                                                            (28, 'btn-numero-2.png'),
+                                                            (28, 'btn-numero-3.png'),
+                                                            (28, 'btn-numero-4.png'),
+                                                            (28, 'btn-numero-5.png'),
+                                                            (28, 'btn-numero-6.png'),
+                                                            (28, 'btn-numero-7.png');
+
+-- ACERTIJO ETAPA 2: El Fuego Muerto - ADIVINANZA
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('ADIVINANZA', 'Cuando vivo, no hago ruido. Cuando muero, canto. Mi vida se cuenta en anillos, pero mi fin es dar calor. ¿Qué soy?', 25);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
+    ('Se encuentra apilado cerca de la fogata y es usado para hacer fuego.', 1, 29);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('MADERA', TRUE, 29);
+
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('ADIVINANZA', 'Tengo costa pero no arenas, siempre estoy mojado. Guardo el reflejo de la luna y mis profundidades esconden secretos.', 25);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
+    ('Es el gran cuerpo de agua que rodea el muelle.', 1, 30);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('LAGO', TRUE, 30);
+
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ( 'ADIVINANZA', 'No tengo cuerpo ni alas, pero viajo sin cesar. Oculto el camino y el destino, y si me ves muy cerca, es porque estás perdido.', 25);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
+    ('Es una densa capa que envuelve el campamento, mencionada en la historia de la Sala.', 1, 31);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('NIEBLA', TRUE, 31);
+
+-- ACERTIJO ETAPA 4: Cabaña de Vigilancia - ORDENAR IMAGEN
+
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('ORDENAR_IMAGEN', 'Las fotos viejas de un campista se desordenaron. Ordénalas cronológicamente de la más antigua a la más reciente para revelar el código grabado debajo del escritorio.', 26);
+
+-- ORDENAR IMAGENES: Fotos de campistas (validación por ordenCorrecto)
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
+                                                                           (32, 'foto-campista-nino.png', 1),
+                                                                           (32, 'foto-campista-preadolescente.png', 2),
+                                                                           (32, 'foto-campista-adolescente.png', 3),
+                                                                           (32, 'foto-campista-adultoJoven.png', 4),
+                                                                           (32, 'foto-campista-adulto.png', 5);
+
+-- ACERTIJO ETAPA 4: Cabaña de Vigilancia - SECUENCIA
+INSERT INTO Acertijo ( tipo, descripcion, id_etapa) VALUES
+    ('SECUENCIA', 'Un diagrama borroso muestra el orden de activación de las luces del sistema: blanca, amarilla, azul, roja, naranja. Replica la secuencia que se muestra una vez.', 27);
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+                                                            (33, 'luz-blanca-interr.png'),
+                                                            (33, 'luz-amarilla-interr.png'),
+                                                            (33, 'luz-azul-interr.png'),
+                                                            (33, 'luz-naranja-interr.png'),
+                                                            (33, 'luz-roja-interr.png');
+
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ( 'DRAG_DROP', 'El portón está sellado con tres símbolos de elementos: FUEGO, TIERRA y AGUA. Arrastra los dos objetos que pertenecen a cada elemento al símbolo correspondiente para liberar la cerradura.', 28);
+INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
+                                                                         (34, 'item-caja-fosforos.png', 'FUEGO'),
+                                                                         (34, 'item-encendedor.png', 'FUEGO'),
+                                                                         (34, 'item-hojas.png', 'TIERRA'),
+                                                                         (34, 'item-piedras.png', 'TIERRA'),
+                                                                         (34, 'item-corteza.png', 'TIERRA'),
+                                                                         (34, 'item-botella-agua.png', 'AGUA');
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
+    ('Busca elementos que puedan arder, que provengan del suelo o que sean nativos del lago.', 1, 34);
