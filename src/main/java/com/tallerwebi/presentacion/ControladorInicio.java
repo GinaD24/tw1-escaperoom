@@ -43,7 +43,7 @@ public class ControladorInicio {
             List<Sala> salas = servicioSala.traerSalas();
             List<Map<String, Object>> salasConEstado = new ArrayList<>();
 
-            Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");  // Cambiado a Long
+            Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");
             Usuario usuario = null;
             if (idUsuario != null) {
                 usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);

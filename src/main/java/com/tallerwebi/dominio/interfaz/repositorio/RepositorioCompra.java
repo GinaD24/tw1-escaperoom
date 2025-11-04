@@ -12,4 +12,5 @@ public interface RepositorioCompra {
     boolean salaDesbloqueadaParaUsuario(Usuario usuario, Sala sala);
     Compra obtenerCompraPorPaymentId(String paymentId);
     void guardarCompra(Compra compra);
+    Compra obtenerCompraPorExternalReference(String externalReference);
 }

@@ -60,4 +60,13 @@ public class RepositorioCompraImpl implements RepositorioCompra {
     public void guardarCompra(Compra compra) {
         sessionFactory.getCurrentSession().saveOrUpdate(compra);
     }
+
+
+    @Override
+    public Compra obtenerCompraPorExternalReference(String externalReference) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("FROM Compra WHERE externalReference = :externalReference", Compra.class)
+                .setParameter("externalReference", externalReference)
+                .uniqueResult();
+    }
 }

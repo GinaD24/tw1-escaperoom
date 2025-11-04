@@ -1,12 +1,14 @@
 package com.tallerwebi.dominio;
 
 import com.mercadopago.MercadoPagoConfig;
+import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
+import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
 import com.tallerwebi.dominio.entidad.Compra;
 import com.tallerwebi.dominio.entidad.Sala;
@@ -14,6 +16,7 @@ import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioCompra;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +25,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Service
 public class ServicioCompraImpl implements ServicioCompra {
 
     private RepositorioCompra repositorioCompra;
+    private static final String MP_ACCESS_TOKEN = "APP_USR-6211919620729480-102619-24d439b82c041fa247a03901e9badbd0-2948865251";
+
+    @Value("${mp.base.url}")
+    private String mpBaseUrl;
 
     @Autowired
     public ServicioCompraImpl(RepositorioCompra repositorioCompra) {
@@ -34,18 +42,36 @@ public class ServicioCompraImpl implements ServicioCompra {
 
     @Override
     @Transactional
-    public void iniciarCompra(Usuario usuario, Sala sala) {
-        Compra compra = new Compra(usuario, sala, LocalDateTime.now(), false);
-        repositorioCompra.guardar(compra);
+    public String iniciarCompra(Usuario usuario, Sala sala) {
+        Compra nuevaCompra = new Compra(usuario, sala, LocalDateTime.now(), false);
+        repositorioCompra.guardar(nuevaCompra);
+
+        nuevaCompra.setExternalReference(nuevaCompra.getId().toString());
+        repositorioCompra.guardarCompra(nuevaCompra);
+
+        try {
+            String confirmacionUrl = "http://localhost:8080/spring/compra/confirmacion"
+                    + "?payment_id=12345"
+                    + "&status=approved"
+                    + "&external_reference=" + nuevaCompra.getExternalReference();
+
+            System.out.println("URL de confirmación generada: " + confirmacionUrl);
+            return confirmacionUrl;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al crear preferencia: " + e.getMessage());
+        }
     }
+
 
     @Override
     @Transactional
     public void confirmarPago(String paymentId) {
-        Compra compra = repositorioCompra.obtenerCompraPorPaymentId(paymentId);
-        if (compra != null) {
-            compra.setPagada(true);
-            repositorioCompra.guardarCompra(compra);
+        try {
+            System.out.println("Procesando pago mock: " + paymentId);
+
+        } catch (Exception e) {
+            System.err.println("Error al confirmar el pago: " + e.getMessage());
         }
     }
 
@@ -62,43 +88,17 @@ public class ServicioCompraImpl implements ServicioCompra {
     }
 
     @Override
-    public String crearPreferenciaParaSala(Sala sala) {
-        try {
-            MercadoPagoConfig.setAccessToken("APP_USR-6211919620729480-102619-24d439b82c041fa247a03901e9badbd0-2948865251");
+    @Transactional
+    public void confirmarCompraPorExternalReference(String externalReference, String paymentId) {
+        Compra compra = repositorioCompra.obtenerCompraPorExternalReference(externalReference);
 
-            PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
-                    .id("test" + sala.getId().toString())
-                    .title("Acceso a sala: " + sala.getNombre())
-                    .description("Desbloquea sala en Escape Room")
-                    .categoryId("entertainment")
-                    .quantity(1)
-                    .currencyId("ARS")
-                    .unitPrice(new BigDecimal("1"))
-                    .build();
-
-            List<PreferenceItemRequest> items = new ArrayList<>();
-            items.add(itemRequest);
-
-            PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success("https://b5c2b1539e2b.ngrok-free.app/spring/inicio/")
-                    .failure("https://b5c2b1539e2b.ngrok-free.app/spring/compra/fallo")
-                    .pending("https://b5c2b1539e2b.ngrok-free.app/spring/compra/pendiente")
-                    .build();
-
-            PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-                    .items(items)
-                    .backUrls(backUrls)
-                    .autoReturn("approved")
-                    .build();
-
-            PreferenceClient client = new PreferenceClient();
-            Preference preference = client.create(preferenceRequest);
-
-            return preference.getSandboxInitPoint();
-        } catch (MPApiException | MPException e) {
-            throw new RuntimeException("Error al crear preferencia: " + e.getMessage());
+        if (compra != null) {
+            compra.setPagada(true);
+            compra.setPaymentId(paymentId);
+            repositorioCompra.guardarCompra(compra);
+            System.out.println("✓ Compra confirmada exitosamente. Sala ID: " + compra.getSala().getId());
+        } else {
+            throw new RuntimeException("No se encontró la compra con external_reference: " + externalReference);
         }
     }
-
-
 }

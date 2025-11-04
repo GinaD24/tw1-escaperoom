@@ -79,16 +79,15 @@ public class ControladorApi {
                     .categoryId("entertainment")
                     .quantity(1)
                     .currencyId("ARS")
-                    .unitPrice(new BigDecimal("1"))
+                    .unitPrice(new BigDecimal("100"))
                     .build();
 
             List<PreferenceItemRequest> items = new ArrayList<>();
             items.add(itemRequest);
 
-            // Logging y URLs con contexto /spring
             System.err.println("Creando backUrls con contexto /spring...");
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success("https://b5c2b1539e2b.ngrok-free.app/spring/inicio/")  // Incluye /spring
+                    .success("https://b5c2b1539e2b.ngrok-free.app/spring/inicio/")
                     .failure("https://b5c2b1539e2b.ngrok-free.app/spring/compra/fallo")
                     .pending("https://b5c2b1539e2b.ngrok-free.app/spring/compra/pendiente")
                     .build();

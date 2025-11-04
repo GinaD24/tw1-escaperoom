@@ -35,7 +35,7 @@ INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
                                                              ('Biblioteca', 2, 'Has llegado a una biblioteca cubierta de polvo. Entre miles de libros se esconden secretos que ansian ser leidos en voz alta.', 1, 'etapa-biblioteca.png'),
                                                              ('Salon', 3, 'Un gran salon donde aun resuenan las risas y los lamentos del pasado. La musica y el silencio guardan las claves para continuar.', 1, 'etapa-salon.png'),
                                                              ('Despacho', 4, 'Este era el refugio del antiguo dueno. Sus objetos personales, mapas y cartas, ocultan las piezas finales de su misterio.', 1, 'etapa-despacho.png'),
-                                                             ('Atico', 5, 'El ultimo piso. Entre baules y objetos olvidados yace el secreto final que te permitira encontrar la salida de la mansion.', 1, 'etapa-atico.png');
+                                                             ('Ático', 5, 'El ultimo piso. Entre baules y objetos olvidados yace el secreto final que te permitira encontrar la salida de la mansion.', 1, 'etapa-atico.png');
 
 -- ACERTIJOS ETAPA 1: Lobby (id_etapa = 1)
 INSERT INTO Acertijo (descripcion, id_etapa) VALUES

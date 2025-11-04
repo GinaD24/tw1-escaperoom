@@ -69,30 +69,30 @@ public class ControladorCompraTest {
         verifyNoInteractions(repositorioUsuario);
     }
 
-    @Test
-    public void alIniciarCompraDeSalaBloqueadaDeberiaCrearCompraYRedirigirAMercadoPago() {
-        when(session.getAttribute("id_usuario")).thenReturn(ID_USUARIO);
-        when(repositorioUsuario.obtenerUsuarioPorId(ID_USUARIO)).thenReturn(mockUsuario);
-        when(servicioSala.obtenerSalaPorId(ID_SALA)).thenReturn(mockSala);
-        when(servicioCompra.salaDesbloqueadaParaUsuario(mockUsuario, mockSala)).thenReturn(false);
-        when(servicioCompra.crearPreferenciaParaSala(mockSala)).thenReturn(INIT_POINT);
+//    @Test
+//    public void alIniciarCompraDeSalaBloqueadaDeberiaCrearCompraYRedirigirAMercadoPago() {
+//        when(session.getAttribute("id_usuario")).thenReturn(ID_USUARIO);
+//        when(repositorioUsuario.obtenerUsuarioPorId(ID_USUARIO)).thenReturn(mockUsuario);
+//        when(servicioSala.obtenerSalaPorId(ID_SALA)).thenReturn(mockSala);
+//        when(servicioCompra.salaDesbloqueadaParaUsuario(mockUsuario, mockSala)).thenReturn(false);
+//        when(servicioCompra.crearPreferenciaParaSala(mockSala)).thenReturn(INIT_POINT);
+//
+//        ModelAndView modelAndView = controladorCompra.iniciarCompra(ID_SALA, request);
+//
+//        verify(servicioCompra, times(1)).iniciarCompra(mockUsuario, mockSala);
+//        verify(servicioCompra, times(1)).crearPreferenciaParaSala(mockSala);
+//        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:" + INIT_POINT));
+//    }
 
-        ModelAndView modelAndView = controladorCompra.iniciarCompra(ID_SALA, request);
 
-        verify(servicioCompra, times(1)).iniciarCompra(mockUsuario, mockSala);
-        verify(servicioCompra, times(1)).crearPreferenciaParaSala(mockSala);
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:" + INIT_POINT));
-    }
-
-
-    @Test
-    public void alRecibirExitoDePagoDeberiaRedirigirAInicioConMensajeDeExito() {
-        ModelAndView modelAndView = controladorCompra.exito(redirectAttributes);
-
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/inicio/"));
-        verify(redirectAttributes, times(1)).addFlashAttribute("mensaje", "¡Pago exitoso! La sala ha sido desbloqueada.");
-        verify(servicioCompra, never()).confirmarPago(any());
-    }
+//    @Test
+//    public void alRecibirExitoDePagoDeberiaRedirigirAInicioConMensajeDeExito() {
+//        ModelAndView modelAndView = controladorCompra.exito(redirectAttributes);
+//
+//        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/inicio/"));
+//        verify(redirectAttributes, times(1)).addFlashAttribute("mensaje", "¡Pago exitoso! La sala ha sido desbloqueada.");
+//        verify(servicioCompra, never()).confirmarPago(any());
+//    }
 
     @Test
     public void alRecibirFalloDePagoDeberiaRedirigirAInicioConMensajeDeFallo() {

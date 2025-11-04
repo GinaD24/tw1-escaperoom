@@ -24,10 +24,12 @@ public class Compra {
     @Column(nullable = false)
     private Boolean pagada;
 
+    @Column(name = "external_reference")
+    private String externalReference;
+
     @Column(name = "payment_id")
     private String paymentId;
 
-    // Constructor vacío (requerido por Hibernate)
     public Compra() {}
 
     public Compra(Usuario usuario, Sala sala, LocalDateTime fechaCompra, Boolean pagada) {
@@ -52,6 +54,9 @@ public class Compra {
 
     public Boolean getPagada() { return pagada; }
     public void setPagada(Boolean pagada) { this.pagada = pagada; }
+
+    public String getExternalReference() { return externalReference; }
+    public void setExternalReference(String externalReference) { this.externalReference = externalReference; }
 
     public String getPaymentId() { return paymentId; }
     public void setPaymentId(String paymentId) { this.paymentId = paymentId; }
