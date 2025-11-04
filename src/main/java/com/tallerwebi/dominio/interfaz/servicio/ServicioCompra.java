@@ -8,7 +8,6 @@ import java.util.List;
 public interface ServicioCompra {
     String iniciarCompra(Usuario usuario, Sala sala);
     void confirmarPago(String paymentId);
-    void confirmarCompraPorExternalReference(String externalReference, String paymentId);
     List<Compra> obtenerComprasPorUsuario(Usuario usuario);
     boolean salaDesbloqueadaParaUsuario(Usuario usuario, Sala sala);
 }

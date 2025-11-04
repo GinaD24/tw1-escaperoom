@@ -1,12 +1,10 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.entidad.Compra;
 import com.tallerwebi.dominio.entidad.Sala;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
-import com.tallerwebi.dominio.interfaz.repositorio.RepositorioCompra;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -68,39 +66,15 @@ public class ControladorCompra {
     }
 
     @GetMapping("/confirmacion")
-    public RedirectView confirmarPago(
-            @RequestParam(name = "payment_id") String paymentId,
-            @RequestParam(name = "status") String status,
-            @RequestParam(name = "external_reference") String externalReference,
-            RedirectAttributes redirectAttributes) {
+    public RedirectView confirmarPago(@RequestParam(name = "payment_id") String paymentId) {
 
         try {
-            System.out.println("=== CONFIRMACIÓN DE PAGO ===");
-            System.out.println("Payment ID: " + paymentId);
-            System.out.println("Status: " + status);
-            System.out.println("External Reference: " + externalReference);
+            servicioCompra.confirmarPago(paymentId);
 
-            if ("approved".equals(status)) {
-                try {
-                    servicioCompra.confirmarCompraPorExternalReference(externalReference, paymentId);
-                    redirectAttributes.addFlashAttribute("mensaje", "¡Pago exitoso! La sala ha sido desbloqueada.");
-                    return new RedirectView("/inicio/", true);
-                } catch (RuntimeException e) {
-                    System.err.println("✗ " + e.getMessage());
-                    redirectAttributes.addFlashAttribute("mensaje", "Error: No se encontró la compra.");
-                    return new RedirectView("/inicio/", true);
-                }
-            } else {
-                System.out.println("✗ Pago no aprobado. Status: " + status);
-                redirectAttributes.addFlashAttribute("mensaje", "El pago no fue aprobado.");
-                return new RedirectView("/inicio/", true);
-            }
+            return new RedirectView("/inicio?pago=exitoso", true);
 
         } catch (Exception e) {
-            System.err.println("✗ Error al procesar la confirmación: " + e.getMessage());
-            e.printStackTrace();
-            redirectAttributes.addFlashAttribute("mensaje", "Error al procesar el pago.");
-            return new RedirectView("/inicio/", true);
+            return new RedirectView("/inicio?pago=error", true);
         }
     }
 }

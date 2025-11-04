@@ -32,6 +32,7 @@ public class ServicioCompraImpl implements ServicioCompra {
     private RepositorioCompra repositorioCompra;
     private static final String MP_ACCESS_TOKEN = "APP_USR-6211919620729480-102619-24d439b82c041fa247a03901e9badbd0-2948865251";
 
+    // Valor inyectado del application.properties
     @Value("${mp.base.url}")
     private String mpBaseUrl;
 
@@ -50,16 +51,52 @@ public class ServicioCompraImpl implements ServicioCompra {
         repositorioCompra.guardarCompra(nuevaCompra);
 
         try {
-            String confirmacionUrl = "http://localhost:8080/spring/compra/confirmacion"
-                    + "?payment_id=12345"
-                    + "&status=approved"
-                    + "&external_reference=" + nuevaCompra.getExternalReference();
 
-            System.out.println("URL de confirmación generada: " + confirmacionUrl);
-            return confirmacionUrl;
+            MercadoPagoConfig.setAccessToken(MP_ACCESS_TOKEN);
+//            com.mercadopago.MercadoPagoConfig.setBaseUrl(mpBaseUrl);
 
-        } catch (Exception e) {
-            throw new RuntimeException("Error al crear preferencia: " + e.getMessage());
+            PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
+                    .id(nuevaCompra.getExternalReference())
+                    .title("Acceso a sala: " + sala.getNombre())
+                    .description("Desbloquea sala en Escape Room")
+                    .categoryId("entertainment")
+                    .quantity(1)
+                    .currencyId("ARS")
+                    .unitPrice(new BigDecimal("100"))
+                    .build();
+
+            List<PreferenceItemRequest> items = new ArrayList<>();
+            items.add(itemRequest);
+
+            PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
+                    .success("http://localhost:8080/spring/compra/confirmacion")
+                    .failure("http://localhost:8080/spring/inicio?pago=fallido")
+                    .pending("http://localhost:8080/spring/inicio?pago=pendiente")
+                    .build();
+
+            if (backUrls == null) {
+                throw new RuntimeException("Error: backUrls es null.");
+            }
+
+            PreferenceRequest preferenceRequest = PreferenceRequest.builder()
+                    .items(items)
+                    .backUrls(backUrls)
+                    .externalReference(nuevaCompra.getExternalReference())
+                    .build();
+
+            PreferenceClient client = new PreferenceClient();
+
+            Preference preference = client.create(preferenceRequest);
+
+            return preference.getSandboxInitPoint();
+
+        } catch (MPApiException e) {
+            System.err.println("Error en Mercado Pago API - Status: " + e.getStatusCode());
+            System.err.println("Response body: " + e.getApiResponse().getContent());
+            e.printStackTrace();
+            throw new RuntimeException("Error al crear preferencia (MP): " + e.getMessage());
+        } catch (MPException e) {
+            throw new RuntimeException("Error al crear preferencia (General): " + e.getMessage());
         }
     }
 
@@ -68,10 +105,32 @@ public class ServicioCompraImpl implements ServicioCompra {
     @Transactional
     public void confirmarPago(String paymentId) {
         try {
-            System.out.println("Procesando pago mock: " + paymentId);
+            MercadoPagoConfig.setAccessToken(MP_ACCESS_TOKEN);
+//            com.mercadopago.MercadoPagoConfig.setBaseUrl(mpBaseUrl);
 
-        } catch (Exception e) {
-            System.err.println("Error al confirmar el pago: " + e.getMessage());
+            // Usamos el constructor simple.
+            PaymentClient paymentClient = new PaymentClient();
+
+            Payment payment = paymentClient.get(Long.valueOf(paymentId));
+
+            String externalReference = payment.getExternalReference();
+
+            if (externalReference != null) {
+                Compra compra = repositorioCompra.obtenerCompraPorExternalReference(externalReference);
+
+                if (compra != null && "approved".equals(payment.getStatus())) {
+                    compra.setPagada(true);
+                    compra.setPaymentId(paymentId);
+                    repositorioCompra.guardarCompra(compra);
+                    System.out.println("Pago #" + paymentId + " CONFIRMADO. Sala desbloqueada.");
+                } else {
+                    System.out.println("Pago #" + paymentId + " no aprobado o compra no encontrada.");
+                }
+            }
+        } catch (MPApiException e) {
+            System.err.println("Error al obtener el pago de MP (API): " + e.getApiResponse().getContent());
+        } catch (MPException e) {
+            System.err.println("Error general al confirmar el pago: " + e.getMessage());
         }
     }
 
@@ -85,20 +144,5 @@ public class ServicioCompraImpl implements ServicioCompra {
     @Transactional
     public boolean salaDesbloqueadaParaUsuario(Usuario usuario, Sala sala) {
         return repositorioCompra.salaDesbloqueadaParaUsuario(usuario, sala);
-    }
-
-    @Override
-    @Transactional
-    public void confirmarCompraPorExternalReference(String externalReference, String paymentId) {
-        Compra compra = repositorioCompra.obtenerCompraPorExternalReference(externalReference);
-
-        if (compra != null) {
-            compra.setPagada(true);
-            compra.setPaymentId(paymentId);
-            repositorioCompra.guardarCompra(compra);
-            System.out.println("✓ Compra confirmada exitosamente. Sala ID: " + compra.getSala().getId());
-        } else {
-            throw new RuntimeException("No se encontró la compra con external_reference: " + externalReference);
-        }
     }
 }

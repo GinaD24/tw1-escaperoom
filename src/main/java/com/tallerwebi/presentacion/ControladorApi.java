@@ -79,12 +79,13 @@ public class ControladorApi {
                     .categoryId("entertainment")
                     .quantity(1)
                     .currencyId("ARS")
-                    .unitPrice(new BigDecimal("100"))
+                    .unitPrice(new BigDecimal("1"))
                     .build();
 
             List<PreferenceItemRequest> items = new ArrayList<>();
             items.add(itemRequest);
 
+            // Logging y URLs con contexto /spring
             System.err.println("Creando backUrls con contexto /spring...");
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
                     .success("https://b5c2b1539e2b.ngrok-free.app/spring/inicio/")
