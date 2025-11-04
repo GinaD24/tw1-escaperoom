@@ -61,6 +61,7 @@ public class ServicioRankingImpl implements ServicioRanking {
                 .sorted(Comparator
                         .comparing(PuestoRanking::getPuntaje).reversed()
                         .thenComparing(PuestoRanking::getTiempoTotal)
+                        .thenComparing(PuestoRanking::getCantidadPistas)
                 )
                 .collect(Collectors.toList());
 
