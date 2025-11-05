@@ -7,6 +7,7 @@ import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -47,10 +48,30 @@ public class ControladorCompra {
         return new ModelAndView("redirect:" + initPoint);
     }
 
-    @GetMapping("/exito")
-    public ModelAndView exito(RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("mensaje", "¡Pago exitoso! La sala será desbloqueada en breve.");
-        return new ModelAndView("redirect:/inicio/");
+    @GetMapping("/confirmacion")
+    public ModelAndView confirmarPago(
+            @RequestParam(name = "payment_id", required = false) String paymentId,
+            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "external_reference", required = false) String externalReference,
+            RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        ModelMap modelo = new ModelMap();
+        try {
+            if ("approved".equals(status)) {
+                // Confirma vía webhook o external_reference (mantén como estaba)
+                servicioCompra.confirmarCompraPorExternalReference(externalReference, paymentId);
+                modelo.put("mensaje", "¡Pago exitoso! La sala ha sido desbloqueada y está lista para ser usada.");
+            } else if ("pending".equals(status)) {
+                modelo.put("mensaje", "Pago pendiente. Te notificaremos cuando se complete.");
+            } else {
+                modelo.put("error", "El pago no pudo ser aprobado. Estado: " + status);
+            }
+        } catch (Exception e) {
+            System.err.println("Error al confirmar el pago: " + e.getMessage());
+            modelo.put("error", "Error inesperado al procesar la confirmación del pago.");
+        }
+        // Devuelve una vista en lugar de redirect
+        return new ModelAndView("confirmacion", modelo);
     }
 
     @GetMapping("/fallo")
@@ -63,25 +84,5 @@ public class ControladorCompra {
     public ModelAndView pendiente(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("mensaje", "El pago está pendiente de aprobación.");
         return new ModelAndView("redirect:/inicio/");
-    }
-
-    @GetMapping("/confirmacion")
-    public RedirectView confirmarPago(
-            @RequestParam(name = "payment_id", required = false) String paymentId,
-            @RequestParam(name = "status", required = false) String status,
-            @RequestParam(name = "external_reference", required = false) String externalReference) {
-
-        try {
-            if (paymentId != null && !paymentId.isEmpty()) {
-                servicioCompra.confirmarPago(paymentId);
-                return new RedirectView("/inicio/?pago=exitoso", true);
-            } else {
-                // No vino payment_id: puede que Mercado Pago todavía no lo pase.
-                // El webhook confirmará el pago en breve; mostramos mensaje intermedio.
-                return new RedirectView("/inicio/?pago=en_proceso", true);
-            }
-        } catch (Exception e) {
-            return new RedirectView("/inicio/?pago=error", true);
-        }
     }
 }

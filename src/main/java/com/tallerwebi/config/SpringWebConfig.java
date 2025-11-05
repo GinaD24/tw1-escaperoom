@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -98,5 +99,26 @@ public class SpringWebConfig implements WebMvcConfigurer {
     }
 
 
+    @Bean
+    public LoginInterceptor loginInterceptor() {
+        return new LoginInterceptor();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(loginInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns(
+                        "/**/login",           // Excluye /spring/login, /login, etc.
+                        "/**/validar-login",   // Excluye /spring/validar-login, /validar-login, etc. (¡CLAVE!)
+                        "/**/irARegistro",
+                        "/**/registrarme",
+                        "/**/compra/confirmacion", // Excluye el retorno de MP
+                        "/**/webhook/mercado-pago",// Excluye el Webhook
+                        "/css/**",
+                        "/js/**",
+                        "/img/**"
+                );
+    }
 
 }

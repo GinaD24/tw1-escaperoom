@@ -11,4 +11,5 @@ public interface ServicioCompra {
     void confirmarPago(String paymentId);
     List<Compra> obtenerComprasPorUsuario(Usuario usuario);
     boolean salaDesbloqueadaParaUsuario(Usuario usuario, Sala sala);
+    void confirmarCompraPorExternalReference(String externalReference, String paymentId);
 }

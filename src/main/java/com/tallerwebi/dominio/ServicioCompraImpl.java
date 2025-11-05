@@ -31,8 +31,8 @@ public class ServicioCompraImpl implements ServicioCompra {
     private final RepositorioCompra repositorioCompra;
     private static final String MP_ACCESS_TOKEN = "APP_USR-6211919620729480-102619-24d439b82c041fa247a03901e9badbd0-2948865251";
 
-    @Value("${mp.base.url:http://localhost:8080}")
-    private String mpBaseUrl;
+//    @Value("${mp.base.url:http://localhost:8080}")
+//    private String mpBaseUrl;
 
     @Autowired
     public ServicioCompraImpl(RepositorioCompra repositorioCompra) {
@@ -63,20 +63,19 @@ public class ServicioCompraImpl implements ServicioCompra {
             List<PreferenceItemRequest> items = new ArrayList<>();
             items.add(itemRequest);
 
-            String baseUrl = "https://f4c7dbbcd72e.ngrok-free.app";
-
+            String baseUrl = "https://consortial-snippily-ettie.ngrok-free.dev";  // Mantén ngrok para backUrls
+            String notificationBaseUrl = "https://consortial-snippily-ettie.ngrok-free.dev";  // Agrega para webhook
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success(baseUrl + "/spring/compra/confirmacion")
+                    .success(baseUrl + "/spring/compra/confirmacion")  // Debe ser esto, no el webhook
                     .failure(baseUrl + "/spring/inicio?pago=fallido")
                     .pending(baseUrl + "/spring/inicio?pago=pendiente")
                     .build();
-
             PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                     .items(items)
                     .backUrls(backUrls)
                     .externalReference(nuevaCompra.getExternalReference())
                     .autoReturn("approved")
-                    .notificationUrl(baseUrl + "/webhook/mercado-pago")
+                    .notificationUrl(notificationBaseUrl + "/spring/webhook/mercado-pago")  // Agrega para confirmar vía webhook
                     .build();
 
             PreferenceClient client = new PreferenceClient();
@@ -90,7 +89,6 @@ public class ServicioCompraImpl implements ServicioCompra {
             System.err.println("Response body: " + e.getApiResponse().getContent());
             e.printStackTrace();
             throw new RuntimeException("Error al crear preferencia (MP): " + e.getMessage(), e);
-
         } catch (MPException e) {
             System.err.println("Error general del SDK de Mercado Pago: " + e.getMessage());
             e.printStackTrace();
@@ -138,4 +136,16 @@ public class ServicioCompraImpl implements ServicioCompra {
     public boolean salaDesbloqueadaParaUsuario(Usuario usuario, Sala sala) {
         return repositorioCompra.salaDesbloqueadaParaUsuario(usuario, sala);
     }
+
+    @Override
+    @Transactional
+    public void confirmarCompraPorExternalReference(String externalReference, String paymentId) {
+        Compra compra = repositorioCompra.obtenerCompraPorExternalReference(externalReference);
+        if (compra != null) {
+            compra.setPagada(true);
+            compra.setPaymentId(paymentId);
+            repositorioCompra.guardarCompra(compra);
+        }
+    }
+
 }
