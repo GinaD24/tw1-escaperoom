@@ -32,24 +32,25 @@ public class ControladorRanking {
     }
 
     @GetMapping("/")
-    public ModelAndView verRankings(@RequestParam(defaultValue = "1") Integer idSala){
+    public ModelAndView verRankings() {
         ModelMap modelo = new ModelMap();
+        List<Sala> salas = servicioSala.traerSalas();
+        modelo.put("salas", salas);
 
         try {
-            List<PuestoRanking> puestoRankings = servicioRanking.obtenerRankingPorSala(idSala);
-            List<Sala> salas = servicioSala.traerSalas();
-            Sala sala = servicioSala.obtenerSalaPorId(idSala);
-            modelo.put("sala", sala);
-            modelo.put("salas", salas);
-            modelo.put("rankings", puestoRankings);
-            modelo.put("idSala", idSala);
-            return new ModelAndView("ranking-sala", modelo);
+            Integer idSalaConPartidas = servicioRanking.obtenerIdSalaConPartidaGanada();
+            Sala sala = servicioSala.obtenerSalaPorId(idSalaConPartidas);
+            List<PuestoRanking> puestoRankings = servicioRanking.obtenerRankingPorSala(idSalaConPartidas);
 
-        } catch(SalaSinRanking e) {
+            modelo.put("sala", sala);
+            modelo.put("rankings", puestoRankings);
+            modelo.put("idSala", idSalaConPartidas);
+
+        } catch (SalaSinRanking e) {
             modelo.put("error", "No hay partidas jugadas aún.");
-            return new ModelAndView("ranking-sala", modelo);
         }
 
+        return new ModelAndView("ranking-sala", modelo);
     }
 
     @GetMapping("/filtrarPorSala")

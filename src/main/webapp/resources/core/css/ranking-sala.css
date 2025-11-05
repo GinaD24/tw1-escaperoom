@@ -653,3 +653,14 @@ td{
     opacity: 1;
     top: 140%;
 }
+
+.nombre-salas-ranking{
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 650;
+}
+
+.sala-no-seleccionada{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 40px;
+}

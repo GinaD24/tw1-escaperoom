@@ -5,12 +5,10 @@ import com.tallerwebi.dominio.entidad.Sala;
 import com.tallerwebi.dominio.excepcion.SalaSinRanking;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioRanking;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
-import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +29,8 @@ public class ControladorPuestoRankingTest {
         this.controladorRanking = new ControladorRanking(servicioRanking, servicioSala);
     }
 
-@Test
-    public void deberiaMostrarLaVistaDelRankingDeLaSala1Con2Puesto(){
+    @Test
+    public void deberiaMostrarLaVistaDelRankingDeLaSala1Con2Puestos(){
         Integer idSala = 1;
         List<Sala> salas = new ArrayList<>();
         Sala sala = new Sala();
@@ -46,9 +44,10 @@ public class ControladorPuestoRankingTest {
         puestosRankings.add(puestoRanking2);
 
         when(servicioSala.traerSalas()).thenReturn((ArrayList<Sala>) salas);
+        when(servicioRanking.obtenerIdSalaConPartidaGanada()).thenReturn(sala.getId());
         when(servicioSala.obtenerSalaPorId(idSala)).thenReturn(sala);
         when(servicioRanking.obtenerRankingPorSala(idSala)).thenReturn(puestosRankings);
-        ModelAndView modelAndView = controladorRanking.verRankings(idSala);
+        ModelAndView modelAndView = controladorRanking.verRankings();
 
         assertThat(modelAndView.getViewName(), equalTo("ranking-sala"));
         assertThat(modelAndView.getModel().get("sala"), equalTo(sala));
@@ -57,7 +56,7 @@ public class ControladorPuestoRankingTest {
         verify(servicioSala).obtenerSalaPorId(idSala);
         verify(servicioRanking).obtenerRankingPorSala(idSala);
 
-}
+    }
 
 
     @Test
@@ -68,13 +67,11 @@ public class ControladorPuestoRankingTest {
         sala.setId(idSala);
         salas.add(sala);
 
-        List<PuestoRanking> puestosRankings  = new ArrayList<>();
-
-        doThrow(SalaSinRanking.class).when(servicioRanking).obtenerRankingPorSala(idSala);
-        ModelAndView modelAndView = controladorRanking.verRankings(idSala);
+        doThrow(SalaSinRanking.class).when(servicioRanking).obtenerIdSalaConPartidaGanada();
+        ModelAndView modelAndView = controladorRanking.verRankings();
 
         assertThat(modelAndView.getModel().get("error"), equalTo("No hay partidas jugadas aún."));
-        verify(servicioRanking).obtenerRankingPorSala(idSala);
+        verify(servicioRanking).obtenerIdSalaConPartidaGanada();
 
     }
 

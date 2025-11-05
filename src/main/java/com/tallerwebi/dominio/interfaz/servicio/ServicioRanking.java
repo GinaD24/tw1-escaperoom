@@ -9,4 +9,5 @@ public interface ServicioRanking {
     List<PuestoRanking> obtenerRankingPorSala(Integer idSala);
 
 
+    Integer obtenerIdSalaConPartidaGanada();
 }
