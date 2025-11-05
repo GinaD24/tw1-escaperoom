@@ -79,20 +79,36 @@ public class ControladorInicio {
     }
 
     @GetMapping("/filtrar-salas")
-    public ModelAndView filtrarSalas(@RequestParam(value = "filtroDificultad", required = false) String dificultadStr) {
+    public ModelAndView filtrarSalas(@RequestParam(value = "filtroDificultad", required = false) String dificultadStr, HttpServletRequest request) {  // Agrega HttpServletRequest
         ModelMap modelo = new ModelMap();
 
         Dificultad dificultad = null;
 
-        if (!dificultadStr.isEmpty()) {
+        if (dificultadStr != null && !dificultadStr.isEmpty()) {
             dificultad = Dificultad.valueOf(dificultadStr);
-        }else{
+        } else {
             return new ModelAndView("redirect:/inicio/");
         }
 
-        List<Sala> salasPorDificultad = servicioSala.obtenerSalaPorDificultad(dificultad);
+        List<Sala> salasFiltradas = servicioSala.obtenerSalaPorDificultad(dificultad);
+        List<SalaVista> salasVista = new ArrayList<>();
 
-        modelo.put("salas", salasPorDificultad);
+        // Obtener usuario de la sesión (igual que verInicio)
+        Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");
+        Usuario usuario = null;
+        if (idUsuario != null) {
+            usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+        }
+
+        for (Sala sala : salasFiltradas) {
+            if (sala == null || sala.getNombre() == null) {
+                continue;  // Salta salas inválidas
+            }
+            boolean desbloqueada = (usuario != null) && servicioCompra.salaDesbloqueadaParaUsuario(usuario, sala);
+            salasVista.add(new SalaVista(sala, desbloqueada));
+        }
+
+        modelo.put("salas", salasVista);
         return new ModelAndView("inicio", modelo);
     }
 }
