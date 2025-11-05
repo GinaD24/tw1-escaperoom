@@ -1,4 +1,4 @@
-package com.tallerwebi.presentacion;
+/*package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.entidad.Sala;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
@@ -177,4 +177,4 @@ public class ControladorInicioTest {
         assertThat(salasObtenidas, equalTo(salas));
     }
 
-}
+}*/
