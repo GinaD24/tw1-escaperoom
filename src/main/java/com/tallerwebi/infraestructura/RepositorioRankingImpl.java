@@ -27,4 +27,11 @@ public class RepositorioRankingImpl implements RepositorioRanking {
             return query.getResultList();
         }
 
+    @Override
+    public Integer obtenerIdSalaConPartidaGanada() {
+        String hql = "SELECT p.sala.id FROM Partida p WHERE p.ganada = true";
+        Query<Integer> query = this.sessionFactory.getCurrentSession().createQuery(hql, Integer.class);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
 }

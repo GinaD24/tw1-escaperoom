@@ -9,5 +9,6 @@ public interface RepositorioRanking {
 
     List<Partida> obtenerPartidasPorSala(Integer idSala);
 
+    Integer obtenerIdSalaConPartidaGanada();
 }
 

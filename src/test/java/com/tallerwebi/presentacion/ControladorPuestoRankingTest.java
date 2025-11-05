@@ -48,7 +48,7 @@ public class ControladorPuestoRankingTest {
         when(servicioSala.traerSalas()).thenReturn((ArrayList<Sala>) salas);
         when(servicioSala.obtenerSalaPorId(idSala)).thenReturn(sala);
         when(servicioRanking.obtenerRankingPorSala(idSala)).thenReturn(puestosRankings);
-        ModelAndView modelAndView = controladorRanking.verRankings(idSala);
+        ModelAndView modelAndView = controladorRanking.verRankings();
 
         assertThat(modelAndView.getViewName(), equalTo("ranking-sala"));
         assertThat(modelAndView.getModel().get("sala"), equalTo(sala));
@@ -71,7 +71,7 @@ public class ControladorPuestoRankingTest {
         List<PuestoRanking> puestosRankings  = new ArrayList<>();
 
         doThrow(SalaSinRanking.class).when(servicioRanking).obtenerRankingPorSala(idSala);
-        ModelAndView modelAndView = controladorRanking.verRankings(idSala);
+        ModelAndView modelAndView = controladorRanking.verRankings();
 
         assertThat(modelAndView.getModel().get("error"), equalTo("No hay partidas jugadas aún."));
         verify(servicioRanking).obtenerRankingPorSala(idSala);
