@@ -69,9 +69,9 @@
                 <table class="table table-striped mt-4">
                     <thead>
                     <tr>
-                        <th scope="col">#</th>
+                        <th scope="col">Puesto</th>
                         <th scope="col">Usuario</th>
-                        <th scope="col">Tiempo (seg)</th>
+                        <th scope="col">Tiempo</th>
                         <th scope="col">Pistas</th>
                         <th scope="col">Puntaje</th>
                     </tr>
@@ -80,7 +80,7 @@
                     <tr th:each="ranking, i : ${rankings}">
                         <td scope="row" th:text="${i.index + 1}"></td>
                         <td th:text="${ranking.usuario.nombreUsuario}"></td>
-                        <td th:text="${ranking.tiempoTotal}"></td>
+                        <td th:text="${((ranking.tiempoTotal / 60)) + 'm ' + ((ranking.tiempoTotal % 60)) + 's'}"></td>
                         <td th:text="${ranking.cantidadPistas}"></td>
                         <td th:text="${ranking.puntaje}"></td>
                     </tr>
