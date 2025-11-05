@@ -22,11 +22,6 @@ public class RepositorioCompraImpl implements RepositorioCompra {
     }
 
     @Override
-    public void guardar(Compra compra) {
-        this.sessionFactory.getCurrentSession().saveOrUpdate(compra);
-    }
-
-    @Override
     public List<Compra> obtenerComprasPorUsuario(Usuario usuario) {
         String hql = "FROM Compra c WHERE c.usuario = :usuario";
         Query<Compra> query = this.sessionFactory.getCurrentSession().createQuery(hql, Compra.class);

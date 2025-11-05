@@ -58,8 +58,6 @@ public class ControladorCompraTest {
         salaMock = new Sala();
         salaMock.setId(ID_SALA);
 
-        when(request.getSession()).thenReturn(session);
-        when(session.getAttribute("id_usuario")).thenReturn(ID_USUARIO);
         lenient().when(request.getSession()).thenReturn(session);
         lenient().when(session.getAttribute("id_usuario")).thenReturn(ID_USUARIO);
     }

@@ -45,7 +45,7 @@ public class ServicioCompraImpl implements ServicioCompra {
     @Transactional
     public String iniciarCompra(Usuario usuario, Sala sala) {
         Compra nuevaCompra = new Compra(usuario, sala, LocalDateTime.now(), false);
-        repositorioCompra.guardar(nuevaCompra);
+        repositorioCompra.guardarCompra(nuevaCompra);
         nuevaCompra.setExternalReference(nuevaCompra.getId().toString());
         repositorioCompra.guardarCompra(nuevaCompra);
 
@@ -86,13 +86,10 @@ public class ServicioCompraImpl implements ServicioCompra {
             return preference.getInitPoint();
 
         } catch (MPApiException e) {
-            System.err.println("Error en Mercado Pago API");
-            System.err.println("Status code: " + e.getStatusCode());
-            System.err.println("Response body: " + e.getApiResponse().getContent());
             e.printStackTrace();
             throw new RuntimeException("Error al crear preferencia (MP): " + e.getMessage(), e);
-        } catch (MPException e) {
-            System.err.println("Error general del SDK de Mercado Pago: " + e.getMessage());
+        } catch (MPException e) { ;
+
             e.printStackTrace();
             throw new RuntimeException("Error al crear preferencia (General): " + e.getMessage(), e);
         }
@@ -115,15 +112,12 @@ public class ServicioCompraImpl implements ServicioCompra {
                     compra.setPagada(true);
                     compra.setPaymentId(paymentId);
                     repositorioCompra.guardarCompra(compra);
-                    System.out.println("Pago #" + paymentId + " confirmado. Sala desbloqueada.");
-                } else {
-                    System.out.println("Pago #" + paymentId + " no aprobado o compra no encontrada.");
                 }
             }
-        } catch (MPApiException e) {
-            System.err.println("Error al obtener el pago de MP (API): " + e.getApiResponse().getContent());
         } catch (MPException e) {
-            System.err.println("Error general al confirmar el pago: " + e.getMessage());
+            throw new RuntimeException(e);
+        } catch (MPApiException e) {
+            throw new RuntimeException(e);
         }
     }
 

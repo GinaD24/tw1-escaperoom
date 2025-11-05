@@ -48,15 +48,14 @@ public class ServicioCompraImplTest {
                 compra.setId(123);
             }
             return null;
-        }).when(repositorioCompra).guardar(any(Compra.class));
+        }).when(repositorioCompra).guardarCompra(any(Compra.class));
 
         // ejecución
         String initPoint = servicioCompra.iniciarCompra(usuario, sala);
 
         // verificación
 
-        verify(repositorioCompra, times(1)).guardar(any(Compra.class));
-        verify(repositorioCompra, times(1)).guardarCompra(any(Compra.class));
+        verify(repositorioCompra, times(2)).guardarCompra(any(Compra.class));
     }
 
     @Test

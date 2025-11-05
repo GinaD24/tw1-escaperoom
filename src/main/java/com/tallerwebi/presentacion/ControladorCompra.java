@@ -66,7 +66,6 @@ public class ControladorCompra {
                 modelo.put("error", "El pago no pudo ser aprobado. Estado: " + status);
             }
         } catch (Exception e) {
-            System.err.println("Error al confirmar el pago: " + e.getMessage());
             modelo.put("error", "Error inesperado al procesar la confirmación del pago.");
         }
         return new ModelAndView("confirmacion", modelo);

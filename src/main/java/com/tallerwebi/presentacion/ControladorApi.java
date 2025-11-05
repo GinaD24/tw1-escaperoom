@@ -85,13 +85,11 @@ public class ControladorApi {
             List<PreferenceItemRequest> items = new ArrayList<>();
             items.add(itemRequest);
 
-            System.err.println("Creando backUrls con contexto /spring...");
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
                     .success("http://localhost:8080/spring/compra/confirmacion")
                     .failure("http://localhost:8080/spring/inicio?pago=fallido")
                     .pending("http://localhost:8080/spring/inicio?pago=pendiente")
                     .build();
-            System.err.println("backUrls creadas: success=" + backUrls.getSuccess());
 
             PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                     .items(items)
@@ -106,15 +104,9 @@ public class ControladorApi {
             response.put("init_point", preference.getSandboxInitPoint());
             return response;
         } catch (MPApiException e) {
-            System.err.println("Error en Mercado Pago API: " + e.getMessage());
-            System.err.println("Status Code: " + e.getStatusCode());
-            if (e.getApiResponse() != null) {
-                System.err.println("Respuesta de API: " + e.getApiResponse().getContent());
-            }
             e.printStackTrace();
             throw new RuntimeException("Error al crear preferencia: " + e.getMessage());
         } catch (MPException e) {
-            System.err.println("Error general: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Error general: " + e.getMessage());
         }

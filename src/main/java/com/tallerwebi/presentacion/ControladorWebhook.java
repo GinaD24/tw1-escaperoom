@@ -32,10 +32,7 @@ public class ControladorWebhook {
                 }
             }
 
-            System.err.println("Webhook MercadoPago sin id de pago: " + payload);
-
         } catch (Exception e) {
-            System.err.println("Error procesando webhook: " + e.getMessage());
             e.printStackTrace();
         }
     }
