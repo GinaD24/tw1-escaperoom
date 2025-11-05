@@ -28,11 +28,13 @@ import java.util.List;
 @Service
 public class ServicioCompraImpl implements ServicioCompra {
 
-    private final RepositorioCompra repositorioCompra;
+    private RepositorioCompra repositorioCompra;
     private static final String MP_ACCESS_TOKEN = "APP_USR-6211919620729480-102619-24d439b82c041fa247a03901e9badbd0-2948865251";
 
 //    @Value("${mp.base.url:http://localhost:8080}")
 //    private String mpBaseUrl;
+
+    public ServicioCompraImpl() {}
 
     @Autowired
     public ServicioCompraImpl(RepositorioCompra repositorioCompra) {
