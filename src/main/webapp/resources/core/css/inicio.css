@@ -158,3 +158,10 @@ body {
     color: white;
     transform: scale(1.05);
 }
+
+.lock-icon.unlock-color {
+    color: #28a745;
+}
+.lock-icon.lock-color {
+    color: #dc3545;
+}

@@ -59,21 +59,14 @@ public class ControladorEditarPerfil {
             return new ModelAndView("redirect:/login");
         }
 
-        System.out.println("Iniciando proceso de guardar cambios para usuario ID: " + idUsuario);
-        System.out.println("Datos recibidos - NombreUsuario: " + datos.getNombreUsuario() + ", UrlFotoPerfil: " + datos.getUrlFotoPerfil());
-
         // bloque try-catch para validaciones DTO
         try {
-            System.out.println("Validando datos...");
             datos.validarDatos();
-            System.out.println("Validación exitosa.");
         } catch (DatosIncompletosException | ValidacionInvalidaException e) {
-            System.out.println("Excepción de Validación: " + e.getMessage());
             atributos.addFlashAttribute("error", "Error de validación: " + e.getMessage());
             atributos.addFlashAttribute("datosPerfil", datos);
             return new ModelAndView("redirect:/configuracion/editar");
         } catch (com.tallerwebi.dominio.excepcion.ContraseniaInvalidaException e) {
-            System.out.println("Excepción ContraseniaInvalidaException (DTO): " + e.getMessage());
             atributos.addFlashAttribute("error", "Error de contraseña: " + e.getMessage());
             atributos.addFlashAttribute("datosPerfil", datos);
             return new ModelAndView("redirect:/configuracion/editar");
@@ -82,7 +75,6 @@ public class ControladorEditarPerfil {
 
         //  bloque try-catch para actualizar el perfil
         try {
-            System.out.println("Asignando ID y actualizando perfil...");
             datos.setId(idUsuario);
             servicioEditarPerfil.actualizarPerfil(datos);
 
@@ -93,24 +85,20 @@ public class ControladorEditarPerfil {
 
             session.setAttribute("urlFotoPerfil", usuarioActualizado.getFotoPerfil());
 
-            System.out.println("Perfil y Sesión actualizados exitosamente.");
             atributos.addFlashAttribute("mensaje", "Perfil actualizado exitosamente.");
             return new ModelAndView("redirect:/perfil/verPerfil");
 
         } catch (UsuarioExistente e) {
-            System.out.println("Excepción UsuarioExistente: " + e.getMessage());
             atributos.addFlashAttribute("error", "Error de actualización: " + e.getMessage());
             atributos.addFlashAttribute("datosPerfil", datos);
             return new ModelAndView("redirect:/configuracion/editar");
 
         } catch (ContraseniaInvalidaException e) {
-            System.out.println("Excepción ContraseniaInvalidaException (Servicio): " + e.getMessage());
             atributos.addFlashAttribute("error", "Error de contraseña: " + e.getMessage());
             atributos.addFlashAttribute("datosPerfil", datos);
             return new ModelAndView("redirect:/configuracion/editar");
 
         } catch (RuntimeException e) {
-            System.out.println("Excepción RuntimeException: " + e.getMessage());
             atributos.addFlashAttribute("error", "Error interno al actualizar: " + e.getMessage());
             atributos.addFlashAttribute("datosPerfil", datos);
             return new ModelAndView("redirect:/configuracion/editar");

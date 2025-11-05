@@ -1,7 +1,12 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.entidad.Sala;
+import com.tallerwebi.dominio.entidad.SalaVista;
+import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
+
 import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.excepcion.NoHaySalasExistentes;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
@@ -11,31 +16,51 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
-
 
 @Controller
 @RequestMapping("/inicio")
 public class ControladorInicio {
 
     private ServicioSala servicioSala;
+    private ServicioCompra servicioCompra;
+    private RepositorioUsuario repositorioUsuario;
 
     @Autowired
-    public ControladorInicio(ServicioSala servicioSala) {
+    public ControladorInicio(ServicioSala servicioSala, ServicioCompra servicioCompra, RepositorioUsuario repositorioUsuario) {
         this.servicioSala = servicioSala;
+        this.servicioCompra = servicioCompra;
+        this.repositorioUsuario = repositorioUsuario;
     }
 
     @GetMapping("/")
-    public ModelAndView verInicio() {
+    public ModelAndView verInicio(HttpServletRequest request) {
         ModelMap modelo = new ModelMap();
 
-        try{
-            modelo.put("salas", servicioSala.traerSalas());
-        }catch(NoHaySalasExistentes e){
+        try {
+            List<Sala> salas = servicioSala.traerSalas();
+            List<SalaVista> salasVista = new ArrayList<>();
+
+            Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");
+            Usuario usuario = null;
+            if (idUsuario != null) {
+                usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+            }
+
+            for (Sala sala : salas) {
+                boolean desbloqueada = (usuario != null) && servicioCompra.salaDesbloqueadaParaUsuario(usuario, sala);
+                salasVista.add(new SalaVista(sala, desbloqueada));
+            }
+
+            modelo.put("salas", salasVista);
+        } catch (NoHaySalasExistentes e) {
             modelo.put("error", "No hay salas existentes.");
         }
         return new ModelAndView("inicio", modelo);
     }
+
 
     @GetMapping("/sala/{id}")
     public ModelAndView verSala(@PathVariable Integer id) {
@@ -53,21 +78,35 @@ public class ControladorInicio {
     }
 
     @GetMapping("/filtrar-salas")
-    public ModelAndView filtrarSalas(@RequestParam(value = "filtroDificultad", required = false) String dificultadStr) {
+    public ModelAndView filtrarSalas(@RequestParam(value = "filtroDificultad", required = false) String dificultadStr, HttpServletRequest request) {  // Agrega HttpServletRequest
         ModelMap modelo = new ModelMap();
 
         Dificultad dificultad = null;
 
-        if (!dificultadStr.isEmpty()) {
+        if (dificultadStr != null && !dificultadStr.isEmpty()) {
             dificultad = Dificultad.valueOf(dificultadStr);
-        }else{
+        } else {
             return new ModelAndView("redirect:/inicio/");
         }
 
-        List<Sala> salasPorDificultad = servicioSala.obtenerSalaPorDificultad(dificultad);
+        List<Sala> salasFiltradas = servicioSala.obtenerSalaPorDificultad(dificultad);
+        List<SalaVista> salasVista = new ArrayList<>();
 
-        modelo.put("salas", salasPorDificultad);
+        Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");
+        Usuario usuario = null;
+        if (idUsuario != null) {
+            usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+        }
+
+        for (Sala sala : salasFiltradas) {
+            if (sala == null || sala.getNombre() == null) {
+                continue;
+            }
+            boolean desbloqueada = (usuario != null) && servicioCompra.salaDesbloqueadaParaUsuario(usuario, sala);
+            salasVista.add(new SalaVista(sala, desbloqueada));
+        }
+
+        modelo.put("salas", salasVista);
         return new ModelAndView("inicio", modelo);
     }
-
 }

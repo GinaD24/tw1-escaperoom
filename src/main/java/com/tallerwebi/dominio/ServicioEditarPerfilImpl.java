@@ -57,9 +57,7 @@ public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
             if (!usuarioAEditar.getPassword().equals(datos.getContrasenaActual())) {
                 throw new ContraseniaInvalidaException("La contraseña actual es incorrecta.");
             }
-            System.out.println("LOG: Contraseña ACTUAL/VIEJA en el objeto antes de setear: " + usuarioAEditar.getPassword());
             usuarioAEditar.setPassword(datos.getContrasenaNueva());
-            System.out.println("LOG: Contraseña NUEVA en el objeto, lista para persistir: " + usuarioAEditar.getPassword());
         }
 
         // --- logica de foto de perfil de usuario  ---
@@ -77,8 +75,6 @@ public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
                 String urlRelativa = "/img/uploads/" + nombreArchivo;
                 usuarioAEditar.setFotoPerfil(urlRelativa);
 
-                System.out.println("LOG: Nueva foto guardada en: " + urlRelativa);
-
             } catch (IOException e) {
                 throw new RuntimeException("Error al guardar el archivo de imagen.", e);
             }
@@ -86,10 +82,7 @@ public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
             usuarioAEditar.setFotoPerfil(null);
         }
 
-
-        System.out.println("LOG: Persistiendo cambios en la DB...");
         repositorioUsuario.modificar(usuarioAEditar);
-        System.out.println("LOG: ¡Cambios persistidos!");
     }
 
     @Override
