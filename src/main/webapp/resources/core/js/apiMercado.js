@@ -15,8 +15,7 @@ checkoutButtons.forEach(button => {
             return response.json();
         })
         .then(data => {
-            // Cambiar aquí: usar sandbox_init_point para simulación
-            const initPoint = data.sandbox_init_point;  // En lugar de data.init_point
+            const initPoint = data.sandbox_init_point;
             button.disabled = false;
 
             button.addEventListener('click', function() {

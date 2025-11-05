@@ -58,7 +58,6 @@ public class ControladorCompra {
         ModelMap modelo = new ModelMap();
         try {
             if ("approved".equals(status)) {
-                // Confirma vía webhook o external_reference (mantén como estaba)
                 servicioCompra.confirmarCompraPorExternalReference(externalReference, paymentId);
                 modelo.put("mensaje", "¡Pago exitoso! La sala ha sido desbloqueada y está lista para ser usada.");
             } else if ("pending".equals(status)) {
@@ -70,7 +69,6 @@ public class ControladorCompra {
             System.err.println("Error al confirmar el pago: " + e.getMessage());
             modelo.put("error", "Error inesperado al procesar la confirmación del pago.");
         }
-        // Devuelve una vista en lugar de redirect
         return new ModelAndView("confirmacion", modelo);
     }
 

@@ -25,8 +25,8 @@ import java.util.List;
 public class ControladorInicio {
 
     private ServicioSala servicioSala;
-    private ServicioCompra servicioCompra;  // Agregar
-    private RepositorioUsuario repositorioUsuario;  // Agregar
+    private ServicioCompra servicioCompra;
+    private RepositorioUsuario repositorioUsuario;
 
     @Autowired
     public ControladorInicio(ServicioSala servicioSala, ServicioCompra servicioCompra, RepositorioUsuario repositorioUsuario) {
@@ -36,14 +36,13 @@ public class ControladorInicio {
     }
 
     @GetMapping("/")
-    public ModelAndView verInicio(HttpServletRequest request) {  // Agregar HttpServletRequest
+    public ModelAndView verInicio(HttpServletRequest request) {
         ModelMap modelo = new ModelMap();
 
         try {
             List<Sala> salas = servicioSala.traerSalas();
             List<SalaVista> salasVista = new ArrayList<>();
 
-            // Obtener usuario de la sesión
             Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");
             Usuario usuario = null;
             if (idUsuario != null) {
@@ -93,7 +92,6 @@ public class ControladorInicio {
         List<Sala> salasFiltradas = servicioSala.obtenerSalaPorDificultad(dificultad);
         List<SalaVista> salasVista = new ArrayList<>();
 
-        // Obtener usuario de la sesión (igual que verInicio)
         Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");
         Usuario usuario = null;
         if (idUsuario != null) {
@@ -102,7 +100,7 @@ public class ControladorInicio {
 
         for (Sala sala : salasFiltradas) {
             if (sala == null || sala.getNombre() == null) {
-                continue;  // Salta salas inválidas
+                continue;
             }
             boolean desbloqueada = (usuario != null) && servicioCompra.salaDesbloqueadaParaUsuario(usuario, sala);
             salasVista.add(new SalaVista(sala, desbloqueada));

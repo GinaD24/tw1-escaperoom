@@ -85,12 +85,11 @@ public class ControladorApi {
             List<PreferenceItemRequest> items = new ArrayList<>();
             items.add(itemRequest);
 
-            // Logging y URLs con contexto /spring
             System.err.println("Creando backUrls con contexto /spring...");
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success("http://localhost:8080/spring/compra/confirmacion")  // Cambia a localhost
-                    .failure("http://localhost:8080/spring/inicio?pago=fallido")  // Cambia a localhost
-                    .pending("http://localhost:8080/spring/inicio?pago=pendiente")  // Cambia a localhost
+                    .success("http://localhost:8080/spring/compra/confirmacion")
+                    .failure("http://localhost:8080/spring/inicio?pago=fallido")
+                    .pending("http://localhost:8080/spring/inicio?pago=pendiente")
                     .build();
             System.err.println("backUrls creadas: success=" + backUrls.getSuccess());
 

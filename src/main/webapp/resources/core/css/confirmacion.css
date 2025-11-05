@@ -1,0 +1,23 @@
+body {
+    background: linear-gradient(to right, #200a46, #180547, #081136);
+    background-repeat: no-repeat;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+}
+
+h1{
+    color: #fac020;
+    font-size: 2.5em;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+div{
+    text-align: center;
+}
+

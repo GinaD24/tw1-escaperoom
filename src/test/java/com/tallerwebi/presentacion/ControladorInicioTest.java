@@ -1,12 +1,18 @@
-/*package com.tallerwebi.presentacion;
+package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.entidad.Sala;
+import com.tallerwebi.dominio.entidad.SalaVista;
+import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.excepcion.NoHaySalasExistentes;
 import com.tallerwebi.dominio.excepcion.SalaInexistente;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -21,135 +27,134 @@ public class ControladorInicioTest {
 
     private ControladorInicio controladorInicio;
     private ServicioSala servicioSala;
+    private ServicioCompra servicioCompra;
+    private RepositorioUsuario repositorioUsuario;
 
     @BeforeEach
     public void init(){
         this.servicioSala = mock(ServicioSala.class);
-        this.controladorInicio = new ControladorInicio(servicioSala);
-
+        this.servicioCompra = mock(ServicioCompra.class);
+        this.repositorioUsuario = mock(RepositorioUsuario.class);
+        this.controladorInicio = new ControladorInicio(servicioSala, servicioCompra, repositorioUsuario);
     }
 
     @Test
     public void dadoQueExisteUnaVistaDeInicioCuandoPidoQueLaMuestreLaDevuelve() {
+        // preparacion
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(new MockHttpSession());
 
-        //preparacion
+        when(servicioSala.traerSalas()).thenReturn(new ArrayList<>());
 
-        //ejecucion
-        ModelAndView modelAndView = controladorInicio.verInicio();
-        //verificacion
+        // ejecucion
+        ModelAndView modelAndView = controladorInicio.verInicio(request);
+
+        // verificación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("inicio"));
     }
 
     @Test
     public void dadoQueExisteUnaListaDeSalasCuandoPidoQueLasMuestreDevuelveLaVistaDeInicioCon3Salas() {
+        // preparacion
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(new MockHttpSession());
 
-        //preparacion
-        Sala sala1 = new Sala();
-        Sala sala2 = new Sala();
-        Sala sala3 = new Sala();
+        Sala sala1 = new Sala(1, "Sala 1", Dificultad.PRINCIPIANTE, "", "", true, 10, "");
+        Sala sala2 = new Sala(2, "Sala 2", Dificultad.INTERMEDIO, "", "", true, 15, "");
+        Sala sala3 = new Sala(3, "Sala 3", Dificultad.AVANZADO, "", "", true, 20, "");
 
-        //ejecucion
-        List<Sala> salas = new ArrayList<Sala>();
+        List<Sala> salas = new ArrayList<>();
         salas.add(sala1);
         salas.add(sala2);
         salas.add(sala3);
 
         when(servicioSala.traerSalas()).thenReturn((ArrayList<Sala>) salas);
+        when(servicioCompra.salaDesbloqueadaParaUsuario(any(), any())).thenReturn(false);
 
-        ModelAndView modelAndView = controladorInicio.verInicio();
+        // ejecución
+        ModelAndView modelAndView = controladorInicio.verInicio(request);
 
-        List<Sala> salasObtenidas = (List<Sala>) modelAndView.getModel().get("salas");
+        List<SalaVista> salasObtenidas = (List<SalaVista>) modelAndView.getModel().get("salas");
 
-        //verificacion
-
+        // verificación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("inicio"));
         assertThat(salasObtenidas.size(), equalTo(3));
-
         verify(servicioSala).traerSalas();
     }
 
     @Test
-    public void dadoQueExistenSalasCuandoQuieroVerUnaEnEspecificoMeDevuelveLaVistaDeEsaSala() {
+    public void dadoQueNOExisteUnaListaDeSalasCuandoPidoQueLasMuestreDevuelveUnMensajeDeError_NoHaySalasExistentes() {
+        // preparacion
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setSession(new MockHttpSession());
 
-        //preparacion
-        Sala sala1 = new Sala();
-        sala1.setId(1);
+        doThrow(NoHaySalasExistentes.class).when(servicioSala).traerSalas();
 
-        when(servicioSala.obtenerSalaPorId(1)).thenReturn(sala1);
+        // ejecución
+        ModelAndView modelAndView = controladorInicio.verInicio(request);
 
-        //ejecucion
-        ModelAndView modelAndView = controladorInicio.verSala(sala1.getId());
-
-        //verificacion
-        assertThat(modelAndView.getModel().get("SalaObtenida"), equalTo(sala1));
-        verify(servicioSala).obtenerSalaPorId(1);
-
-
+        // verificación
+        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("No hay salas existentes."));
     }
 
+    @Test
+    public void dadoQueExistenSalasCuandoQuieroVerUnaEnEspecificoMeDevuelveLaVistaDeEsaSala() {
+        // preparación
+        Sala sala1 = new Sala(1, "Sala 1", Dificultad.PRINCIPIANTE, "", "", true, 10, "");
+        when(servicioSala.obtenerSalaPorId(1)).thenReturn(sala1);
+
+        // ejecución
+        ModelAndView modelAndView = controladorInicio.verSala(sala1.getId());
+
+        // verificación
+        assertThat(modelAndView.getModel().get("SalaObtenida"), equalTo(sala1));
+        verify(servicioSala).obtenerSalaPorId(1);
+    }
 
     @Test
     public void dadoQueExistenSalasCuandoQuieroVerUnaQueNoExisteMeRedirigeAElInicio() {
+        // preparación
+        doThrow(SalaInexistente.class).when(servicioSala).obtenerSalaPorId(5);
 
-        //preparacion
-        doThrow(SalaInexistente.class).when(servicioSala).obtenerSalaPorId(5);;
-
-        //ejecucion
+        // ejecución
         ModelAndView modelAndView = controladorInicio.verSala(5);
 
-        //verificacion
+        // verificación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/inicio/"));
         verify(servicioSala).obtenerSalaPorId(5);
     }
 
     @Test
-    public void dadoQueNOExisteUnaListaDeSalasCuandoPidoQueLasMuestreDevuelveUnMensajeDeError_NoHaySalasExistentes() {
-
-        //preparacion
-        doThrow(NoHaySalasExistentes.class).when(servicioSala).traerSalas();
-
-        //ejecucion
-        ModelAndView modelAndView = controladorInicio.verInicio();
-
-        //verificacion
-        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("No hay salas existentes."));
-    }
-
-    @Test
     public void dadoQueExisteUnaListaDeSalasCuandoPidoQueMuestreUnaSalaPrincipianteEstaTieneUnaDuracionDe10Minutos() {
-        //preparacion
-        Sala sala1 = new Sala();
-        sala1.setId(1);
-        sala1.setDuracion(10);
+        // preparación
+        Sala sala1 = new Sala(1, "Sala 1", Dificultad.PRINCIPIANTE, "", "", true, 10, "");
 
         when(servicioSala.obtenerSalaPorId(1)).thenReturn(sala1);
 
-        //ejecucion
+        // ejecución
         ModelAndView modelAndView = controladorInicio.verSala(sala1.getId());
 
         Sala salaObtenida = (Sala) modelAndView.getModel().get("SalaObtenida");
 
-        //verificacion
+        // verificación
         assertThat(salaObtenida.getDuracion(), equalTo(10));
         verify(servicioSala).obtenerSalaPorId(1);
-
     }
 
     @Test
     public void deberiaDevolverLasSalasPrincipiantesCuandoLasFiltroPorDificultad(){
-
-        Sala sala1 = new  Sala(1, "SALA 1", Dificultad.PRINCIPIANTE, "", "", null, null, null);
-        Sala sala2 = new  Sala(2, "SALA 2", Dificultad.INTERMEDIO, "", "", null, null, null);
-        Sala sala3 = new  Sala(3, "SALA 3", Dificultad.PRINCIPIANTE, "", "", null, null, null);
-        Sala sala4 = new  Sala(4, "SALA 4", Dificultad.AVANZADO, "", "", null, null, null);
+        Sala sala1 = new Sala(1, "SALA 1", Dificultad.PRINCIPIANTE, "", "", null, null, null);
+        Sala sala2 = new Sala(2, "SALA 2", Dificultad.INTERMEDIO, "", "", null, null, null);
+        Sala sala3 = new Sala(3, "SALA 3", Dificultad.PRINCIPIANTE, "", "", null, null, null);
+        Sala sala4 = new Sala(4, "SALA 4", Dificultad.AVANZADO, "", "", null, null, null);
 
         List<Sala> salas = new ArrayList<>();
         salas.add(sala1);
         salas.add(sala3);
 
-
         when(servicioSala.obtenerSalaPorDificultad(Dificultad.PRINCIPIANTE)).thenReturn(salas);
-        List<Sala> salasObtenidas =  servicioSala.obtenerSalaPorDificultad(Dificultad.PRINCIPIANTE);
+
+        List<Sala> salasObtenidas = servicioSala.obtenerSalaPorDificultad(Dificultad.PRINCIPIANTE);
 
         verify(servicioSala).obtenerSalaPorDificultad(Dificultad.PRINCIPIANTE);
         assertThat(salasObtenidas, equalTo(salas));
@@ -157,11 +162,10 @@ public class ControladorInicioTest {
 
     @Test
     public void deberiaDevolverTodasLasSalasCuandoLasFiltroPorTodasLasDificultades(){
-
-        Sala sala1 = new  Sala(1, "SALA 1", Dificultad.PRINCIPIANTE, "", "", null, null, null);
-        Sala sala2 = new  Sala(2, "SALA 2", Dificultad.INTERMEDIO, "", "", null, null, null);
-        Sala sala3 = new  Sala(3, "SALA 3", Dificultad.PRINCIPIANTE, "", "", null, null, null);
-        Sala sala4 = new  Sala(4, "SALA 4", Dificultad.AVANZADO, "", "", null, null, null);
+        Sala sala1 = new Sala(1, "SALA 1", Dificultad.PRINCIPIANTE, "", "", null, null, null);
+        Sala sala2 = new Sala(2, "SALA 2", Dificultad.INTERMEDIO, "", "", null, null, null);
+        Sala sala3 = new Sala(3, "SALA 3", Dificultad.PRINCIPIANTE, "", "", null, null, null);
+        Sala sala4 = new Sala(4, "SALA 4", Dificultad.AVANZADO, "", "", null, null, null);
 
         List<Sala> salas = new ArrayList<>();
         salas.add(sala1);
@@ -169,12 +173,11 @@ public class ControladorInicioTest {
         salas.add(sala3);
         salas.add(sala4);
 
-
         when(servicioSala.obtenerSalaPorDificultad(null)).thenReturn(salas);
-        List<Sala> salasObtenidas =  servicioSala.obtenerSalaPorDificultad(null);
+
+        List<Sala> salasObtenidas = servicioSala.obtenerSalaPorDificultad(null);
 
         verify(servicioSala).obtenerSalaPorDificultad(null);
         assertThat(salasObtenidas, equalTo(salas));
     }
-
-}*/
+}
