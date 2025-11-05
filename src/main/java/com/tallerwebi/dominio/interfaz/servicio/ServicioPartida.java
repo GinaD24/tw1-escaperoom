@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio.interfaz.servicio;
 
 import com.tallerwebi.dominio.entidad.*;
+import com.tallerwebi.presentacion.AcertijoActualDTO;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ public interface ServicioPartida {
 
     Etapa obtenerEtapaPorNumero(Integer idSala, Integer numeroEtapa);
 
-    Pista obtenerSiguientePista(Long idAcertijo, Long id_usuario);
+    void registrarUsoDePista(Long idUsuario);
 
-    Boolean validarRespuesta(Long idAcertijo , String respuesta, Long idUsuario);
+    Boolean validarRespuesta(AcertijoActualDTO acertijoActual, String respuestaUsuario, Long idUsuario);
 
     Acertijo buscarAcertijoPorId(Long idAcertijo);
 

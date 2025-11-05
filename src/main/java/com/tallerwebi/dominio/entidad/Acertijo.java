@@ -1,3 +1,4 @@
+
 package com.tallerwebi.dominio.entidad;
 
 import com.tallerwebi.dominio.enums.TipoAcertijo;
@@ -31,6 +32,12 @@ public class Acertijo {
 
     @OneToMany(mappedBy = "acertijo", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DragDropItem> dragDropItems = new HashSet<>();
+
+    @OneToOne(mappedBy = "acertijo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Respuesta respuesta;
+
+    @OneToMany(mappedBy = "acertijo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Pista> pistas = new HashSet<>();
 
     public Acertijo( String descripcion) {
         this.descripcion = descripcion;
@@ -80,5 +87,21 @@ public class Acertijo {
 
     public void setDragDropItems(Set<DragDropItem> dragDropItems) {
         this.dragDropItems = dragDropItems;
+    }
+
+    public Respuesta getRespuesta() {
+        return respuesta;
+    }
+
+    public void setRespuesta(Respuesta respuesta) {
+        this.respuesta = respuesta;
+    }
+
+    public Set<Pista> getPistas() {
+        return pistas;
+    }
+
+    public void setPistas(Set<Pista> pistas) {
+        this.pistas = pistas;
     }
 }

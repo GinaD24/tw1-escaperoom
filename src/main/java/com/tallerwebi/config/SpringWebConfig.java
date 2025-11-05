@@ -5,6 +5,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -16,6 +19,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 @EnableWebMvc
 @Configuration
 @ComponentScan({"com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura"})
+@PropertySource("classpath:config.properties")
 public class SpringWebConfig implements WebMvcConfigurer {
 
     // Spring + Thymeleaf need this
@@ -73,6 +77,20 @@ public class SpringWebConfig implements WebMvcConfigurer {
         return viewResolver;
     }
 
+    @Bean
+    public RestTemplate restTemplate() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
 
+        factory.setConnectTimeout(10000);
+
+        factory.setReadTimeout(120000);
+
+        return new RestTemplate(factory);
+    }
+
+    @Bean
+    public  org.springframework.context.support.PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+        return new org.springframework.context.support.PropertySourcesPlaceholderConfigurer();
+    }
 
 }

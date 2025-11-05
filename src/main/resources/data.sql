@@ -1,3 +1,4 @@
+
 INSERT INTO Usuario( email, password, rol) VALUES( 'test@unlam.edu.ar', 'test', 'ADMIN');
 
 INSERT INTO Usuario (email,nombre,apellido,password,fechaNacimiento,nombreUsuario,fotoPerfil)
@@ -90,23 +91,23 @@ INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Todos los contened
 
 --13 aacertijos
 -- PISTAS Y RESPUESTAS PARA ACERTIJOS 1-3 (Etapa 1)
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Busca tu propio reflejo en la sala.', 1, 1);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Busca tu propio reflejo en la sala.', 1, 1);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('ESPEJO', TRUE, 1);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('El tiempo es la clave. Escucha su constante pasar en el vestíbulo.', 1, 2);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('El tiempo es la clave. Escucha su constante pasar en el vestíbulo.', 1, 2);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('RELOJ', TRUE, 2);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('No puedes tocarme, pero siempre estoy contigo cuando hay una fuente de luz.', 1, 3);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('No puedes tocarme, pero siempre estoy contigo cuando hay una fuente de luz.', 1, 3);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('SOMBRA', TRUE, 3);
 
 -- PISTAS Y RESPUESTAS PARA ACERTIJOS 10-12 (Etapa 4)
-    INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Se esconde en el cajón más pequeño del escritorio, esperando abrir algo importante.', 1, 6);
+ --    INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Se esconde en el cajón más pequeño del escritorio, esperando abrir algo importante.', 1, 6);
     INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LLAVE', TRUE, 6);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los detalles más pequeños son a menudo los más importantes.', 1, 7); -- Pista nueva
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los detalles más pequeños son a menudo los más importantes.', 1, 7); -- Pista nueva
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LUPA', TRUE, 7); -- Respuesta nueva
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Incluso en la quietud de esta habitación, siempre busca el norte.', 1, 8);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Incluso en la quietud de esta habitación, siempre busca el norte.', 1, 8);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('BRUJULA', TRUE, 8);
 
 
@@ -165,7 +166,7 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
 INSERT INTO Acertijo ( tipo, descripcion, id_etapa) VALUES
 ( 'ADIVINANZA', 'Paso siempre adelante pero nunca me muevo de mi sitio. Soy crucial para todo experimento, pero no me puedes guardar en un frasco. ¿Qué soy?', 11);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los relojes y los calendarios son mis sirvientes.', 1, 15);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los relojes y los calendarios son mis sirvientes.', 1, 15);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('TIEMPO', TRUE, 15);
 
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
@@ -218,7 +219,7 @@ INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
 -- ACERTIJO ETAPA 1: La Celda (id_etapa = 14) - ADIVINANZA
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
 (18, 'ADIVINANZA', 'Te retengo sin tocarte, te observo sin tener ojos y aunque soy fuerte, un pequeño objeto es mi amo. ¿Qué soy?', 14);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Busca en la puerta de tu celda, es lo único que te impide salir.', 1, 18);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Busca en la puerta de tu celda, es lo único que te impide salir.', 1, 18);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('CERRADURA', TRUE, 18);
 
 -- ACERTIJO ETAPA 2: Pabellón A (id_etapa = 15) - SECUENCIA
@@ -257,8 +258,8 @@ INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
 -- ACERTIJO ETAPA 5: Patio de Recreo (id_etapa = 18) - ADIVINANZA
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
     (22, 'ADIVINANZA', 'Siempre estoy cerca pero no me ves, observo cada movimiento y aunque todos me ignoran, nunca me pierdo nada. ¿Qué soy?', 18);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
-    ('Vigila sin moverse y está en todas partes en la carcel.', 1, 22);
+ -- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
+ --   ('Vigila sin moverse y está en todas partes en la carcel.', 1, 22);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
     ('CAMARA', TRUE, 22);
 
@@ -307,5 +308,5 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
 -- ACERTIJO ETAPA 10: Puerta Principal (id_etapa = 23) - ADIVINANZA
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
 (27, 'ADIVINANZA', 'Todos me anhelan aquí dentro, pero no tengo peso ni forma. No se me puede ver ni tocar, pero se siente cuando se ha ido. Para conseguirme, debes resolverlo todo. ¿Qué soy?', 23);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Es lo que has estado buscando desde que despertaste en la celda.', 1, 27);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Es lo que has estado buscando desde que despertaste en la celda.', 1, 27);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LIBERTAD', TRUE, 27);

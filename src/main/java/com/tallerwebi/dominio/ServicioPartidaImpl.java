@@ -8,8 +8,10 @@ import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPartida;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioSala;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioGeneradorIA;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
+import com.tallerwebi.presentacion.AcertijoActualDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,14 +32,17 @@ public class ServicioPartidaImpl implements ServicioPartida {
     private RepositorioPartida repositorioPartida;
     private RepositorioUsuario repositorioUsuario;
     private RepositorioSala repositorioSala;
+    private ServicioGeneradorIA servicioGeneradorIA;
 
     @Autowired
     public ServicioPartidaImpl(ServicioSala servicioSala, RepositorioPartida repositorioPartida,
-                               RepositorioUsuario repositorioUsuario, RepositorioSala repositorioSala) {
+                               RepositorioUsuario repositorioUsuario, RepositorioSala repositorioSala,
+                                ServicioGeneradorIA servicioGeneradorIA) {
         this.servicioSala = servicioSala;
         this.repositorioPartida = repositorioPartida;
         this.repositorioUsuario = repositorioUsuario;
         this.repositorioSala = repositorioSala;
+        this.servicioGeneradorIA = servicioGeneradorIA;
     }
 
     @Override
@@ -50,6 +55,19 @@ public class ServicioPartidaImpl implements ServicioPartida {
         return etapaObtenida;
     }
 
+    @Override
+    @Transactional
+    public void registrarUsoDePista(Long idUsuario) {
+        Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
+
+        if (partida != null) {
+            this.repositorioPartida.registrarPistaEnPartida(idUsuario);
+
+            partida.setPuntaje(partida.getPuntaje() - 25);
+        }
+
+    }
+ /*
     @Override
     @Transactional
     public Pista obtenerSiguientePista(Long idAcertijo, Long id_usuario) {
@@ -85,8 +103,76 @@ public class ServicioPartidaImpl implements ServicioPartida {
         }
 
         return pistaSeleccionada;
+        return null;
     }
+*/
+    @Transactional
+    @Override
+    public Boolean validarRespuesta(AcertijoActualDTO acertijoActual, String respuestaUsuario, Long idUsuario) {
+        TipoAcertijo tipo = acertijoActual.getTipo();
+        Long idAcertijo = acertijoActual.getId();
+        Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
+        boolean esCorrecta = false;
 
+        switch(tipo){
+            case ADIVINANZA:
+                String respuestaCorrecta = acertijoActual.getRespuestaCorrecta();
+
+                String[] palabrasIngresadas = respuestaUsuario.toLowerCase().split("\\s+");
+                if(Arrays.asList(palabrasIngresadas).contains(respuestaCorrecta.toLowerCase())){
+                    esCorrecta = true;
+                    partida.setPuntaje(partida.getPuntaje() + 100);
+                }
+                break;
+
+            case ORDENAR_IMAGEN:
+            case SECUENCIA:
+                if (idAcertijo == null) {
+                    return false;
+                }
+
+                List<Long> ordenSeleccionado = Arrays.stream(respuestaUsuario.split(","))
+                        .map(Long::valueOf)
+                        .collect(Collectors.toList());
+
+                List<Long> ordenCorrecto = this.repositorioPartida.obtenerOrdenDeImgCorrecto(idAcertijo);
+
+                if (ordenSeleccionado.equals(ordenCorrecto)) {
+                    esCorrecta = true;
+                    partida.setPuntaje(partida.getPuntaje() + 100);
+                }
+                break;
+
+            case DRAG_DROP:
+                if (idAcertijo == null) {
+                    return false;
+                }
+
+                Map<Long, String> respuestaDragDrop = Arrays.stream(respuestaUsuario.split(","))
+                        .map(pair -> pair.split(":"))
+                        .filter(arr -> arr.length == 2)
+                        .collect(Collectors.toMap(
+                                arr -> Long.valueOf(arr[0]),
+                                arr -> arr[1]
+                        ));
+
+                List<DragDropItem> itemsCorrectos = this.repositorioPartida.obtenerItemsDragDrop(idAcertijo);
+
+                boolean todoCorrecto = itemsCorrectos.stream()
+                        .allMatch(item ->
+                                respuestaDragDrop.containsKey(item.getId()) &&
+                                        respuestaDragDrop.get(item.getId()).equals(item.getCategoriaCorrecta())
+                        );
+                if (todoCorrecto) {
+                    esCorrecta = true;
+                    partida.setPuntaje(partida.getPuntaje() + 100);
+                }
+                break;
+        }
+
+        return esCorrecta;
+    }
+/*
     @Override
     @Transactional
     public Boolean validarRespuesta(Long idAcertijo, String respuesta, Long idUsuario) {
@@ -148,7 +234,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
         return esCorrecta;
     }
-
+*/
     @Override
     @Transactional
     public Acertijo buscarAcertijoPorId(Long idAcertijo) {
@@ -263,6 +349,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
         return acertijoSeleccionado;
     }
 
+    @Transactional
     public boolean tiempoExpirado(Partida partida) {
         Integer duracionMinutos = partida.getSala().getDuracion();
         LocalDateTime finEsperado = partida.getInicio().plusMinutes(duracionMinutos);

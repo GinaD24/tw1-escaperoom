@@ -14,7 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -85,13 +85,13 @@ public class ControladorPartida {
 
             DatosPartidaDTO dtoDatosPartida = servicioDatosPartida.obtenerDatosDePartida(idSala, numeroEtapa, idUsuario);
 
-            if(datosPartidaSesion.getIdAcertijo() != null && datosPartidaSesion.getIdEtapa().equals(dtoDatosPartida.getEtapa().getId())){
+            if(datosPartidaSesion.getAcertijoActual() != null && datosPartidaSesion.getIdEtapa().equals(dtoDatosPartida.getEtapa().getId())){
                 validarAcertijoEnSesion(dtoDatosPartida);
             }
 
             actualizarSesion(datosPartidaSesion, dtoDatosPartida);
 
-            if(dtoDatosPartida.getAcertijo().getTipo().equals(TipoAcertijo.DRAG_DROP)){
+            if(dtoDatosPartida.getAcertijo().getTipo().equals(TipoAcertijo.DRAG_DROP) && dtoDatosPartida.getAcertijo().getId() != null){
                 List<String> categorias = this.servicioPartida.obtenerCategoriasDelAcertijoDragDrop(dtoDatosPartida.getAcertijo().getId());
                 modelo.put("categorias", categorias);
             }
@@ -109,7 +109,23 @@ public class ControladorPartida {
         }
     }
 
+    @GetMapping("/pista")
+    @ResponseBody
+    public String obtenerPista(@SessionAttribute("id_usuario") Long id_usuario) {
 
+        AcertijoActualDTO acertijoActual = datosPartidaSesion.getAcertijoActual();
+
+        String pistaTexto = acertijoActual.obtenerSiguientePista();
+
+        if (pistaTexto == null) {
+            return "Ya no quedan pistas.";
+        } else {
+            this.servicioPartida.registrarUsoDePista(id_usuario);
+
+            return pistaTexto;
+        }
+    }
+    /*
     @GetMapping("/acertijo/{idAcertijo}/pista")
     @ResponseBody
     public String obtenerPista(@PathVariable Long idAcertijo, @SessionAttribute("id_usuario") Long id_usuario) {
@@ -123,8 +139,57 @@ public class ControladorPartida {
         }
         return pistaTexto;
     }
+*/
+    @PostMapping("/validar/{idSala}/{numeroEtapa}")
+    public ModelAndView validarRespuesta(@PathVariable Integer idSala, @PathVariable Integer numeroEtapa,
+                                         @RequestParam String respuesta,
+                                         @SessionAttribute("id_usuario") Long id_usuario) {
 
+        ModelMap modelo = new ModelMap();
 
+        Partida partida = servicioPartida.obtenerPartidaActivaPorIdUsuario(id_usuario);
+        if(tiempoValido(partida) == false){
+            return new ModelAndView("redirect:/partida/finalizarPartida");
+        }
+
+        AcertijoActualDTO acertijoActual = datosPartidaSesion.getAcertijoActual();
+
+        Acertijo acertijoParaLaVista = obtenerAcertijoDesdeSesion(acertijoActual);
+
+        Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
+        Etapa etapa = this.servicioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
+
+        if(acertijoParaLaVista.getTipo().equals(TipoAcertijo.DRAG_DROP) && acertijoParaLaVista.getId() != null){
+            List<String> categorias = this.servicioPartida.obtenerCategoriasDelAcertijoDragDrop(acertijoParaLaVista.getId());
+            modelo.put("categorias", categorias);
+        }
+
+        modelo.put("partida", partida);
+        modelo.put("salaElegida", sala);
+        modelo.put("etapa", etapa);
+        modelo.put("acertijo", acertijoParaLaVista);
+
+        Boolean esCorrecta = this.servicioPartida.validarRespuesta(acertijoActual, respuesta, id_usuario);
+
+        if (respuesta.isEmpty()) {
+            modelo.put("error", "Completa este campo para continuar.");
+
+        } else if (esCorrecta == false) { // <-- 6. Usamos la variable booleana
+            modelo.put("error", "Respuesta incorrecta. Intenta nuevamente.");
+
+        } else {
+            Integer cantidadDeEtapasTotales = sala.getCantidadDeEtapas();
+            if (cantidadDeEtapasTotales.equals(numeroEtapa)) {
+                datosPartidaSesion.setPartidaGanada(true);
+                return new ModelAndView("redirect:/partida/finalizarPartida");
+            }
+            datosPartidaSesion.setNumeroEtapaActual(numeroEtapa + 1);
+            return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa" + (numeroEtapa + 1));
+        }
+        return new ModelAndView("partida", modelo);
+    }
+
+/*
     @PostMapping("/validar/{idSala}/{numeroEtapa}")
     public ModelAndView validarRespuesta(@PathVariable Integer idSala, @PathVariable Integer numeroEtapa,
             @SessionAttribute("id_acertijo") Long id_acertijo, @RequestParam String respuesta, @SessionAttribute("id_usuario") Long id_usuario) {
@@ -166,7 +231,7 @@ public class ControladorPartida {
         }
         return new ModelAndView("partida", modelo);
     }
-
+*/
 
     @GetMapping("/finalizarPartida")
     public ModelAndView finalizarPartida(HttpServletRequest request) {
@@ -207,6 +272,11 @@ public class ControladorPartida {
     }
 
     private Boolean tiempoValido(Partida partida) {
+
+        if (partida == null) {
+            return false;
+        }
+
         boolean tiempoValido = true;
         if (servicioPartida.tiempoExpirado(partida)) {
             tiempoValido = false;
@@ -226,26 +296,122 @@ public class ControladorPartida {
     }
 
     private void actualizarSesion(DatosPartidaSesion datosPartidaSesion, DatosPartidaDTO dto) {
+        Etapa etapaActual = dto.getEtapa();
+        Acertijo acertijo = dto.getAcertijo();
+
+        if (acertijo == null) {
+            return;
+        }
+
         if (datosPartidaSesion.getIdEtapa() == null ||
-                !dto.getEtapa().getId().equals(datosPartidaSesion.getIdEtapa())) {
-            datosPartidaSesion.limpiarSesionIdEtapaAcertijo();
-            datosPartidaSesion.setIdEtapa(dto.getEtapa().getId());
+                !etapaActual.getId().equals(datosPartidaSesion.getIdEtapa())) {
+
+            datosPartidaSesion.limpiarAcertijoActual();
+            datosPartidaSesion.setIdEtapa(etapaActual.getId());
         }
 
-        if (datosPartidaSesion.getIdAcertijo() == null ||
-                !dto.getAcertijo().getId().equals(datosPartidaSesion.getIdAcertijo())) {
-            datosPartidaSesion.setIdAcertijo(dto.getAcertijo().getId());
+        AcertijoActualDTO acertijoActualDTO = datosPartidaSesion.getAcertijoActual();
+
+        if (acertijoActualDTO == null ||
+                (acertijo.getId() != null && !acertijo.getId().equals(acertijoActualDTO.getId())) ||
+                (acertijo.getId() == null && acertijoActualDTO.getId() != null)) {
+
+            AcertijoActualDTO acertijoNuevoDTO = new AcertijoActualDTO();
+
+            acertijoNuevoDTO.setId(acertijo.getId());
+            acertijoNuevoDTO.setDescripcion(acertijo.getDescripcion());
+            acertijoNuevoDTO.setTipo(acertijo.getTipo());
+
+            if (acertijo.getTipo() == TipoAcertijo.ADIVINANZA && acertijo.getRespuesta() != null) {
+                String respuestaCorrecta = acertijo.getRespuesta().getRespuesta();
+                acertijoNuevoDTO.setRespuestaCorrecta(respuestaCorrecta);
+            }
+
+            List<String> descPistas = acertijo.getPistas().stream()
+                    .map(Pista::getDescripcion)
+                    .collect(Collectors.toList());
+            acertijoNuevoDTO.setPistas(descPistas);
+
+            datosPartidaSesion.setAcertijoActual(acertijoNuevoDTO);
         }
-
-
     }
 
     private void validarAcertijoEnSesion(DatosPartidaDTO dtoDatosPartida) {
-        Long idAcertijoObtenido = dtoDatosPartida.getAcertijo().getId();
-        Long idAcertijoEnSesion = datosPartidaSesion.getIdAcertijo();
-        Acertijo acertijoEnSesion = servicioPartida.buscarAcertijoPorId(idAcertijoEnSesion);
-        if(!idAcertijoObtenido.equals(idAcertijoEnSesion)){
-            dtoDatosPartida.setAcertijo(acertijoEnSesion);
+        AcertijoActualDTO estadoEnSesion = datosPartidaSesion.getAcertijoActual();
+
+        if (estadoEnSesion == null) {
+            return;
         }
+
+        Acertijo acertijoFabricado = new Acertijo();
+        acertijoFabricado.setId(estadoEnSesion.getId());
+        acertijoFabricado.setTipo(estadoEnSesion.getTipo());
+        acertijoFabricado.setDescripcion(estadoEnSesion.getDescripcion());
+
+        Respuesta respuestaFabricada = new Respuesta();
+        respuestaFabricada.setRespuesta(estadoEnSesion.getRespuestaCorrecta());
+        respuestaFabricada.setEs_correcta(true);
+        respuestaFabricada.setAcertijo(acertijoFabricado);
+        acertijoFabricado.setRespuesta(respuestaFabricada);
+
+        int numeroPista = 1;
+
+        for (String descPista : estadoEnSesion.getPistas()) {
+            Pista pistaFabricada = new Pista();
+            pistaFabricada.setDescripcion(descPista);
+            pistaFabricada.setNumero(numeroPista++);
+            pistaFabricada.setAcertijo(acertijoFabricado);
+            acertijoFabricado.getPistas().add(pistaFabricada);
+        }
+
+        if (acertijoFabricado.getId() != null &&
+                (acertijoFabricado.getTipo().equals(TipoAcertijo.DRAG_DROP) ||
+                        acertijoFabricado.getTipo().equals(TipoAcertijo.ORDENAR_IMAGEN) ||
+                        acertijoFabricado.getTipo().equals(TipoAcertijo.SECUENCIA)))
+        {
+            Acertijo acertijoConItems = servicioPartida.buscarAcertijoPorId(acertijoFabricado.getId());
+            acertijoFabricado.setDragDropItems(acertijoConItems.getDragDropItems());
+            acertijoFabricado.setImagenes(acertijoConItems.getImagenes());
+        }
+
+        dtoDatosPartida.setAcertijo(acertijoFabricado);
+    }
+
+    private Acertijo obtenerAcertijoDesdeSesion(AcertijoActualDTO estadoEnSesion) {
+        if (estadoEnSesion == null) {
+            return null;
+        }
+
+        Acertijo acertijoFabricado = new Acertijo();
+        acertijoFabricado.setId(estadoEnSesion.getId());
+        acertijoFabricado.setTipo(estadoEnSesion.getTipo());
+        acertijoFabricado.setDescripcion(estadoEnSesion.getDescripcion());
+
+        Respuesta respuestaFabricada = new Respuesta();
+        respuestaFabricada.setRespuesta(estadoEnSesion.getRespuestaCorrecta());
+        respuestaFabricada.setEs_correcta(true);
+        respuestaFabricada.setAcertijo(acertijoFabricado);
+        acertijoFabricado.setRespuesta(respuestaFabricada);
+
+        int numeroPista = 1;
+        for (String descPista : estadoEnSesion.getPistas()) {
+            Pista pistaFabricada = new Pista();
+            pistaFabricada.setDescripcion(descPista);
+            pistaFabricada.setNumero(numeroPista++);
+            pistaFabricada.setAcertijo(acertijoFabricado);
+            acertijoFabricado.getPistas().add(pistaFabricada);
+        }
+
+        if (acertijoFabricado.getId() != null &&
+                (acertijoFabricado.getTipo().equals(TipoAcertijo.DRAG_DROP) ||
+                        acertijoFabricado.getTipo().equals(TipoAcertijo.ORDENAR_IMAGEN) ||
+                        acertijoFabricado.getTipo().equals(TipoAcertijo.SECUENCIA)))
+        {
+            Acertijo acertijoConItems = servicioPartida.buscarAcertijoPorId(acertijoFabricado.getId());
+            acertijoFabricado.setDragDropItems(acertijoConItems.getDragDropItems());
+            acertijoFabricado.setImagenes(acertijoConItems.getImagenes());
+        }
+
+        return acertijoFabricado;
     }
 }

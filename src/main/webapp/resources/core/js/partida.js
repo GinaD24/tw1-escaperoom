@@ -5,18 +5,33 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (btnPista) {
         btnPista.addEventListener("click", function() {
-            const idAcertijo = this.dataset.acertijo;
 
-            fetch(`/spring/partida/acertijo/${idAcertijo}/pista`)
-                .then(response => response.text())
+            // --- CORRECCIÓN ---
+            // Ya no se necesita el ID del acertijo, el controlador lo sabe por la sesión.
+            // Simplemente llamamos al nuevo endpoint.
+            fetch(`/spring/partida/pista`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al obtener la pista');
+                    }
+                    return response.text();
+                })
                 .then(text => {
                     const pistaDiv = document.getElementById("pista");
-                    pistaDiv.innerText = text;
+                    pistaDiv.innerHTML = `<p class="pista-texto">${text}</p>`; // Usamos innerHTML por si acaso
 
                     if (text.trim() !== "Ya no quedan pistas.") {
                         mostrarAnimacionPuntos();
                         actualizarPuntaje(-25);
+                    } else {
+                        // Deshabilitamos el botón si no hay más pistas
+                        btnPista.disabled = true;
                     }
+                })
+                .catch(error => {
+                     console.error('Error:', error);
+                     const pistaDiv = document.getElementById("pista");
+                     pistaDiv.innerHTML = `<p class="text-danger">No se pudo cargar la pista.</p>`;
                 });
         });
     }
@@ -44,15 +59,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnCancelar = document.getElementById("cancelarSalir");
     const btnConfirmar = document.getElementById("confirmarSalir");
 
-    btnSalir.addEventListener("click", () => {
-        modal.style.display = "flex";
-    });
+    if (btnSalir) { // Buena práctica: verificar si el botón existe
+        btnSalir.addEventListener("click", () => {
+            modal.style.display = "flex";
+        });
+    }
 
-    btnCancelar.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
+    if (btnCancelar) {
+        btnCancelar.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+    }
 
-    btnConfirmar.addEventListener("click", () => {
-        window.location.href = "/spring/partida/finalizarPartida";
-    });
+    if (btnConfirmar) {
+        btnConfirmar.addEventListener("click", () => {
+            window.location.href = "/spring/partida/finalizarPartida";
+        });
+    }
 });
