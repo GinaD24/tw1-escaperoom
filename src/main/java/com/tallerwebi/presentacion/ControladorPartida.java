@@ -87,6 +87,7 @@ public class ControladorPartida {
 
             if(dtoDatosPartida.getAcertijo().getTipo().equals(TipoAcertijo.SECUENCIA)){
                 List<ImagenAcertijo> imagenesDeSecuencia = this.servicioPartida.obtenerSecuenciaAleatoria(dtoDatosPartida.getAcertijo());
+                datosPartidaSesion.guardarSecuencia(imagenesDeSecuencia);
                 modelo.put("imagenesDeSecuencia", imagenesDeSecuencia);
             }
 
@@ -150,7 +151,7 @@ public class ControladorPartida {
         }
 
         if(acertijo.getTipo().equals(TipoAcertijo.SECUENCIA)){
-            List<ImagenAcertijo> imagenesDeSecuencia = this.servicioPartida.obtenerSecuenciaAleatoria(acertijo);
+            List<ImagenAcertijo> imagenesDeSecuencia = this.datosPartidaSesion.getSecuencia();
             modelo.put("imagenesDeSecuencia", imagenesDeSecuencia);
         }
 

@@ -1,11 +1,13 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.entidad.ImagenAcertijo;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Component
 @SessionScope
@@ -83,5 +85,13 @@ public class DatosPartidaSesion {
     public void limpiarSesionIdEtapaAcertijo() {
         session.removeAttribute("id_acertijo");
         session.removeAttribute("id_etapa");
+    }
+
+    public void guardarSecuencia(List<ImagenAcertijo> imagenesDeSecuencia) {
+        session.setAttribute("imagenesDeSecuencia", imagenesDeSecuencia);
+    }
+
+    public List<ImagenAcertijo> getSecuencia() {
+        return (List<ImagenAcertijo>) session.getAttribute("imagenesDeSecuencia");
     }
 }
