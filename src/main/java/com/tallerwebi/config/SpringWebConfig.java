@@ -109,12 +109,12 @@ public class SpringWebConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns(
-                        "/**/login",           // Excluye /spring/login, /login, etc.
-                        "/**/validar-login",   // Excluye /spring/validar-login, /validar-login, etc. (¡CLAVE!)
+                        "/**/login",
+                        "/**/validar-login",
                         "/**/irARegistro",
                         "/**/registrarme",
-                        "/**/compra/confirmacion", // Excluye el retorno de MP
-                        "/**/webhook/mercado-pago",// Excluye el Webhook
+                        "/**/compra/confirmacion",
+                        "/**/webhook/mercado-pago",
                         "/css/**",
                         "/js/**",
                         "/img/**"

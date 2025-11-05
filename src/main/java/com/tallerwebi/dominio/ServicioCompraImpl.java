@@ -63,10 +63,10 @@ public class ServicioCompraImpl implements ServicioCompra {
             List<PreferenceItemRequest> items = new ArrayList<>();
             items.add(itemRequest);
 
-            String baseUrl = "https://consortial-snippily-ettie.ngrok-free.dev";  // Mantén ngrok para backUrls
-            String notificationBaseUrl = "https://consortial-snippily-ettie.ngrok-free.dev";  // Agrega para webhook
+            String baseUrl = "https://consortial-snippily-ettie.ngrok-free.dev";
+            String notificationBaseUrl = "https://consortial-snippily-ettie.ngrok-free.dev";
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success(baseUrl + "/spring/compra/confirmacion")  // Debe ser esto, no el webhook
+                    .success(baseUrl + "/spring/compra/confirmacion")
                     .failure(baseUrl + "/spring/inicio?pago=fallido")
                     .pending(baseUrl + "/spring/inicio?pago=pendiente")
                     .build();
@@ -75,7 +75,7 @@ public class ServicioCompraImpl implements ServicioCompra {
                     .backUrls(backUrls)
                     .externalReference(nuevaCompra.getExternalReference())
                     .autoReturn("approved")
-                    .notificationUrl(notificationBaseUrl + "/spring/webhook/mercado-pago")  // Agrega para confirmar vía webhook
+                    .notificationUrl(notificationBaseUrl + "/spring/webhook/mercado-pago")
                     .build();
 
             PreferenceClient client = new PreferenceClient();
