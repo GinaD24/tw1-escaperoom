@@ -55,9 +55,9 @@ public class ServicioPartidaImpl implements ServicioPartida {
         Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
 
         if (partida != null) {
-            this.repositorioPartida.registrarPistaEnPartida(idUsuario);
-
+            partida.setPistasUsadas(partida.getPistasUsadas() + 1);
             partida.setPuntaje(partida.getPuntaje() - 25);
+            this.repositorioPartida.registrarPistaEnPartida(idUsuario);
         }
 
     }
