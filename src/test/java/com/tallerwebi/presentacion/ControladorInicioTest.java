@@ -5,6 +5,7 @@ import com.tallerwebi.dominio.entidad.SalaVista;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioLogin;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.excepcion.NoHaySalasExistentes;
@@ -28,14 +29,14 @@ public class ControladorInicioTest {
     private ControladorInicio controladorInicio;
     private ServicioSala servicioSala;
     private ServicioCompra servicioCompra;
-    private RepositorioUsuario repositorioUsuario;
+    private ServicioLogin servicioLogin;
 
     @BeforeEach
     public void init(){
         this.servicioSala = mock(ServicioSala.class);
         this.servicioCompra = mock(ServicioCompra.class);
-        this.repositorioUsuario = mock(RepositorioUsuario.class);
-        this.controladorInicio = new ControladorInicio(servicioSala, servicioCompra, repositorioUsuario);
+        this.servicioLogin = mock(ServicioLogin.class);
+        this.controladorInicio = new ControladorInicio(servicioSala, servicioCompra, servicioLogin);
     }
 
     @Test

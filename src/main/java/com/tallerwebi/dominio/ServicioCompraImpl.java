@@ -16,7 +16,6 @@ import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioCompra;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +29,6 @@ public class ServicioCompraImpl implements ServicioCompra {
 
     private RepositorioCompra repositorioCompra;
     private static final String MP_ACCESS_TOKEN = "APP_USR-6211919620729480-102619-24d439b82c041fa247a03901e9badbd0-2948865251";
-
-//    @Value("${mp.base.url:http://localhost:8080}")
-//    private String mpBaseUrl;
 
     public ServicioCompraImpl() {}
 
@@ -65,8 +61,8 @@ public class ServicioCompraImpl implements ServicioCompra {
             List<PreferenceItemRequest> items = new ArrayList<>();
             items.add(itemRequest);
 
-            String baseUrl = "https://consortial-snippily-ettie.ngrok-free.dev";
-            String notificationBaseUrl = "https://consortial-snippily-ettie.ngrok-free.dev";
+            String baseUrl = "https://historical-edythe-semiexternally.ngrok-free.dev";
+            String notificationBaseUrl = "https://historical-edythe-semiexternally.ngrok-free.dev";
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
                     .success(baseUrl + "/spring/compra/confirmacion")
                     .failure(baseUrl + "/spring/inicio?pago=fallido")

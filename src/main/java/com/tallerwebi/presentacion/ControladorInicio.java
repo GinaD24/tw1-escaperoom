@@ -3,8 +3,8 @@ package com.tallerwebi.presentacion;
 import com.tallerwebi.dominio.entidad.Sala;
 import com.tallerwebi.dominio.entidad.SalaVista;
 import com.tallerwebi.dominio.entidad.Usuario;
-import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioLogin;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 
 import com.tallerwebi.dominio.enums.Dificultad;
@@ -26,13 +26,13 @@ public class ControladorInicio {
 
     private ServicioSala servicioSala;
     private ServicioCompra servicioCompra;
-    private RepositorioUsuario repositorioUsuario;
+    private ServicioLogin servicioLogin;
 
     @Autowired
-    public ControladorInicio(ServicioSala servicioSala, ServicioCompra servicioCompra, RepositorioUsuario repositorioUsuario) {
+    public ControladorInicio(ServicioSala servicioSala, ServicioCompra servicioCompra, ServicioLogin servicioLogin) {
         this.servicioSala = servicioSala;
         this.servicioCompra = servicioCompra;
-        this.repositorioUsuario = repositorioUsuario;
+        this.servicioLogin = servicioLogin;
     }
 
     @GetMapping("/")
@@ -46,7 +46,7 @@ public class ControladorInicio {
             Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");
             Usuario usuario = null;
             if (idUsuario != null) {
-                usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+                usuario = servicioLogin.buscarUsuarioPorId(idUsuario);
             }
 
             for (Sala sala : salas) {
@@ -95,7 +95,7 @@ public class ControladorInicio {
         Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");
         Usuario usuario = null;
         if (idUsuario != null) {
-            usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+            usuario = servicioLogin.buscarUsuarioPorId(idUsuario);
         }
 
         for (Sala sala : salasFiltradas) {

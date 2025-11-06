@@ -95,10 +95,6 @@ public class ControladorPartida {
                 modelo.put("imagenesDeSecuencia", imagenesDeSecuencia);
             }
 
-            //if(datosPartidaSesion.getIdAcertijo() != null && datosPartidaSesion.getIdEtapa().equals(dtoDatosPartida.getEtapa().getId())){
-
-            //}
-
             actualizarSesion(datosPartidaSesion, dtoDatosPartida);
 
             if(dtoDatosPartida.getAcertijo().getTipo().equals(TipoAcertijo.DRAG_DROP) && dtoDatosPartida.getAcertijo().getId() != null){
@@ -284,10 +280,10 @@ public class ControladorPartida {
                 acertijoNuevoDTO.setRespuestaCorrecta(respuestaCorrecta);
             }
 
-            List<String> descPistas = acertijo.getPistas().stream()
+            List<String> descripcionPistas = acertijo.getPistas().stream()
                     .map(Pista::getDescripcion)
                     .collect(Collectors.toList());
-            acertijoNuevoDTO.setPistas(descPistas);
+            acertijoNuevoDTO.setPistas(descripcionPistas);
 
             datosPartidaSesion.setAcertijoActual(acertijoNuevoDTO);
         }

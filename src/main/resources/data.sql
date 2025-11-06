@@ -142,7 +142,6 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
                                                                          (11, 'ReactivoA.png', 'Quimicos'),
                                                                          (11, 'ReactivoB.png', 'Quimicos');
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Algunos extinguen llamas, otros las avivan.', 1, 12);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('GAS', TRUE, 12);
 
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
@@ -312,8 +311,6 @@ INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
 (27, 'ADIVINANZA', 'Todos me anhelan aquí dentro, pero no tengo peso ni forma. No se me puede ver ni tocar, pero se siente cuando se ha ido. Para conseguirme, debes resolverlo todo. ¿Qué soy?', 23);
 -- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Es lo que has estado buscando desde que despertaste en la celda.', 1, 27);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LIBERTAD', TRUE, 27);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Es lo que has estado buscando desde que despertaste en la celda.', 1, 27);
-INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LIBERTAD', TRUE, 27);
 
 
 -- ------------------------------------------------------------------
@@ -341,22 +338,19 @@ INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
 -- ACERTIJO ETAPA 2: El Fuego Muerto - ADIVINANZA
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
     ('ADIVINANZA', 'Cuando vivo, no hago ruido. Cuando muero, canto. Mi vida se cuenta en anillos, pero mi fin es dar calor. ¿Qué soy?', 25);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
-    ('Se encuentra apilado cerca de la fogata y es usado para hacer fuego.', 1, 29);
+
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
     ('MADERA', TRUE, 29);
 
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
     ('ADIVINANZA', 'Tengo costa pero no arenas, siempre estoy mojado. Guardo el reflejo de la luna y mis profundidades esconden secretos.', 25);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
-    ('Es el gran cuerpo de agua que rodea el muelle.', 1, 30);
+
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
     ('LAGO', TRUE, 30);
 
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
     ( 'ADIVINANZA', 'No tengo cuerpo ni alas, pero viajo sin cesar. Oculto el camino y el destino, y si me ves muy cerca, es porque estás perdido.', 25);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
-    ('Es una densa capa que envuelve el campamento, mencionada en la historia de la Sala.', 1, 31);
+
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
     ('NIEBLA', TRUE, 31);
 
@@ -416,7 +410,6 @@ INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
 -- ACERTIJO ETAPA 1: Dormitorio Principal
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
     ('ADIVINANZA', 'Vivo en tu cabeza, pero no soy tu cerebro. Me hago más fuerte cuando estás solo y me alimento de tus miedos. Aunque intentes gritar, soy la voz que nadie escucha. ¿Qué soy?', 29);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Es la enfermedad que trajo a todos a este hospital.', 1, 35);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LOCURA', TRUE, 35);
 
 -- ------------------------------------------------------------------
@@ -479,9 +472,6 @@ INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
     ('ADIVINANZA', 'Tengo filo sin ser herramienta, sirvo a la mano que me empuña y divido todo lo que toco. En estos muros, mi ausencia era ley y mi encuentro, un gran peligro. ¿Qué soy?', 34);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
-    ('Piensa en el utensilio más peligroso y afilado de cualquier cocina.',1 , 1);
-
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
     ('CUCHILLO', TRUE, 40);
 
@@ -502,9 +492,6 @@ INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
 
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
     ('ADIVINANZA', 'No tengo cuerpo, pero puedo ocultarte la visión. Lleno este cuarto sin ser invitado y hago que tu reflejo en el espejo se desvanezca por completo. Solo el frío me hace desaparecer. ¿Qué soy?', 36);
-
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
-    ('Piensa en el resultado de que el agua caliente se encuentre con el aire frío en este lugar.', 1, 1);
 
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
     ('VAPOR', TRUE, 42);

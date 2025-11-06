@@ -2,8 +2,8 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.entidad.Sala;
 import com.tallerwebi.dominio.entidad.Usuario;
-import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioLogin;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,13 +21,14 @@ public class ControladorCompra {
 
     private ServicioCompra servicioCompra;
     private ServicioSala servicioSala;
-    private RepositorioUsuario repositorioUsuario;
+
+    private ServicioLogin servicioLogin;
 
     @Autowired
-    public ControladorCompra(ServicioCompra servicioCompra, ServicioSala servicioSala, RepositorioUsuario repositorioUsuario) {
+    public ControladorCompra(ServicioCompra servicioCompra, ServicioSala servicioSala, ServicioLogin servicioLogin) {
         this.servicioCompra = servicioCompra;
         this.servicioSala = servicioSala;
-        this.repositorioUsuario = repositorioUsuario;
+        this.servicioLogin = servicioLogin;
     }
 
     @PostMapping("/iniciar/{idSala}")
@@ -36,7 +37,7 @@ public class ControladorCompra {
         if (idUsuario == null) {
             return new ModelAndView("redirect:/login");
         }
-        Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+        Usuario usuario = servicioLogin.buscarUsuarioPorId(idUsuario);
         Sala sala = servicioSala.obtenerSalaPorId(idSala);
 
         if (servicioCompra.salaDesbloqueadaParaUsuario(usuario, sala)) {

@@ -2,8 +2,8 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.entidad.Sala;
 import com.tallerwebi.dominio.entidad.Usuario;
-import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioLogin;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ public class ControladorCompraTest {
     private ServicioSala servicioSala;
 
     @Mock
-    private RepositorioUsuario repositorioUsuario;
+    private ServicioLogin servicioLogin;
 
     @Mock
     private HttpServletRequest request;
@@ -79,7 +79,7 @@ public class ControladorCompraTest {
     @Test
     public void iniciarCompra_DeberiaRedirigirASalaSiYaEstaDesbloqueada() {
         // preparación
-        when(repositorioUsuario.obtenerUsuarioPorId(ID_USUARIO)).thenReturn(usuarioMock);
+        when(servicioLogin.buscarUsuarioPorId(ID_USUARIO)).thenReturn(usuarioMock);
         when(servicioSala.obtenerSalaPorId(ID_SALA)).thenReturn(salaMock);
         when(servicioCompra.salaDesbloqueadaParaUsuario(usuarioMock, salaMock)).thenReturn(true);
 
@@ -95,7 +95,7 @@ public class ControladorCompraTest {
     public void iniciarCompra_DeberiaRedirigirAMercadoPagoSiCompraEsExitosa() {
         // preparación
         String initPointEsperado = "https://checkout.mercadopago.com/redireccion";
-        when(repositorioUsuario.obtenerUsuarioPorId(ID_USUARIO)).thenReturn(usuarioMock);
+        when(servicioLogin.buscarUsuarioPorId(ID_USUARIO)).thenReturn(usuarioMock);
         when(servicioSala.obtenerSalaPorId(ID_SALA)).thenReturn(salaMock);
         when(servicioCompra.salaDesbloqueadaParaUsuario(usuarioMock, salaMock)).thenReturn(false);
         when(servicioCompra.iniciarCompra(usuarioMock, salaMock)).thenReturn(initPointEsperado);

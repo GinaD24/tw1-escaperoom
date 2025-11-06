@@ -21,7 +21,6 @@ import java.util.List;
 // Importación añadida
 import java.util.stream.Collectors;
 
-
 @Service
 public class ServicioDatosPartidaImpl implements ServicioDatosPartida {
 

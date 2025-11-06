@@ -6,9 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (btnPista) {
         btnPista.addEventListener("click", function() {
 
-            // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
-            // 1. Usamos backticks (`) para que sea un string válido.
-            // 2. Usamos la URL correcta del controlador (sin el ID).
+
             fetch(`/spring/partida/pista`)
                 .then(response => {
                     if (!response.ok) {
@@ -18,13 +16,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 })
                 .then(text => {
                     const pistaDiv = document.getElementById("pista");
-                    pistaDiv.innerHTML = `<p class="pista-texto">${text}</p>`; // Usar innerHTML
+                    pistaDiv.innerHTML = `<p class="pista-texto">${text}</p>`;
 
                     if (text.trim() !== "Ya no quedan pistas.") {
                         mostrarAnimacionPuntos();
                         actualizarPuntaje(-25);
                     } else {
-                        // Deshabilitamos el botón si no hay más pistas
+
                         btnPista.disabled = true;
                     }
                 })
@@ -37,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function mostrarAnimacionPuntos() {
-        if (!animacionPuntos) return; // Chequeo de seguridad
+        if (!animacionPuntos) return;
         animacionPuntos.textContent = "-25";
         animacionPuntos.classList.add("mostrar");
 
@@ -47,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function actualizarPuntaje(valor) {
-        if (!valorPuntaje) return; // Chequeo de seguridad
+        if (!valorPuntaje) return;
         let puntajeActual = parseInt(valorPuntaje.textContent);
         let nuevoPuntaje = Math.max(0, puntajeActual + valor);
         valorPuntaje.textContent = nuevoPuntaje;
@@ -56,8 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Este código (el del botón Salir) estaba bien,
-    // pero no se ejecutaba por el error de sintaxis de arriba.
+
     const btnSalir = document.getElementById("btnSalir");
     const modal = document.getElementById("modalSalir");
     const btnCancelar = document.getElementById("cancelarSalir");
