@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -32,7 +33,7 @@ public class ControladorPartidaTest {
     @BeforeEach
     public void init() {
         this.servicioSala = mock(ServicioSala.class);
-        this.servicioPartida = mock(ServicioPartidaImpl.class);
+        this.servicioPartida = mock(ServicioPartida.class);
         this.servicioDatosPartida = mock(ServicioDatosPartida.class);
         this.datosPartidaSesion = mock(DatosPartidaSesion.class);
         this.controladorPartida = new ControladorPartida(servicioSala, servicioPartida,servicioDatosPartida, datosPartidaSesion);
@@ -51,17 +52,22 @@ public class ControladorPartidaTest {
         Long idUsuario = 1L;
         mockUsuarioSesion(requestMock, sessionMock, idUsuario);
 
+        when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), 1)).thenReturn(new Etapa());
+
         controladorPartida.iniciarPartida(sala.getId(), partida, requestMock);
 
+        verify(servicioPartida).obtenerEtapaPorNumero(sala.getId(), 1);
         verify(servicioPartida).guardarPartida(partida, idUsuario, sala.getId());
     }
 
     @Test
     public void deberiaMostrarLaVistaDeLaPartida() {
+
         Sala sala = crearSalaTest();
         Etapa etapa = crearEtapaTest();
         Acertijo acertijo = crearAcertijoTest();
         acertijo.setTipo(TipoAcertijo.ADIVINANZA);
+        acertijo.setRespuesta(new Respuesta("mockRespuesta"));
 
         Long idUsuario = 1L;
         mockUsuarioSesion(requestMock, sessionMock, idUsuario);
@@ -80,9 +86,8 @@ public class ControladorPartidaTest {
 
         verify(servicioDatosPartida).obtenerDatosDePartida(sala.getId(), etapa.getNumero(), idUsuario);
         verify(datosPartidaSesion).setIdEtapa(etapa.getId());
-        verify(datosPartidaSesion).setIdAcertijo(acertijo.getId());
+        verify(datosPartidaSesion).setAcertijoActual(any(AcertijoActualDTO.class));
     }
-
 
 
 
@@ -93,14 +98,16 @@ public class ControladorPartidaTest {
         Etapa etapa = crearEtapaTest();
         Acertijo acertijo = crearAcertijoTest();
         acertijo.setTipo(TipoAcertijo.ADIVINANZA);
+        acertijo.setRespuesta(new Respuesta("mockRespuesta"));
 
         Long idUsuario = 1L;
+
         mockUsuarioSesion(requestMock, sessionMock, idUsuario);
+
+        mockDatosPartidaSesion(datosPartidaSesion, sala.getId(), etapa.getNumero(), null, null);
 
         DatosPartidaDTO dto = new DatosPartidaDTO(sala, etapa, acertijo);
         when(servicioDatosPartida.obtenerDatosDePartida(sala.getId(), etapa.getNumero(), idUsuario)).thenReturn(dto);
-
-        mockDatosPartidaSesion(datosPartidaSesion, sala.getId(), etapa.getNumero(), null, null);
 
         ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario);
 
@@ -108,7 +115,7 @@ public class ControladorPartidaTest {
 
         verify(servicioDatosPartida).obtenerDatosDePartida(sala.getId(), etapa.getNumero(), idUsuario);
         verify(datosPartidaSesion).setIdEtapa(etapa.getId());
-        verify(datosPartidaSesion).setIdAcertijo(acertijo.getId());
+        verify(datosPartidaSesion).setAcertijoActual(any(AcertijoActualDTO.class));
     }
 
     @Test
@@ -119,45 +126,64 @@ public class ControladorPartidaTest {
         Acertijo acertijo = crearAcertijoTest();
         acertijo.setTipo(TipoAcertijo.ADIVINANZA);
 
+        acertijo.setRespuesta(new Respuesta("mockRespuesta"));
+
         Long idUsuario = 1L;
+
         mockUsuarioSesion(requestMock, sessionMock, idUsuario);
+
+        // Pasamos 'null' para acertijoDTO para simular que no hay acertijo previo
+        // en la sesión, forzando la ejecución de 'actualizarSesion'.
+        mockDatosPartidaSesion(datosPartidaSesion, sala.getId(), etapa.getNumero(), null, null);
 
         DatosPartidaDTO dto = new DatosPartidaDTO(sala, etapa, acertijo);
         when(servicioDatosPartida.obtenerDatosDePartida(sala.getId(), etapa.getNumero(), idUsuario)).thenReturn(dto);
 
-        mockDatosPartidaSesion(datosPartidaSesion, sala.getId(), etapa.getNumero(), null, null);
-
         ModelAndView modelAndView = controladorPartida.mostrarPartida(sala.getId(), etapa.getNumero(), idUsuario);
 
         assertThat(modelAndView.getModel().get("acertijo"), equalTo(acertijo));
+
         verify(servicioDatosPartida).obtenerDatosDePartida(sala.getId(), etapa.getNumero(), idUsuario);
         verify(datosPartidaSesion).setIdEtapa(etapa.getId());
-        verify(datosPartidaSesion).setIdAcertijo(acertijo.getId());
+        verify(datosPartidaSesion).setAcertijoActual(any(AcertijoActualDTO.class));
     }
 
     @Test
     public void deberiaPoderPedirUnaPistaDelAcertijo() {
-        Acertijo acertijo = crearAcertijoTest();
-        Pista pista = new Pista("pista", 1);
         Long idUsuario = 1L;
-        when(servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario)).thenReturn(pista);
+        String textoPista = "Esta es la primera pista";
 
-        String pistaObtenida = controladorPartida.obtenerPista(acertijo.getId(), idUsuario);
+        AcertijoActualDTO acertijoDTO = new AcertijoActualDTO();
+        acertijoDTO.getPistas().add(textoPista);
+        acertijoDTO.setPistasUsadas(0);
 
-        assertThat(pistaObtenida, equalTo(pista.getDescripcion()));
-        verify(servicioPartida).obtenerSiguientePista(acertijo.getId(),idUsuario );
+        when(datosPartidaSesion.getAcertijoActual()).thenReturn(acertijoDTO);
+
+        String pistaObtenida = controladorPartida.obtenerPista(idUsuario);
+
+        assertThat(pistaObtenida, equalTo(textoPista));
+
+        verify(servicioPartida).registrarUsoDePista(idUsuario);
+        verify(datosPartidaSesion).getAcertijoActual();
+        assertThat(acertijoDTO.getPistasUsadas(), equalTo(1));
     }
 
     @Test
     public void deberiaDevolverUnMensajeYaNoQuedanPistas_CuandoElUsuarioAgotoLasPistas() {
-        Acertijo acertijo = crearAcertijoTest();
         Long idUsuario = 1L;
-        when(servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario)).thenReturn(null);
 
-        String pistaObtenida = controladorPartida.obtenerPista(acertijo.getId(), idUsuario);
+        AcertijoActualDTO acertijoDTO = new AcertijoActualDTO();
+        acertijoDTO.getPistas().add("pista 1");
+        acertijoDTO.setPistasUsadas(1);
+
+        when(datosPartidaSesion.getAcertijoActual()).thenReturn(acertijoDTO);
+
+        String pistaObtenida = controladorPartida.obtenerPista(idUsuario);
 
         assertThat(pistaObtenida, equalTo("Ya no quedan pistas."));
-        verify(servicioPartida).obtenerSiguientePista(acertijo.getId(),idUsuario);
+
+        verify(datosPartidaSesion).getAcertijoActual();
+        verify(servicioPartida, times(0)).registrarUsoDePista(idUsuario);
     }
 
     @Test
@@ -166,47 +192,75 @@ public class ControladorPartidaTest {
         Sala sala = crearSalaTest();
         sala.setCantidadDeEtapas(5);
         Etapa etapa = crearEtapaTest();
-        Acertijo acertijo = crearAcertijoTest();
-        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
-        Respuesta respuesta = new Respuesta("Respuesta");
         Long idUsuario = 1L;
+        String respuestaCorrecta = "Respuesta";
 
-        mockDatosPartidaSesion(datosPartidaSesion, sala.getId(), etapa.getNumero(), null, acertijo.getId());
+        AcertijoActualDTO acertijoDTO = new AcertijoActualDTO();
+        acertijoDTO.setId(1L);
+        acertijoDTO.setTipo(TipoAcertijo.ADIVINANZA);
+        acertijoDTO.setRespuestaCorrecta(respuestaCorrecta);
 
-       when(servicioSala.obtenerSalaPorId(sala.getId())).thenReturn(sala);
-       when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
-       when(servicioPartida.buscarAcertijoPorId(datosPartidaSesion.getIdAcertijo())).thenReturn(acertijo);
+        when(datosPartidaSesion.getAcertijoActual()).thenReturn(acertijoDTO);
 
-       when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta(), idUsuario, null)).thenReturn(true);
+        Partida partidaMock = new Partida(LocalDateTime.now());
+        when(servicioPartida.obtenerPartidaActivaPorIdUsuario(idUsuario)).thenReturn(partidaMock);
+        when(servicioPartida.tiempoExpirado(partidaMock)).thenReturn(false);
 
-       ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), idUsuario, null);
+        when(servicioPartida.validarRespuesta(acertijoDTO, respuestaCorrecta, idUsuario, null)).thenReturn(true);
 
-       assertThat(modelAndView.getViewName(), equalTo("redirect:/partida/sala" + sala.getId() + "/etapa" + (etapa.getNumero() + 1)));
-       verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta(),idUsuario, null);
-       verify(servicioSala).obtenerSalaPorId(sala.getId());
-       verify(servicioPartida).obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
-       verify(servicioPartida).buscarAcertijoPorId(datosPartidaSesion.getIdAcertijo());
+        when(servicioSala.obtenerSalaPorId(sala.getId())).thenReturn(sala);
+        when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
+
+        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(), respuestaCorrecta, idUsuario, null);
+
+        assertThat(modelAndView.getViewName(), equalTo("redirect:/partida/sala" + sala.getId() + "/etapa" + (etapa.getNumero() + 1)));
+
+        verify(datosPartidaSesion).getAcertijoActual();
+        verify(servicioPartida).validarRespuesta(acertijoDTO, respuestaCorrecta, idUsuario, null);
+        verify(datosPartidaSesion).setNumeroEtapaActual(etapa.getNumero() + 1);
+
+        verify(servicioSala).obtenerSalaPorId(sala.getId());
+        verify(servicioPartida).obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
+
+        // Verificamos que NO se llamó a buscarAcertijoPorId (porque es ADIVINANZA)
+        verify(servicioPartida, times(0)).buscarAcertijoPorId(any());
     }
 
     @Test
     public void deberiaMostrarUnMensajeSiNoSeRespondioCorrectamenteElAcertijo() {
 
         Sala sala = crearSalaTest();
-        sala.setCantidadDeEtapas(5);
         Etapa etapa = crearEtapaTest();
-        Acertijo acertijo = crearAcertijoTest();
-        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
-        Respuesta respuesta = new Respuesta("Respuesta");
         Long idUsuario = 1L;
+        String respuestaIncorrecta = "Respuesta Incorrecta";
 
-        mockDatosPartidaSesion(datosPartidaSesion, sala.getId(), etapa.getNumero(), null, acertijo.getId());
-        when(servicioPartida.buscarAcertijoPorId(datosPartidaSesion.getIdAcertijo())).thenReturn(acertijo);
+        AcertijoActualDTO acertijoDTO = new AcertijoActualDTO();
+        acertijoDTO.setId(1L);
+        acertijoDTO.setTipo(TipoAcertijo.ADIVINANZA);
+        acertijoDTO.setRespuestaCorrecta("Respuesta Correcta");
+        acertijoDTO.setPistas(Arrays.asList("pista 1", "pista 2"));
 
-        when(servicioPartida.validarRespuesta(acertijo.getId(),respuesta.getRespuesta(),idUsuario, null )).thenReturn(false);
-        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(),acertijo.getId(),respuesta.getRespuesta(), idUsuario, null );
 
+        when(datosPartidaSesion.getAcertijoActual()).thenReturn(acertijoDTO);
+
+        Partida partidaMock = new Partida(LocalDateTime.now());
+        when(servicioPartida.obtenerPartidaActivaPorIdUsuario(idUsuario)).thenReturn(partidaMock);
+        when(servicioPartida.tiempoExpirado(partidaMock)).thenReturn(false);
+
+        when(servicioPartida.validarRespuesta(acertijoDTO, respuestaIncorrecta, idUsuario, null)).thenReturn(false);
+
+        when(servicioSala.obtenerSalaPorId(sala.getId())).thenReturn(sala);
+        when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
+
+        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(), respuestaIncorrecta, idUsuario, null);
+
+        assertThat(modelAndView.getViewName(), equalTo("partida"));
         assertThat(modelAndView.getModel().get("error"), equalTo("Respuesta incorrecta. Intenta nuevamente."));
-        verify(servicioPartida).validarRespuesta(acertijo.getId(),respuesta.getRespuesta(), idUsuario, null);
+
+        verify(servicioPartida).validarRespuesta(acertijoDTO, respuestaIncorrecta, idUsuario, null);
+        verify(servicioSala).obtenerSalaPorId(sala.getId());
+        verify(servicioPartida).obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
+        verify(datosPartidaSesion, times(0)).setNumeroEtapaActual(anyInt());
     }
 
     @Test
@@ -260,11 +314,11 @@ public class ControladorPartidaTest {
         when(sessionMock.getAttribute("id_usuario")).thenReturn(idUsuario);
     }
 
-    private void mockDatosPartidaSesion(DatosPartidaSesion datosPartidaSesion, Integer idSala, Integer numeroEtapa, Long idEtapa, Long idAcertijo) {
+    private void mockDatosPartidaSesion(DatosPartidaSesion datosPartidaSesion, Integer idSala, Integer numeroEtapa, Long idEtapa, AcertijoActualDTO acertijoDTO) {
         when(datosPartidaSesion.getIdSalaActual()).thenReturn(idSala);
         when(datosPartidaSesion.getNumeroEtapaActual()).thenReturn(numeroEtapa);
         when(datosPartidaSesion.getIdEtapa()).thenReturn(idEtapa);
-        when(datosPartidaSesion.getIdAcertijo()).thenReturn(idAcertijo);
+        when(datosPartidaSesion.getAcertijoActual()).thenReturn(acertijoDTO);
     }
 
 

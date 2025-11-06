@@ -1,7 +1,8 @@
 package com.tallerwebi.dominio.interfaz.servicio;
 
 import com.tallerwebi.dominio.entidad.*;
-import org.springframework.lang.Nullable;
+import com.tallerwebi.presentacion.AcertijoActualDTO;
+import org.eclipse.sisu.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -14,9 +15,9 @@ public interface ServicioPartida {
 
     Etapa obtenerEtapaPorNumero(Integer idSala, Integer numeroEtapa);
 
-    Pista obtenerSiguientePista(Long idAcertijo, Long id_usuario);
+    void registrarUsoDePista(Long idUsuario);
 
-    Boolean validarRespuesta(Long idAcertijo , String respuesta, Long idUsuario,  @Nullable String ordenSecuenciaCorrecto);
+    Boolean validarRespuesta(AcertijoActualDTO acertijoActual, String respuestaUsuario, Long idUsuario,  @Nullable String ordenSecuenciaCorrecto);
 
     Acertijo buscarAcertijoPorId(Long idAcertijo);
 

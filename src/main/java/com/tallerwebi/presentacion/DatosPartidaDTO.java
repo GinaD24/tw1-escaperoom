@@ -11,25 +11,24 @@ public class DatosPartidaDTO {
     private Acertijo acertijo;
 
     public DatosPartidaDTO(Sala sala, Etapa etapa, Acertijo acertijo) {
-            this.sala = sala;
-            this.etapa = etapa;
-            this.acertijo = acertijo;
-        }
+        this.sala = sala;
+        this.etapa = etapa;
+        this.acertijo = acertijo;
+    }
 
-        public Sala getSala() {
-            return sala;
-        }
+    public Sala getSala() {
+        return sala;
+    }
 
-        public Etapa getEtapa() {
-            return etapa;
-        }
+    public Etapa getEtapa() {
+        return etapa;
+    }
 
-        public Acertijo getAcertijo() {
-            return acertijo;
-        }
+    public Acertijo getAcertijo() {
+        return acertijo;
+    }
 
     public void setAcertijo(Acertijo acertijo) {
         this.acertijo = acertijo;
     }
 }
-
