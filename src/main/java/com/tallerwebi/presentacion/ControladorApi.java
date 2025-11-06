@@ -32,7 +32,7 @@ public class ControladorApi {
     public ControladorApi(ServicioSala servicioSala) {
         this.servicioSala = servicioSala;
     }
-
+    // Es una forma de comprobar rápidamente que la configuración de Mercado Pago (el access_token) funciona y se puede generar una URL de pago.
     @GetMapping("/mercado")
     public Map<String, String> mercado() throws MPException, MPApiException {
         MercadoPagoConfig.setAccessToken("APP_USR-6211919620729480-102619-24d439b82c041fa247a03901e9badbd0-2948865251");
@@ -62,7 +62,7 @@ public class ControladorApi {
         return response;
     }
 
-    @GetMapping("/mercado/preferencia/{idSala}")
+    @GetMapping("/mercado/preferencia/{idSala}") //Generar una URL de pago para una prueba rápida o integración simple.
     public Map<String, String> crearPreferenciaParaSala(@PathVariable Integer idSala) {
         try {
             MercadoPagoConfig.setAccessToken("APP_USR-6211919620729480-102619-24d439b82c041fa247a03901e9badbd0-2948865251");

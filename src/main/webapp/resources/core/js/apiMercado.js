@@ -19,7 +19,7 @@ checkoutButtons.forEach(button => {
             button.disabled = false;
 
             button.addEventListener('click', function() {
-                window.location.href = initPoint;
+                window.location.href = initPoint; //pasareal de pago
             });
         })
         .catch(error => {

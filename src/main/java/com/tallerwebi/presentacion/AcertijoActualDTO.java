@@ -75,5 +75,5 @@ public class AcertijoActualDTO implements Serializable {
             return pista;
         }
         return null;
-    }
+    } //
 }

@@ -17,7 +17,7 @@ import java.io.IOException;
 public class ServicioEditarPerfilImpl implements ServicioEditarPerfil {
 
     private final RepositorioUsuario repositorioUsuario;
-    private static final String UPLOAD_DIR = "C:/uploads/imagenes_perfil/";
+    private static final String UPLOAD_DIR = "C:/uploads/imagenes_perfil/"; //se crea carpeta
 
     @Autowired
     public ServicioEditarPerfilImpl(RepositorioUsuario repositorioUsuario) {

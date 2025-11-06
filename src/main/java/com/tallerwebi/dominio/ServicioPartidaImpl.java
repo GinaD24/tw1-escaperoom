@@ -332,7 +332,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
     @Override
     public List<ImagenAcertijo> obtenerSecuenciaAleatoria(Acertijo acertijo) {
         List<ImagenAcertijo> imagenesAcertijo = new ArrayList<>(acertijo.getImagenes());
-        Collections.shuffle(imagenesAcertijo);
+        Collections.shuffle(imagenesAcertijo); //lo hace de forma aleatoria
         return imagenesAcertijo;
     }
 
@@ -375,7 +375,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
             Random random = new Random();
             do {
                 acertijoSeleccionado = listaDeAcertijosObtenida.get(random.nextInt(listaDeAcertijosObtenida.size()));
-            } while (acertijosVistos != null && acertijosVistos.contains(acertijoSeleccionado));
+            } while (acertijosVistos != null && acertijosVistos.contains(acertijoSeleccionado)); //trae los acertijos random
 
 
             Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(id_usuario);

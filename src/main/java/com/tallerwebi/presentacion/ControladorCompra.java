@@ -32,14 +32,14 @@ public class ControladorCompra {
 
     @PostMapping("/iniciar/{idSala}")
     public ModelAndView iniciarCompra(@PathVariable Integer idSala, HttpServletRequest request) {
-        Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");
+        Long idUsuario = (Long) request.getSession().getAttribute("id_usuario"); //verificaciony ssion del usuraio
         if (idUsuario == null) {
             return new ModelAndView("redirect:/login");
         }
         Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
         Sala sala = servicioSala.obtenerSalaPorId(idSala);
 
-        if (servicioCompra.salaDesbloqueadaParaUsuario(usuario, sala)) {
+        if (servicioCompra.salaDesbloqueadaParaUsuario(usuario, sala)) { //comreuba sie l ususario compro la sala
             return new ModelAndView("redirect:/inicio/sala/" + idSala);
         }
 
@@ -52,7 +52,7 @@ public class ControladorCompra {
     public ModelAndView confirmarPago(
             @RequestParam(name = "payment_id", required = false) String paymentId,
             @RequestParam(name = "status", required = false) String status,
-            @RequestParam(name = "external_reference", required = false) String externalReference,
+            @RequestParam(name = "external_reference", required = false) String externalReference, //id objeto compra
             RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
         ModelMap modelo = new ModelMap();

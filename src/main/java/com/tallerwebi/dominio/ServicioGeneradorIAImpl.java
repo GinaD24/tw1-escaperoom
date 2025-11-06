@@ -24,8 +24,8 @@ import java.util.Map;
 @Service
 public class ServicioGeneradorIAImpl implements ServicioGeneradorIA {
 
-    private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
+    private final RestTemplate restTemplate; //lamadas http
+    private final ObjectMapper objectMapper; //manjear jsson
     private final String apiKey;
     private final String apiUrl;
 
@@ -51,7 +51,7 @@ public class ServicioGeneradorIAImpl implements ServicioGeneradorIA {
                 descripcionAcertijo, respuestaCorrecta
         );
 
-        HttpHeaders headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders(); //json
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(this.apiKey);
 
@@ -74,7 +74,7 @@ public class ServicioGeneradorIAImpl implements ServicioGeneradorIA {
             JsonNode root = objectMapper.readTree(rawResponse);
             String content = root.path("choices").get(0).path("message").path("content").asText();
 
-            String json = extractJsonFromText(content);
+            String json = extractJsonFromText(content); // solo trae el json
             if (json.isEmpty()) {
                 throw new RuntimeException("La IA no devolvió un JSON válido: " + rawResponse);
             }
@@ -111,5 +111,5 @@ public class ServicioGeneradorIAImpl implements ServicioGeneradorIA {
             return text.substring(start, end + 1);
         }
         return "";
-    }
+    }//
 }
