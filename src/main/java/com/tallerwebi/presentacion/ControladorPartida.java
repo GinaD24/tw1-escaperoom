@@ -337,26 +337,26 @@ public class ControladorPartida {
     }
 
     private void validarAcertijoEnSesion(DatosPartidaDTO dtoDatosPartida) {
-        AcertijoActualDTO estadoEnSesion = datosPartidaSesion.getAcertijoActual();
+        AcertijoActualDTO acertijoActual = datosPartidaSesion.getAcertijoActual();
 
-        if (estadoEnSesion == null) {
+        if (acertijoActual == null) {
             return;
         }
 
         Acertijo acertijoFabricado = new Acertijo();
-        acertijoFabricado.setId(estadoEnSesion.getId());
-        acertijoFabricado.setTipo(estadoEnSesion.getTipo());
-        acertijoFabricado.setDescripcion(estadoEnSesion.getDescripcion());
+        acertijoFabricado.setId(acertijoActual.getId());
+        acertijoFabricado.setTipo(acertijoActual.getTipo());
+        acertijoFabricado.setDescripcion(acertijoActual.getDescripcion());
 
         Respuesta respuestaFabricada = new Respuesta();
-        respuestaFabricada.setRespuesta(estadoEnSesion.getRespuestaCorrecta());
+        respuestaFabricada.setRespuesta(acertijoActual.getRespuestaCorrecta());
         respuestaFabricada.setEs_correcta(true);
         respuestaFabricada.setAcertijo(acertijoFabricado);
         acertijoFabricado.setRespuesta(respuestaFabricada);
 
         int numeroPista = 1;
 
-        for (String descPista : estadoEnSesion.getPistas()) {
+        for (String descPista : acertijoActual.getPistas()) {
             Pista pistaFabricada = new Pista();
             pistaFabricada.setDescripcion(descPista);
             pistaFabricada.setNumero(numeroPista++);
@@ -377,24 +377,24 @@ public class ControladorPartida {
         dtoDatosPartida.setAcertijo(acertijoFabricado);
     }
 
-    private Acertijo obtenerAcertijoDesdeSesion(AcertijoActualDTO estadoEnSesion) {
-        if (estadoEnSesion == null) {
+    private Acertijo obtenerAcertijoDesdeSesion(AcertijoActualDTO acertijoActual) {
+        if (acertijoActual == null) {
             return null;
         }
 
         Acertijo acertijoFabricado = new Acertijo();
-        acertijoFabricado.setId(estadoEnSesion.getId());
-        acertijoFabricado.setTipo(estadoEnSesion.getTipo());
-        acertijoFabricado.setDescripcion(estadoEnSesion.getDescripcion());
+        acertijoFabricado.setId(acertijoActual.getId());
+        acertijoFabricado.setTipo(acertijoActual.getTipo());
+        acertijoFabricado.setDescripcion(acertijoActual.getDescripcion());
 
         Respuesta respuestaFabricada = new Respuesta();
-        respuestaFabricada.setRespuesta(estadoEnSesion.getRespuestaCorrecta());
+        respuestaFabricada.setRespuesta(acertijoActual.getRespuestaCorrecta());
         respuestaFabricada.setEs_correcta(true);
         respuestaFabricada.setAcertijo(acertijoFabricado);
         acertijoFabricado.setRespuesta(respuestaFabricada);
 
         int numeroPista = 1;
-        for (String descPista : estadoEnSesion.getPistas()) {
+        for (String descPista : acertijoActual.getPistas()) {
             Pista pistaFabricada = new Pista();
             pistaFabricada.setDescripcion(descPista);
             pistaFabricada.setNumero(numeroPista++);

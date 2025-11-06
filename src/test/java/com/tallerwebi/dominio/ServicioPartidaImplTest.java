@@ -1,4 +1,3 @@
-/*
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.*;
@@ -10,11 +9,13 @@ import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPartida;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioSala;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioGeneradorIA;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import com.tallerwebi.infraestructura.RepositorioPartidaImpl;
 import com.tallerwebi.infraestructura.RepositorioSalaImpl;
 import com.tallerwebi.infraestructura.RepositorioUsuarioImpl;
+import com.tallerwebi.presentacion.AcertijoActualDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,14 +39,15 @@ public class ServicioPartidaImplTest {
     private ServicioSala servicioSala;
     private RepositorioUsuario repositorioUsuario;
     private RepositorioSala repositorioSala;
+    private ServicioGeneradorIA servicioGeneradorIA;
 
     @BeforeEach
     public void init() {
         this.repositorioPartida = mock(RepositorioPartidaImpl.class);
         this.repositorioUsuario = mock(RepositorioUsuarioImpl.class);
         this.repositorioSala = mock(RepositorioSalaImpl.class);
-        this.servicioPartida = new ServicioPartidaImpl(servicioSala,repositorioPartida, repositorioUsuario, repositorioSala );
-
+        this.servicioGeneradorIA = mock(ServicioGeneradorIA.class);
+        this.servicioPartida = new ServicioPartidaImpl(servicioSala,repositorioPartida, repositorioUsuario, repositorioSala, servicioGeneradorIA );
     }
 
     @Test
@@ -127,56 +129,63 @@ public class ServicioPartidaImplTest {
 
     @Test
     public void deberiaDevolverElAcertijoDeLaEtapaEnLaPartida(){
-        Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
+        Etapa etapa = new Etapa("Lobby", 1, "...", "a.png");
         etapa.setId(1L);
-        Acertijo acertijo1 = new Acertijo( "lalalal");
-        Acertijo acertijo2 = new Acertijo( "lelele");
-        Acertijo acertijo3 = new Acertijo( "lilili");
-
+        Acertijo acertijo1 = new Acertijo("lalalal");
         List<Acertijo> listaDeAcertijos = new ArrayList<>();
-
         listaDeAcertijos.add(acertijo1);
-        listaDeAcertijos.add(acertijo2);
-        listaDeAcertijos.add(acertijo3);
+        Long idUsuario = 1L;
+        Usuario usuarioMock = new Usuario();
 
         when(repositorioPartida.obtenerListaDeAcertijos(etapa.getId())).thenReturn(listaDeAcertijos);
-        Long idUsuario = 1L;
-        Acertijo acertijoElegido = this.servicioPartida.obtenerAcertijo(etapa.getId(),idUsuario );
+        when(repositorioUsuario.obtenerUsuarioPorId(idUsuario)).thenReturn(usuarioMock);
+        when(repositorioPartida.buscarEtapaPorId(etapa.getId())).thenReturn(etapa);
 
-        assertTrue(acertijoElegido.equals(acertijo1) || acertijoElegido.equals(acertijo2) || acertijoElegido.equals(acertijo3));
+        Acertijo acertijoElegido = this.servicioPartida.obtenerAcertijo(etapa.getId(), idUsuario);
+
+        assertNotNull(acertijoElegido);
         verify(repositorioPartida).obtenerListaDeAcertijos(etapa.getId());
+        verify(repositorioPartida).registrarAcertijoMostrado(any(AcertijoUsuario.class));
     }
 
     @Test
     public void deberiaDevolverUnAcertijo_QueElUsuarioNoHayaVisto(){
+
         Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
         etapa.setId(1L);
-        Acertijo acertijo1 = new Acertijo( "lalalal");
-        Acertijo acertijo2 = new Acertijo( "lelele");
-        Acertijo acertijo3 = new Acertijo( "lilili");
+        Acertijo acertijoVisto = new Acertijo( "lalalal");
+        Acertijo acertijoNoVisto1 = new Acertijo( "lelele");
+        Acertijo acertijoNoVisto2 = new Acertijo( "lilili");
 
         List<Acertijo> listaDeAcertijos = new ArrayList<>();
-        listaDeAcertijos.add(acertijo1);
-        listaDeAcertijos.add(acertijo2);
-        listaDeAcertijos.add(acertijo3);
+        listaDeAcertijos.add(acertijoVisto);
+        listaDeAcertijos.add(acertijoNoVisto1);
+        listaDeAcertijos.add(acertijoNoVisto2);
 
         List<Acertijo> listaDeAcertijosVISTOS = new ArrayList<>();
-        listaDeAcertijosVISTOS.add(acertijo1);
+        listaDeAcertijosVISTOS.add(acertijoVisto);
 
         Long idUsuario = 1L;
+        Usuario usuarioMock = new Usuario();
 
         when(repositorioPartida.obtenerListaDeAcertijos(etapa.getId())).thenReturn(listaDeAcertijos);
         when(repositorioPartida.obtenerAcertijosVistosPorUsuarioPorEtapa(idUsuario, etapa.getId())).thenReturn(listaDeAcertijosVISTOS);
 
-        Acertijo acertijoElegido = this.servicioPartida.obtenerAcertijo(etapa.getId(),idUsuario );
+        when(repositorioUsuario.obtenerUsuarioPorId(idUsuario)).thenReturn(usuarioMock);
+        when(repositorioPartida.buscarEtapaPorId(etapa.getId())).thenReturn(etapa);
 
-        assertTrue(acertijoElegido.equals(acertijo2) || acertijoElegido.equals(acertijo3));
-        assertNotEquals(acertijoElegido, acertijo1);
+        Acertijo acertijoElegido = this.servicioPartida.obtenerAcertijo(etapa.getId(), idUsuario);
 
-        verify(repositorioPartida).obtenerAcertijosVistosPorUsuarioPorEtapa(idUsuario, etapa.getId());
+        assertNotEquals(acertijoVisto, acertijoElegido);
+        assertTrue(acertijoElegido.equals(acertijoNoVisto1) || acertijoElegido.equals(acertijoNoVisto2));
+
         verify(repositorioPartida).obtenerListaDeAcertijos(etapa.getId());
+        verify(repositorioPartida).obtenerAcertijosVistosPorUsuarioPorEtapa(idUsuario, etapa.getId());
+        verify(repositorioUsuario).obtenerUsuarioPorId(idUsuario);
+        verify(repositorioPartida).buscarEtapaPorId(etapa.getId());
+        verify(repositorioPartida).registrarAcertijoMostrado(any(AcertijoUsuario.class));
     }
-
+    /*
     @Test
     public void deberiaDevolverLaPrimeraPistaDelAcertijo(){
         Long idUsuario = 1L;
@@ -203,7 +212,7 @@ public class ServicioPartidaImplTest {
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertThat(pista, equalTo(listaDePistas.get(0)));
     }
-
+     - - - - - - - - - - -  - - - - - - - - - - -  - - - - - - - - -  - - - - - -  - - - - -
     @Test
     public void deberiaDevolverLaSegundaPistaDelAcertijo_UnaVezQueYaPidioLaPrimera(){
         Acertijo acertijo = new Acertijo( "lalalal");
@@ -236,71 +245,58 @@ public class ServicioPartidaImplTest {
         verify(repositorioPartida, times(2)).obtenerPartidaActivaPorUsuario(idUsuario);
         assertThat(pista, equalTo(listaDePistas.get(1)));
     }
-
+    */
     @Test
     public void deberiaDevolverTrueSiSeRespondioCorrectamenteElAcertijo_DeTipoADIVINANZA(){
+        AcertijoActualDTO acertijoDTO =  new AcertijoActualDTO();
+        acertijoDTO.setTipo(TipoAcertijo.ADIVINANZA);
+        acertijoDTO.setRespuestaCorrecta("Respuesta");
 
-        Acertijo acertijo = new Acertijo( "lalalal");
-        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
-        Respuesta respuestaCorrecta = new Respuesta("Respuesta");
         Respuesta respuestaIngresada = new Respuesta("Respuesta");
         Long idUsuario = 1L;
 
-        when(repositorioPartida.obtenerRespuestaCorrecta(acertijo.getId())).thenReturn(respuestaCorrecta);
-        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
 
         Partida partida = new Partida(LocalDateTime.now());
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuestaIngresada.getRespuesta(), idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO,respuestaIngresada.getRespuesta(), idUsuario);
 
-        verify(repositorioPartida).obtenerRespuestaCorrecta(acertijo.getId());
-        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
-        verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertTrue(validacionDeRespuesta);
     }
 
     @Test
     public void deberiaDevolverTrue_SiLaRespuestaDelAcertijoADIVINANZA_CONTIENELaRespuestaCorrecta(){
-        Acertijo acertijo = new Acertijo( "lalalal");
-        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
+        AcertijoActualDTO acertijoDTO =  new AcertijoActualDTO();
+        acertijoDTO.setTipo(TipoAcertijo.ADIVINANZA);
+        acertijoDTO.setRespuestaCorrecta("Respuesta");
+
         Long idUsuario = 1L;
-
-        Respuesta respuestaCorrecta = new Respuesta("Respuesta");
         Respuesta respuestaIngresada = new Respuesta("LA Respuesta INGRESADA");
-
-        when(repositorioPartida.obtenerRespuestaCorrecta(acertijo.getId())).thenReturn(respuestaCorrecta);
-        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
 
         Partida partida = new Partida(LocalDateTime.now());
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuestaIngresada.getRespuesta(), idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO,respuestaIngresada.getRespuesta(), idUsuario);
 
-        verify(repositorioPartida).obtenerRespuestaCorrecta(acertijo.getId());
-        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertTrue(validacionDeRespuesta);
     }
 
     @Test
     public void deberiaDevolverFalsoSiNOSeRespondioCorrectamenteElAcertijo_DeTipoADIVINANZA(){
-        Acertijo acertijo = new Acertijo( "lalalal");
-        acertijo.setTipo(TipoAcertijo.ADIVINANZA);
-        Respuesta respuestaCorrecta = new Respuesta("Respuesta");
+        AcertijoActualDTO acertijoDTO =  new AcertijoActualDTO();
+        acertijoDTO.setId(1L);
+        acertijoDTO.setTipo(TipoAcertijo.ADIVINANZA);
+        acertijoDTO.setRespuestaCorrecta("Respuesta");
+
         Respuesta respuestaIngresada = new Respuesta("akhsdgauysduiaRespuestahbsduykhagsdygasdyi");
         Long idUsuario = 1L;
-
-        when(repositorioPartida.obtenerRespuestaCorrecta(acertijo.getId())).thenReturn(respuestaCorrecta);
-        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
 
         Partida partida = new Partida(LocalDateTime.now());
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(),respuestaIngresada.getRespuesta(), idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO,respuestaIngresada.getRespuesta(), idUsuario);
 
-        verify(repositorioPartida).obtenerRespuestaCorrecta(acertijo.getId());
-        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertFalse(validacionDeRespuesta);
     }
@@ -308,8 +304,9 @@ public class ServicioPartidaImplTest {
     @Test
     public void deberiaDevolverTrueSiORDENOCorrectamenteElAcertijo_DeTipoORDENAR_IMAGEN_ODelTipoSECUENCIA(){
         Partida partida = new Partida(LocalDateTime.now());
-        Acertijo acertijo = new Acertijo( "lalalal");
-        acertijo.setTipo(TipoAcertijo.ORDENAR_IMAGEN);
+        AcertijoActualDTO acertijoDTO =  new AcertijoActualDTO();
+        acertijoDTO.setId(1L);
+        acertijoDTO.setTipo(TipoAcertijo.ORDENAR_IMAGEN);
 
         List<Long> ordenCorrecto = new ArrayList<>();
         ordenCorrecto.add(1L);
@@ -320,14 +317,12 @@ public class ServicioPartidaImplTest {
 
         String ordenIngresado = "1,2,3";
 
-        when(repositorioPartida.obtenerOrdenDeImgCorrecto(acertijo.getId())).thenReturn(ordenCorrecto);
-        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+        when(repositorioPartida.obtenerOrdenDeImgCorrecto(acertijoDTO.getId())).thenReturn(ordenCorrecto);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(), ordenIngresado, idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario);
 
-        verify(repositorioPartida).obtenerOrdenDeImgCorrecto(acertijo.getId());
-        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+        verify(repositorioPartida).obtenerOrdenDeImgCorrecto(acertijoDTO.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertTrue(validacionDeRespuesta);
     }
@@ -335,8 +330,9 @@ public class ServicioPartidaImplTest {
     @Test
     public void deberiaDevolverFalseSi_NoORDENOCorrectamenteElAcertijo_DeTipoORDENAR_IMAGEN_ODelTipoSECUENCIA(){
         Partida partida = new Partida(LocalDateTime.now());
-        Acertijo acertijo = new Acertijo( "lalalal");
-        acertijo.setTipo(TipoAcertijo.ORDENAR_IMAGEN);
+        AcertijoActualDTO acertijoDTO =  new AcertijoActualDTO();
+        acertijoDTO.setId(1L);
+        acertijoDTO.setTipo(TipoAcertijo.ORDENAR_IMAGEN);
 
         List<Long> ordenCorrecto = new ArrayList<>();
         ordenCorrecto.add(1L);
@@ -347,14 +343,12 @@ public class ServicioPartidaImplTest {
 
         String ordenIngresado = "2,1,3";
 
-        when(repositorioPartida.obtenerOrdenDeImgCorrecto(acertijo.getId())).thenReturn(ordenCorrecto);
-        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+        when(repositorioPartida.obtenerOrdenDeImgCorrecto(acertijoDTO.getId())).thenReturn(ordenCorrecto);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(), ordenIngresado, idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario);
 
-        verify(repositorioPartida).obtenerOrdenDeImgCorrecto(acertijo.getId());
-        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+        verify(repositorioPartida).obtenerOrdenDeImgCorrecto(acertijoDTO.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertFalse(validacionDeRespuesta);
     }
@@ -362,8 +356,9 @@ public class ServicioPartidaImplTest {
     @Test
     public void deberiaDevolverTrueSiResolvioCorrectamenteElAcertijo_DeTipoDRAG_DROP(){
         Partida partida = new Partida(LocalDateTime.now());
-        Acertijo acertijo = new Acertijo( "lalalal");
-        acertijo.setTipo(TipoAcertijo.DRAG_DROP);
+        AcertijoActualDTO acertijoDTO =  new AcertijoActualDTO();
+        acertijoDTO.setId(1L);
+        acertijoDTO.setTipo(TipoAcertijo.DRAG_DROP);
 
         DragDropItem item1 = new DragDropItem();
         item1.setCategoriaCorrecta("cat1");
@@ -380,22 +375,21 @@ public class ServicioPartidaImplTest {
 
         String ordenIngresado = "1:cat1,2:cat2";
 
-        when(repositorioPartida.obtenerItemsDragDrop(acertijo.getId())).thenReturn(items);
-        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+        when(repositorioPartida.obtenerItemsDragDrop(acertijoDTO.getId())).thenReturn(items);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(), ordenIngresado, idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario);
 
-        verify(repositorioPartida).obtenerItemsDragDrop(acertijo.getId());
-        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+        verify(repositorioPartida).obtenerItemsDragDrop(acertijoDTO.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertTrue(validacionDeRespuesta);
     }
     @Test
     public void deberiaDevolverFalseSiNOResolvioCorrectamenteElAcertijo_DeTipoDRAG_DROP(){
         Partida partida = new Partida(LocalDateTime.now());
-        Acertijo acertijo = new Acertijo( "lalalal");
-        acertijo.setTipo(TipoAcertijo.DRAG_DROP);
+        AcertijoActualDTO acertijoDTO =  new AcertijoActualDTO();
+        acertijoDTO.setId(1L);
+        acertijoDTO.setTipo(TipoAcertijo.DRAG_DROP);
 
         DragDropItem item1 = new DragDropItem();
         item1.setCategoriaCorrecta("cat1");
@@ -412,14 +406,12 @@ public class ServicioPartidaImplTest {
 
         String ordenIngresado = "1:cat2,2:cat1";
 
-        when(repositorioPartida.obtenerItemsDragDrop(acertijo.getId())).thenReturn(items);
-        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+        when(repositorioPartida.obtenerItemsDragDrop(acertijoDTO.getId())).thenReturn(items);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(), ordenIngresado, idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario);
 
-        verify(repositorioPartida).obtenerItemsDragDrop(acertijo.getId());
-        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+        verify(repositorioPartida).obtenerItemsDragDrop(acertijoDTO.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertFalse(validacionDeRespuesta);
     }
@@ -524,4 +516,3 @@ public class ServicioPartidaImplTest {
 
 
 }
-*/
