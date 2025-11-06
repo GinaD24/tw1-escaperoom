@@ -2,6 +2,7 @@ package com.tallerwebi.dominio.interfaz.servicio;
 
 import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.presentacion.AcertijoActualDTO;
+import org.eclipse.sisu.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -16,8 +17,7 @@ public interface ServicioPartida {
 
     void registrarUsoDePista(Long idUsuario);
 
-    Boolean validarRespuesta(AcertijoActualDTO acertijoActual, String respuestaUsuario, Long idUsuario);
-    Boolean validarRespuesta(Long idAcertijo , String respuesta, Long idUsuario,  @Nullable String ordenSecuenciaCorrecto);
+    Boolean validarRespuesta(AcertijoActualDTO acertijoActual, String respuestaUsuario, Long idUsuario,  @Nullable String ordenSecuenciaCorrecto);
 
     Acertijo buscarAcertijoPorId(Long idAcertijo);
 

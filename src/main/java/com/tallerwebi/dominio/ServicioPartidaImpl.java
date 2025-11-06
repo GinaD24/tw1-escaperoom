@@ -12,8 +12,8 @@ import com.tallerwebi.dominio.interfaz.servicio.ServicioGeneradorIA;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import com.tallerwebi.presentacion.AcertijoActualDTO;
+import org.eclipse.sisu.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -106,7 +106,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
 */
     @Transactional
     @Override
-    public Boolean validarRespuesta(AcertijoActualDTO acertijoActual, String respuestaUsuario, Long idUsuario) {
+    public Boolean validarRespuesta(AcertijoActualDTO acertijoActual, String respuestaUsuario, Long idUsuario, @Nullable String ordenSecuenciaCorrecto) {
         TipoAcertijo tipo = acertijoActual.getTipo();
         Long idAcertijo = acertijoActual.getId();
         Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
@@ -124,7 +124,6 @@ public class ServicioPartidaImpl implements ServicioPartida {
                 break;
 
             case ORDENAR_IMAGEN:
-            case SECUENCIA:
                 if (idAcertijo == null) {
                     return false;
                 }
@@ -136,6 +135,24 @@ public class ServicioPartidaImpl implements ServicioPartida {
                 List<Long> ordenCorrecto = this.repositorioPartida.obtenerOrdenDeImgCorrecto(idAcertijo);
 
                 if (ordenSeleccionado.equals(ordenCorrecto)) {
+                    esCorrecta = true;
+                    partida.setPuntaje(partida.getPuntaje() + 100);
+                }
+                break;
+            case SECUENCIA:
+                if (ordenSecuenciaCorrecto == null) {
+                    throw new IllegalArgumentException("Se requiere el orden correcto para acertijo SECUENCIA");
+                }
+
+                List<Long> ordenSeleccionadoSecuencia = Arrays.stream(respuestaUsuario.split(","))
+                        .map(Long::valueOf)
+                        .collect(Collectors.toList());
+
+                List<Long> ordenCorrectoList = Arrays.stream(ordenSecuenciaCorrecto.split(","))
+                        .map(Long::valueOf)
+                        .collect(Collectors.toList());
+
+                if (ordenSeleccionadoSecuencia.equals(ordenCorrectoList)) {
                     esCorrecta = true;
                     partida.setPuntaje(partida.getPuntaje() + 100);
                 }

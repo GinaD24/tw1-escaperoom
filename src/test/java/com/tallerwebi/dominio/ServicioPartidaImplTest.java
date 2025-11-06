@@ -259,7 +259,7 @@ public class ServicioPartidaImplTest {
         Partida partida = new Partida(LocalDateTime.now());
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO,respuestaIngresada.getRespuesta(), idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO,respuestaIngresada.getRespuesta(), idUsuario, null);
 
         assertTrue(validacionDeRespuesta);
     }
@@ -276,7 +276,7 @@ public class ServicioPartidaImplTest {
         Partida partida = new Partida(LocalDateTime.now());
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO,respuestaIngresada.getRespuesta(), idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO,respuestaIngresada.getRespuesta(), idUsuario, null);
 
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertTrue(validacionDeRespuesta);
@@ -295,7 +295,7 @@ public class ServicioPartidaImplTest {
         Partida partida = new Partida(LocalDateTime.now());
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO,respuestaIngresada.getRespuesta(), idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO,respuestaIngresada.getRespuesta(), idUsuario, null);
 
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertFalse(validacionDeRespuesta);
@@ -320,7 +320,7 @@ public class ServicioPartidaImplTest {
         when(repositorioPartida.obtenerOrdenDeImgCorrecto(acertijoDTO.getId())).thenReturn(ordenCorrecto);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario, null);
 
         verify(repositorioPartida).obtenerOrdenDeImgCorrecto(acertijoDTO.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
@@ -346,7 +346,7 @@ public class ServicioPartidaImplTest {
         when(repositorioPartida.obtenerOrdenDeImgCorrecto(acertijoDTO.getId())).thenReturn(ordenCorrecto);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario, null);
 
         verify(repositorioPartida).obtenerOrdenDeImgCorrecto(acertijoDTO.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
@@ -378,7 +378,7 @@ public class ServicioPartidaImplTest {
         when(repositorioPartida.obtenerItemsDragDrop(acertijoDTO.getId())).thenReturn(items);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario, null);
 
         verify(repositorioPartida).obtenerItemsDragDrop(acertijoDTO.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
@@ -409,7 +409,7 @@ public class ServicioPartidaImplTest {
         when(repositorioPartida.obtenerItemsDragDrop(acertijoDTO.getId())).thenReturn(items);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario, null);
 
         verify(repositorioPartida).obtenerItemsDragDrop(acertijoDTO.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
@@ -419,8 +419,9 @@ public class ServicioPartidaImplTest {
     @Test
     public void deberiaDevolverTrueSiCompletoCorrectamenteElAcertijo_DeTipoSECUENCIA(){
         Partida partida = new Partida(LocalDateTime.now());
-        Acertijo acertijo = new Acertijo( "lalalal");
-        acertijo.setTipo(TipoAcertijo.SECUENCIA);
+        AcertijoActualDTO acertijoDTO =  new AcertijoActualDTO();
+        acertijoDTO.setId(1L);
+        acertijoDTO.setTipo(TipoAcertijo.SECUENCIA);
 
         String ordenCorrecto = "1,2,3";
 
@@ -428,12 +429,10 @@ public class ServicioPartidaImplTest {
 
         String ordenIngresado = "1,2,3";
 
-        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(), ordenIngresado, idUsuario, ordenCorrecto);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario, ordenCorrecto);
 
-        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertTrue(validacionDeRespuesta);
     }
@@ -441,8 +440,9 @@ public class ServicioPartidaImplTest {
     @Test
     public void deberiaDevolverFalseSiCompletoIncorrectamenteElAcertijo_DeTipoSECUENCIA(){
         Partida partida = new Partida(LocalDateTime.now());
-        Acertijo acertijo = new Acertijo( "lalalal");
-        acertijo.setTipo(TipoAcertijo.SECUENCIA);
+        AcertijoActualDTO acertijoDTO =  new AcertijoActualDTO();
+        acertijoDTO.setId(1L);
+        acertijoDTO.setTipo(TipoAcertijo.SECUENCIA);
 
         String ordenCorrecto = "2,3,1";
 
@@ -450,12 +450,10 @@ public class ServicioPartidaImplTest {
 
         String ordenIngresado = "1,2,3";
 
-        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(), ordenIngresado, idUsuario, ordenCorrecto);
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario, ordenCorrecto);
 
-        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
         assertFalse(validacionDeRespuesta);
     }

@@ -1,5 +1,14 @@
 package com.tallerwebi.integracion.config;
 
+import org.springframework.context.annotation.FilterType;
+import com.tallerwebi.dominio.ServicioGeneradorIAImpl;
+
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioGeneradorIA;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +24,15 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan({"com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura"})
+@PropertySource("classpath:config.properties") // <-- 1. Añadido para cargar propiedades
+@ComponentScan(
+        basePackages = {"com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura"},
+        // 2. Añadido para excluir el bean real que falla
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {ServicioGeneradorIAImpl.class}
+        )
+)
 public class SpringWebTestConfig implements WebMvcConfigurer {
 
     // Spring + Thymeleaf need this
@@ -27,6 +44,28 @@ public class SpringWebTestConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/css/**").addResourceLocations("/resources/core/css/");
         registry.addResourceHandler("/js/**").addResourceLocations("/resources/core/js/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
+    }
+
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        long maxUploadSize = 5 * 1024 * 1024;
+        multipartResolver.setMaxUploadSize(maxUploadSize);
+        multipartResolver.setMaxInMemorySize(1048576); // 1MB
+        return multipartResolver;
+    }
+
+    @Bean
+    // 3. Ya no se necesita @Primary, porque el original fue excluido
+    public ServicioGeneradorIA servicioGeneradorIAMock() {
+        // Creamos un mock (una simulación) de la interfaz del servicio
+        return Mockito.mock(ServicioGeneradorIA.class);
+    }
+
+    // 4. Añadido para que Spring pueda resolver @Value y ${}
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+        return new PropertySourcesPlaceholderConfigurer();
     }
 
     // https://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html

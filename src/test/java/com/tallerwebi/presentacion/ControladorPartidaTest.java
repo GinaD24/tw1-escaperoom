@@ -206,17 +206,17 @@ public class ControladorPartidaTest {
         when(servicioPartida.obtenerPartidaActivaPorIdUsuario(idUsuario)).thenReturn(partidaMock);
         when(servicioPartida.tiempoExpirado(partidaMock)).thenReturn(false);
 
-        when(servicioPartida.validarRespuesta(acertijoDTO, respuestaCorrecta, idUsuario)).thenReturn(true);
+        when(servicioPartida.validarRespuesta(acertijoDTO, respuestaCorrecta, idUsuario, null)).thenReturn(true);
 
         when(servicioSala.obtenerSalaPorId(sala.getId())).thenReturn(sala);
         when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
 
-        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(), respuestaCorrecta, idUsuario);
+        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(), respuestaCorrecta, idUsuario, null);
 
         assertThat(modelAndView.getViewName(), equalTo("redirect:/partida/sala" + sala.getId() + "/etapa" + (etapa.getNumero() + 1)));
 
         verify(datosPartidaSesion).getAcertijoActual();
-        verify(servicioPartida).validarRespuesta(acertijoDTO, respuestaCorrecta, idUsuario);
+        verify(servicioPartida).validarRespuesta(acertijoDTO, respuestaCorrecta, idUsuario, null);
         verify(datosPartidaSesion).setNumeroEtapaActual(etapa.getNumero() + 1);
 
         verify(servicioSala).obtenerSalaPorId(sala.getId());
@@ -247,17 +247,17 @@ public class ControladorPartidaTest {
         when(servicioPartida.obtenerPartidaActivaPorIdUsuario(idUsuario)).thenReturn(partidaMock);
         when(servicioPartida.tiempoExpirado(partidaMock)).thenReturn(false);
 
-        when(servicioPartida.validarRespuesta(acertijoDTO, respuestaIncorrecta, idUsuario)).thenReturn(false);
+        when(servicioPartida.validarRespuesta(acertijoDTO, respuestaIncorrecta, idUsuario, null)).thenReturn(false);
 
         when(servicioSala.obtenerSalaPorId(sala.getId())).thenReturn(sala);
         when(servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
 
-        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(), respuestaIncorrecta, idUsuario);
+        ModelAndView modelAndView = controladorPartida.validarRespuesta(sala.getId(), etapa.getNumero(), respuestaIncorrecta, idUsuario, null);
 
         assertThat(modelAndView.getViewName(), equalTo("partida"));
         assertThat(modelAndView.getModel().get("error"), equalTo("Respuesta incorrecta. Intenta nuevamente."));
 
-        verify(servicioPartida).validarRespuesta(acertijoDTO, respuestaIncorrecta, idUsuario);
+        verify(servicioPartida).validarRespuesta(acertijoDTO, respuestaIncorrecta, idUsuario, null);
         verify(servicioSala).obtenerSalaPorId(sala.getId());
         verify(servicioPartida).obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
         verify(datosPartidaSesion, times(0)).setNumeroEtapaActual(anyInt());

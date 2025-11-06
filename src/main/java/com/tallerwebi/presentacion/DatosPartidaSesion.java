@@ -88,6 +88,7 @@ public class DatosPartidaSesion {
 
     public void limpiarAcertijoActual() {
         session.removeAttribute("acertijo_actual");
+    }
     public void guardarSecuencia(List<ImagenAcertijo> imagenesDeSecuencia) {
         session.setAttribute("imagenesDeSecuencia", imagenesDeSecuencia);
     }

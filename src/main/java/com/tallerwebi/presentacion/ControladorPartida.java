@@ -85,16 +85,19 @@ public class ControladorPartida {
 
             DatosPartidaDTO dtoDatosPartida = servicioDatosPartida.obtenerDatosDePartida(idSala, numeroEtapa, idUsuario);
 
-            if(datosPartidaSesion.getAcertijoActual() != null && datosPartidaSesion.getIdEtapa().equals(dtoDatosPartida.getEtapa().getId())){
+            if(datosPartidaSesion.getAcertijoActual() != null && datosPartidaSesion.getIdEtapa().equals(dtoDatosPartida.getEtapa().getId())) {
+                validarAcertijoEnSesion(dtoDatosPartida);
+            }
+
             if(dtoDatosPartida.getAcertijo().getTipo().equals(TipoAcertijo.SECUENCIA)){
                 List<ImagenAcertijo> imagenesDeSecuencia = this.servicioPartida.obtenerSecuenciaAleatoria(dtoDatosPartida.getAcertijo());
                 datosPartidaSesion.guardarSecuencia(imagenesDeSecuencia);
                 modelo.put("imagenesDeSecuencia", imagenesDeSecuencia);
             }
 
-            if(datosPartidaSesion.getIdAcertijo() != null && datosPartidaSesion.getIdEtapa().equals(dtoDatosPartida.getEtapa().getId())){
-                validarAcertijoEnSesion(dtoDatosPartida);
-            }
+            //if(datosPartidaSesion.getIdAcertijo() != null && datosPartidaSesion.getIdEtapa().equals(dtoDatosPartida.getEtapa().getId())){
+
+            //}
 
             actualizarSesion(datosPartidaSesion, dtoDatosPartida);
 
@@ -132,25 +135,12 @@ public class ControladorPartida {
             return pistaTexto;
         }
     }
-    /*
-    @GetMapping("/acertijo/{idAcertijo}/pista")
-    @ResponseBody
-    public String obtenerPista(@PathVariable Long idAcertijo, @SessionAttribute("id_usuario") Long id_usuario) {
-        Pista pista = this.servicioPartida.obtenerSiguientePista(idAcertijo, id_usuario);
-        String pistaTexto = "";
 
-        if(pista == null){
-            pistaTexto = "Ya no quedan pistas.";
-        }else{
-           pistaTexto = pista.getDescripcion();
-        }
-        return pistaTexto;
-    }
-*/
     @PostMapping("/validar/{idSala}/{numeroEtapa}")
     public ModelAndView validarRespuesta(@PathVariable Integer idSala, @PathVariable Integer numeroEtapa,
                                          @RequestParam String respuesta,
-                                         @SessionAttribute("id_usuario") Long id_usuario) {
+                                         @SessionAttribute("id_usuario") Long id_usuario,
+                                        @RequestParam(required = false) String secuenciaCorrecta){
 
         ModelMap modelo = new ModelMap();
 
@@ -170,13 +160,17 @@ public class ControladorPartida {
             List<String> categorias = this.servicioPartida.obtenerCategoriasDelAcertijoDragDrop(acertijoParaLaVista.getId());
             modelo.put("categorias", categorias);
         }
+        if(acertijoParaLaVista.getTipo().equals(TipoAcertijo.SECUENCIA)){
+            List<ImagenAcertijo> imagenesDeSecuencia = this.datosPartidaSesion.getSecuencia();
+            modelo.put("imagenesDeSecuencia", imagenesDeSecuencia);
+        }
 
         modelo.put("partida", partida);
         modelo.put("salaElegida", sala);
         modelo.put("etapa", etapa);
         modelo.put("acertijo", acertijoParaLaVista);
 
-        Boolean esCorrecta = this.servicioPartida.validarRespuesta(acertijoActual, respuesta, id_usuario);
+        Boolean esCorrecta = this.servicioPartida.validarRespuesta(acertijoActual, respuesta, id_usuario, secuenciaCorrecta);
 
         if (respuesta.isEmpty()) {
             modelo.put("error", "Completa este campo para continuar.");
@@ -195,56 +189,6 @@ public class ControladorPartida {
         }
         return new ModelAndView("partida", modelo);
     }
-
-/*
-    @PostMapping("/validar/{idSala}/{numeroEtapa}")
-    public ModelAndView validarRespuesta(@PathVariable Integer idSala, @PathVariable Integer numeroEtapa,
-            @SessionAttribute("id_acertijo") Long id_acertijo, @RequestParam String respuesta, @SessionAttribute("id_usuario") Long id_usuario, @RequestParam(required = false) String secuenciaCorrecta) {
-        ModelMap modelo = new ModelMap();
-
-        Partida partida = servicioPartida.obtenerPartidaActivaPorIdUsuario(id_usuario);
-        if(tiempoValido(partida) == false){
-            return new ModelAndView("redirect:/partida/finalizarPartida");
-        }
-
-        Sala sala = this.servicioSala.obtenerSalaPorId(idSala);
-        Etapa etapa = this.servicioPartida.obtenerEtapaPorNumero(idSala, numeroEtapa);
-        Acertijo acertijo = this.servicioPartida.buscarAcertijoPorId(id_acertijo);
-
-        if(acertijo.getTipo().equals(TipoAcertijo.DRAG_DROP)){
-            List<String> categorias = this.servicioPartida.obtenerCategoriasDelAcertijoDragDrop(id_acertijo);
-            modelo.put("categorias", categorias);
-        }
-
-        if(acertijo.getTipo().equals(TipoAcertijo.SECUENCIA)){
-            List<ImagenAcertijo> imagenesDeSecuencia = this.datosPartidaSesion.getSecuencia();
-            modelo.put("imagenesDeSecuencia", imagenesDeSecuencia);
-        }
-
-        modelo.put("partida", partida);
-        modelo.put("salaElegida", sala);
-        modelo.put("etapa", etapa);
-        modelo.put("acertijo", acertijo);
-
-        if (respuesta.isEmpty()) {
-            modelo.put("error", "Completa este campo para continuar.");
-
-        } else if (this.servicioPartida.validarRespuesta(id_acertijo, respuesta, id_usuario, secuenciaCorrecta).equals(false)) {
-            modelo.put("error", "Respuesta incorrecta. Intenta nuevamente.");
-
-        } else {
-            Integer cantidadDeEtapasTotales = sala.getCantidadDeEtapas();
-            if (cantidadDeEtapasTotales.equals(numeroEtapa)) {
-                datosPartidaSesion.setPartidaGanada(true);
-                return new ModelAndView("redirect:/partida/finalizarPartida");
-            }
-
-            datosPartidaSesion.setNumeroEtapaActual(numeroEtapa + 1);
-            return new ModelAndView("redirect:/partida/sala" + idSala + "/etapa" + (numeroEtapa + 1));
-        }
-        return new ModelAndView("partida", modelo);
-    }
-*/
 
     @GetMapping("/finalizarPartida")
     public ModelAndView finalizarPartida(HttpServletRequest request) {
