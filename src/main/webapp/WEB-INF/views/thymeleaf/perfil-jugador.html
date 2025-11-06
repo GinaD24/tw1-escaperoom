@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,52 +7,74 @@
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-
-    <!-- custom style -->
     <link rel="stylesheet" th:href="@{/css/perfilJugador.css}"/>
-
 </head>
-
 <body>
 
 <header>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <div >
-                <a th:href="@{/inicio/}">
-                    <img class="logo-escape ms-3" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
-                </a>
-            </div>
-            <h1 class="navbar-brand mt-3">ESCAPE ROOM</h1>
-            <div class="iconos-nav d-flex me-4">
+            <a th:href="@{/inicio/}">
+                <img class="logo-escape ms-3" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
+            </a>
+            <h1 class="navbar-brand mt-3 mx-auto" style="padding-left: 80px;">ESCAPE ROOM</h1>
+            <div class="d-flex">
                 <a class="icono me-3" th:href="@{/ranking/}">
                     <img th:src="@{/img/icono-ranking.png}" alt="img-ranking" style="width: 50px">
+                </a>
+                <a class="icono me-3" th:href="@{/cerrar-sesion}">
+                    <img th:src="@{/img/iconoLogOut.png}" alt="img-logout" style="width: 50px">
                 </a>
             </div>
         </div>
     </nav>
 </header>
 
-
 <main>
-    <div class="contenedor">
+    <div class="contenedor mt-5">
 
-        <div class="contenedorFoto">
-            <img th:src="@{'/img/' + ${perfil.fotoPerfil}}" alt="Foto de perfil" width="120" height="120">
+        <div class="perfil-header mt-2">
+
+            <div class="perfil-foto-area">
+                <div id="previewContainer" class="contenedorFoto">
+                    <img th:if="${usuario.fotoPerfil != null}"
+                         th:src="@{'/img/' + ${usuario.fotoPerfil}}"
+                         alt="Foto de perfil" id="preview">
+
+                    <img th:unless="${usuario.fotoPerfil != null}"
+                         th:src="@{/img/perfil-default.png}"
+                         style="width: 220px;"
+                         alt="Foto por defecto" id="preview-default">
+                </div>
+
+                <div id="fileUpload" class="mt-2 text-center fileUpload">
+                    <a class="btn btn-sm btn-foto" id="botonCambiarFoto" >
+                        <img th:src="@{/img/cambiar-foto.png}" style="width:40px; margin:auto;">
+                    </a>
+                    <input id="imagen" type="file" hidden name="imagen" accept=".png, .jpg, .jpeg">
+                </div>
+            </div>
+
+            <div class="perfil-info-area ms-4">
+                <h1 class="nombre-usuario" th:text="${usuario.nombreUsuario}"></h1>
+
+                <p class="perfil-dato-completo" th:text="${usuario.nombre} + ' ' + ${usuario.apellido}"></p>
+                <p class="perfil-dato-completo" th:text="'Fecha de Nac: ' + ${usuario.fechaNacimiento}"></p>
+
+                <a class="btn btn-sm btn-editar mt-3" th:href="@{/configuracion/editar}">Editar perfil</a>
+            </div>
+
+        </div>
+        <hr class="perfil-divisor">
+
+        <div class="d-flex justify-content-center">
+            <a  th:href="@{/historial/}" class="btn btn-historial btn-lg mt-4 text-center">Ver Historial</a>
         </div>
 
-
-        <div  class="contenedorTitulo">
-            <h1  th:text="${perfil.nombreUsuario}"></h1>
-            <h3  th:text="${perfil.nombre} + ' ' +  ${perfil.apellido}"></h3>
-            <h3  th:text="${perfil.fechaNacimiento}"></h3>
-        </div>
-        <a class="btn btn-primary">Editar perfil</a><br>
-        <a class="btn btn-primary">Cambiar foto</a>
     </div>
-
 </main>
 
-</body>
 
+<script th:src="@{/js/perfil.js}"></script>
+</body>
 </html>

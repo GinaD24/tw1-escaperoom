@@ -1,116 +1,193 @@
 package com.tallerwebi.dominio;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tallerwebi.dominio.entidad.Ranking;
-import com.tallerwebi.dominio.excepcion.SalaInexistente;
-import com.tallerwebi.dominio.interfaz.repositorio.RankingRepository;
+import com.tallerwebi.dominio.entidad.Partida;
+import com.tallerwebi.dominio.entidad.PuestoRanking;
+import com.tallerwebi.dominio.entidad.Sala;
+import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioRanking;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ServicioRankingTest {
     
     private ServicioRankingImpl servicioRanking;
-    private RankingRepository rankingRepository;
+    private RepositorioRanking repositorioRanking;
 
     @BeforeEach
     public void init() {
-        this.rankingRepository = mock(RankingRepository.class);
-        this.servicioRanking = new ServicioRankingImpl(rankingRepository);
-    }
-
-    @Test
-    public void dadoQueExisteUnRankingPuedoAgregarNuevosRankingsDeJugadores(){
-        
-       Integer idSala = 1;
-       when(rankingRepository.buscarPorIdDeSalaYNombreDeUsuario(idSala, "Ruben")).thenReturn(null);
-
-       Ranking nuevoRanking = new Ranking(idSala, 600L, "Ruben", 35.0, 2, LocalDate.now(), new ArrayList<>());
-
-       servicioRanking.agregarRanking(nuevoRanking);
-
-       verify(rankingRepository, times(1)).guardar(nuevoRanking);
-    }
-
-
-
-    @Test
-    public void dadoQueExisteUnRankingPuedoObtenerRankingPorSalaQueDevuelveUnaListaDeRankingsOrdenados() {
-        Integer idSala = 1;
-        List<Ranking> rankingsDesordenados = new ArrayList<>();
-        
-        rankingsDesordenados.add(new Ranking(idSala, 800L, "Ana", 15.0, 2, LocalDate.now(), new ArrayList<>()));
-        rankingsDesordenados.add(new Ranking(idSala, 1200L, "Carlos", 10.0, 1, LocalDate.now(), new ArrayList<>()));
-        rankingsDesordenados.add(new Ranking(idSala, 1000L, "Diego", 12.0, 3, LocalDate.now(), new ArrayList<>()));
-
-        when(rankingRepository.obtenerRankingPorSala(idSala)).thenReturn(rankingsDesordenados);
-        
-        List<Ranking> rankingsObtenidos = servicioRanking.obtenerRankingPorSala(idSala);
-        
-        assertThat(rankingsObtenidos, notNullValue());
-        
-        assertThat(rankingsObtenidos.get(0).getPuntaje(), is(1200L));
-        assertThat(rankingsObtenidos.get(1).getPuntaje(), is(1000L));
-        assertThat(rankingsObtenidos.get(2).getPuntaje(), is(800L));
+        this.repositorioRanking = mock(RepositorioRanking.class);
+        this.servicioRanking = new ServicioRankingImpl(repositorioRanking);
     }
 
 
     @Test
-    public void dadoQueExisteUnRankingSiTengoUnPuntajeMejorDeUnJugadorElRankingSeActualiza(){
-        Integer idSala = 2;
+    public void deberiaDevolverUnaListaDePuestoRankingSiendoElPrimerPuesto_ElQueTerminoConMayorPuntajeLaPartida(){
+        Sala sala = new Sala();
+        sala.setId(1);
 
-        Ranking antiguoRanking = new Ranking(idSala, 700L, "Martina", 25.0, 3, LocalDate.now(), new ArrayList<>());
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        Usuario usuario2 = new Usuario();
+        usuario.setId(2L);
 
-        when(rankingRepository.buscarPorIdDeSalaYNombreDeUsuario(idSala, "Martina")).thenReturn(antiguoRanking);
+        List<Partida> listaDePartidas  = new ArrayList<>();
 
-        Ranking nuevoRanking = new Ranking(idSala, 1000L, "Martina", 10.0, 1, LocalDate.now(), new ArrayList<>());
+        Partida partida = new Partida();
+        partida.setId(1L);
+        partida.setInicio(LocalDateTime.now());
+        partida.setSala(sala);
+        partida.setPuntaje(500);
+        partida.setEsta_activa(false);
+        partida.setUsuario(usuario);
+        partida.setPistasUsadas(0);
+        partida.setGanada(true);
+        partida.setTiempoTotal(60L);
 
-        servicioRanking.actualizarRanking(nuevoRanking);
-        verify(rankingRepository, times(1)).guardar(nuevoRanking);
+
+        Partida partida2 = new Partida();
+        partida2.setId(2L);
+        partida2.setInicio(LocalDateTime.now());
+        partida2.setSala(sala);
+        partida2.setPuntaje(450); //50 puntos menos
+        partida2.setEsta_activa(false);
+        partida2.setUsuario(usuario2);
+        partida2.setPistasUsadas(0);
+        partida2.setGanada(true);
+        partida2.setTiempoTotal(60L); //mismo tiempo
+
+        listaDePartidas.add(partida);
+        listaDePartidas.add(partida2);
+
+        List<PuestoRanking> listaDePuestoRanking = new ArrayList<>();
+        listaDePuestoRanking.add(new PuestoRanking(sala.getId(), partida.getPuntaje(), usuario, partida.getTiempoTotal(), 0 ));
+        listaDePuestoRanking.add(new PuestoRanking(sala.getId(), partida2.getPuntaje(), usuario2, partida2.getTiempoTotal(), 0));
+
+        when(repositorioRanking.obtenerPartidasPorSala(sala.getId())).thenReturn(listaDePartidas);
+
+        List<PuestoRanking> puestosObtenidos = this.servicioRanking.obtenerRankingPorSala(sala.getId());
+
+        assertThat(puestosObtenidos.get(0).getUsuario(), equalTo(usuario));
+        assertThat(puestosObtenidos.get(0).getPuntaje(), equalTo(partida.getPuntaje()));
+        assertThat(puestosObtenidos.get(1).getUsuario(), equalTo(usuario2));
+        assertThat(puestosObtenidos.get(1).getPuntaje(), equalTo(partida2.getPuntaje()));
+        verify(repositorioRanking).obtenerPartidasPorSala(sala.getId());
     }
 
-
     @Test
-    public void dadoQueExisteUnRankingSiNoExistenPuntajesSeDevuelveUnaListaVacia(){
-        Integer idSala = 1;
-        List<Ranking> rankingVacio = new ArrayList<>();
+    public void deberiaDevolverUnaListaDePuestoRankingSiendoElPrimerPuesto_ElQueTerminoAntesLaPartida(){
+        Sala sala = new Sala();
+        sala.setId(1);
 
-        when(rankingRepository.obtenerRankingPorSala(idSala)).thenReturn(rankingVacio);
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        Usuario usuario2 = new Usuario();
+        usuario.setId(2L);
 
-        assertThrows(SalaInexistente.class, () -> {
-            this.servicioRanking.obtenerRankingPorSala(idSala);
-        });
-        assertThat(rankingVacio, is(empty()));
+        List<Partida> listaDePartidas  = new ArrayList<>();
+
+        Partida partida = new Partida();
+        partida.setId(1L);
+        partida.setInicio(LocalDateTime.now());
+        partida.setSala(sala);
+        partida.setPuntaje(500);
+        partida.setEsta_activa(false);
+        partida.setUsuario(usuario);
+        partida.setPistasUsadas(0);
+        partida.setGanada(true);
+        partida.setTiempoTotal(60L); //tarda 60 segs
+
+
+        Partida partida2 = new Partida();
+        partida2.setId(2L);
+        partida2.setInicio(LocalDateTime.now());
+        partida2.setSala(sala);
+        partida2.setPuntaje(500);
+        partida2.setEsta_activa(false);
+        partida2.setUsuario(usuario2);
+        partida2.setPistasUsadas(0);
+        partida2.setGanada(true);
+        partida2.setTiempoTotal(120L);//tarda 120 segs
+
+        listaDePartidas.add(partida);
+        listaDePartidas.add(partida2);
+
+        List<PuestoRanking> listaDePuestoRanking = new ArrayList<>();
+        listaDePuestoRanking.add(new PuestoRanking(sala.getId(), partida.getPuntaje(), usuario, partida.getTiempoTotal(), 0 ));
+        listaDePuestoRanking.add(new PuestoRanking(sala.getId(), partida2.getPuntaje(), usuario2, partida2.getTiempoTotal(), 0));
+
+        when(repositorioRanking.obtenerPartidasPorSala(sala.getId())).thenReturn(listaDePartidas);
+
+        List<PuestoRanking> puestosObtenidos = this.servicioRanking.obtenerRankingPorSala(sala.getId());
+
+        assertThat(puestosObtenidos.get(0).getUsuario(), equalTo(usuario));
+        assertThat(puestosObtenidos.get(0).getPuntaje(), equalTo(partida.getPuntaje()));
+        assertThat(puestosObtenidos.get(1).getUsuario(), equalTo(usuario2));
+        assertThat(puestosObtenidos.get(1).getPuntaje(), equalTo(partida2.getPuntaje()));
+        verify(repositorioRanking).obtenerPartidasPorSala(sala.getId());
     }
 
     @Test
-    public void dadoQueExisteUnRankingSi2JugadoresTienenElMismoPuntajeSeDecidePorTiempoFinalizacionYPistasUtilizadas(){
-        Integer idSala = 1;
-        List<Ranking> rankingsDesordenados = new ArrayList<>();
+    public void deberiaDevolverUnaListaDePuestoRankingSiendoElPrimerPuesto_ElQueNoUsoPistas(){
+        Sala sala = new Sala();
+        sala.setId(1);
 
-        Ranking puntaje1 = new Ranking(idSala, 800L,"Clara", 25.0, 3, LocalDate.now(), new ArrayList<>());
-        Ranking puntaje2 = new Ranking(idSala, 800L, "Mauro", 24.0, 2, LocalDate.now(), new ArrayList<>());
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        Usuario usuario2 = new Usuario();
+        usuario.setId(2L);
 
-        rankingsDesordenados.add(puntaje1);
-        rankingsDesordenados.add(puntaje2);
-        
-        when(rankingRepository.obtenerRankingPorSala(idSala)).thenReturn(rankingsDesordenados);
+        List<Partida> listaDePartidas  = new ArrayList<>();
 
-        List<Ranking> rankingsOrdenados = servicioRanking.obtenerRankingPorSala(idSala);
+        Partida partida = new Partida();
+        partida.setId(1L);
+        partida.setInicio(LocalDateTime.now());
+        partida.setSala(sala);
+        partida.setPuntaje(500);
+        partida.setEsta_activa(false);
+        partida.setUsuario(usuario);
+        partida.setPistasUsadas(0);
+        partida.setGanada(true);
+        partida.setTiempoTotal(60L);
 
-        assertThat(rankingsOrdenados.get(0).getNombreUsuario(), is("Mauro"));
-        assertThat(rankingsOrdenados.get(1).getNombreUsuario(), is("Clara"));
+
+        Partida partida2 = new Partida();
+        partida2.setId(2L);
+        partida2.setInicio(LocalDateTime.now());
+        partida2.setSala(sala);
+        partida2.setPuntaje(500);
+        partida2.setEsta_activa(false);
+        partida2.setUsuario(usuario2);
+        partida2.setPistasUsadas(1); //pista usada
+        partida2.setGanada(true);
+        partida2.setTiempoTotal(60L); //mismo puntaje, mismo tiempo
+
+        listaDePartidas.add(partida);
+        listaDePartidas.add(partida2);
+
+        List<PuestoRanking> listaDePuestoRanking = new ArrayList<>();
+        listaDePuestoRanking.add(new PuestoRanking(sala.getId(), partida.getPuntaje(), usuario, partida.getTiempoTotal(), 0 ));
+        listaDePuestoRanking.add(new PuestoRanking(sala.getId(), partida2.getPuntaje(), usuario2, partida2.getTiempoTotal(), 0));
+
+        when(repositorioRanking.obtenerPartidasPorSala(sala.getId())).thenReturn(listaDePartidas);
+
+        List<PuestoRanking> puestosObtenidos = this.servicioRanking.obtenerRankingPorSala(sala.getId());
+
+        assertThat(puestosObtenidos.get(0).getUsuario(), equalTo(usuario));
+        assertThat(puestosObtenidos.get(0).getPuntaje(), equalTo(partida.getPuntaje()));
+        assertThat(puestosObtenidos.get(1).getUsuario(), equalTo(usuario2));
+        assertThat(puestosObtenidos.get(1).getPuntaje(), equalTo(partida2.getPuntaje()));
+        verify(repositorioRanking).obtenerPartidasPorSala(sala.getId());
     }
 
 }

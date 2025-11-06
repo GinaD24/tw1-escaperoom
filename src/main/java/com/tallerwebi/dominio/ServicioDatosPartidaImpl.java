@@ -15,6 +15,8 @@ import com.tallerwebi.presentacion.DatosPartidaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 // Importación añadida
 import java.util.stream.Collectors;

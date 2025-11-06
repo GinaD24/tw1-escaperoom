@@ -1,7 +1,7 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -59,7 +59,4 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     public Usuario obtenerUsuarioPorId(Long id) {
         return sessionFactory.getCurrentSession().get(Usuario.class, id);
     }
-
-
-
 }

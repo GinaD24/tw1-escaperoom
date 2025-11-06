@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Partidas - Escape Room</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/perfilJugador.css}"/>
+    <link rel="stylesheet" th:href="@{/css/ranking-sala.css}"/>
+    <style>
+
+    </style>
+</head>
+
+<header>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a th:href="@{/inicio/}">
+                <img class="logo-escape ms-3" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
+            </a>
+            <h1 class="navbar-brand mt-3 mx-auto" style="padding-left: 64px;">ESCAPE ROOM</h1>
+            <div class="d-flex gap-3">
+                <a class="icono" th:href="@{/perfil/verPerfil}">
+                    <img th:src="@{/img/icono-perfil.png}" alt="img-user" style="width: 50px">
+                </a>
+                <a class="icono me-3" th:href="@{/cerrar-sesion}">
+                    <img th:src="@{/img/iconoLogOut.png}" alt="img-logout" style="width: 50px">
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+
+<div class="container my-4">
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+
+        </div>
+    </div>
+
+    <h1 class="titulo-historial text-3xl fw-bold mb-4 border-bottom border-secondary pb-2" style="color: #fafb63;">Historial de Partidas</h1>
+
+    <div th:if="${#lists.isEmpty(historial)}" class="text-center py-5 bg-dark text-white rounded shadow">
+        <p class="fs-5 text-secondary">Aún no has finalizado ninguna partida.</p>
+        <p class="text-muted mt-2">¡Es hora de poner a prueba tus habilidades!</p>
+    </div>
+
+
+    <div id="match-list" class="d-grid gap-3" th:unless="${#lists.isEmpty(historial)}">
+        <div th:each="partida : ${historial}"
+             class="fondo-historial match-item p-3 rounded shadow d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 transition-hover"
+
+             th:classappend="${partida.ganada ? 'match-victory' : 'match-defeat'}">
+
+            <div class="w-100  w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
+                <span th:text="${partida.ganada ? 'VICTORIA' : 'DERROTA'}"
+                      class="match-resultado fs-4 fw-bold text-uppercase"
+                      th:classappend="${partida.ganada ? 'text-success' : 'text-danger'}">
+                    RESULTADO
+                </span>
+
+
+            </div>
+
+            <div class="w-100 me-2 w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
+
+                <span class="text-muted small">Sala</span>
+                <span th:text="${partida.sala.nombre}"
+                      class="match-tiempo fs-5 fw-bold mt-1 texto-sala-historial">
+                </span>
+
+            </div>
+
+            <div class="w-100 ms-5 w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
+                <span class="text-muted small">Fecha y hora</span>
+                <span th:text="${partida.fin != null ? partida.fin.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm')) : ''}"
+                        class="match-tiempo fs-5 fw-bold mt-1 text-white">
+                    </span>
+
+
+            </div>
+
+            <div class="w-100 w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
+                <span class="text-muted small">Tiempo</span>
+                <span th:text="${partida.tiempoTotal != null ? (partida.tiempoTotal / 60) + ' min ' + (partida.tiempoTotal % 60) + ' s' : ''}"
+                        class="match-tiempo fs-5 fw-bold mt-1 text-white">
+                    </span>
+
+            </div>
+
+            <div class="w-100 w-sm-25 d-flex flex-column align-items-center align-items-sm-start text-center text-sm-start">
+
+                <span class="text-muted small">Puntaje</span>
+                <span th:text="${partida.puntaje}"
+                      class="match-tiempo fs-4 fw-bold mt-1 text-success">
+                </span>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
+</body>
+</html>

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/perfil")
@@ -17,8 +19,9 @@ public class ControladorPerfilJugador {
 
     private final ServicioPerfil servicioPerfil;
 
+
     @Autowired
-    public ControladorPerfilJugador(ServicioPerfil servicioPerfil) {
+    public ControladorPerfilJugador(ServicioPerfil servicioPerfil) { // <-- 2. Inyección en Constructor
         this.servicioPerfil = servicioPerfil;
     }
 
@@ -27,8 +30,12 @@ public class ControladorPerfilJugador {
         ModelMap modelo = new ModelMap();
         try {
             Long idUsuario = (Long) session.getAttribute("id_usuario");
+            if(idUsuario == null) {
+                return new ModelAndView("redirect:/login");
+            }
+
             Usuario usuario = servicioPerfil.obtenerPerfil(idUsuario);
-            modelo.put("perfil", usuario);
+            modelo.put("usuario", usuario);
             return new ModelAndView("perfil-jugador", modelo);
         } catch (IDUsuarioInvalido e) {
             return new ModelAndView("redirect:/inicio/");

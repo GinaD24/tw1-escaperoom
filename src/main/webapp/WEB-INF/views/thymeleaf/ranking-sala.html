@@ -10,33 +10,38 @@
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
 
     <link rel="stylesheet" th:href="@{/css/ranking-sala.css}"/>
+    <link rel="stylesheet" th:href="@{/css/perfilJugador.css}"/>
 
 </head>
 
 <body>
 
-<nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-        <div >
+<header>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
             <a th:href="@{/inicio/}">
                 <img class="logo-escape ms-3" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
             </a>
+            <h1 class="navbar-brand mt-3 mx-auto ps-5">ESCAPE ROOM</h1>
+            <div class="d-flex gap-4">
+                <a class="icono" th:href="@{/perfil/verPerfil}">
+                    <img th:src="@{/img/icono-perfil.png}" alt="img-user" style="width: 50px">
+                    <span class="tooltip-text">Ver mi perfil</span>
+                </a>
+                <a class="icono me-3" th:href="@{/cerrar-sesion}">
+                    <img th:src="@{/img/iconoLogOut.png}" alt="img-logout" style="width: 50px">
+                </a>
+            </div>
         </div>
-        <h1 class="navbar-brand mt-3">ESCAPE ROOM</h1>
-        <div class="iconos-nav d-flex me-4">
-            <a class="icono" th:href="@{/perfil/verPerfil}">
-                <img th:src="@{/img/icono-perfil.png}" alt="img-user" style="width: 50px">
-                <span class="tooltip-text">Ver mi perfil</span>
-            </a>
-        </div>
-    </div>
-</nav>
+    </nav>
+</header>
 
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="row justify-content-center mb-4">
                 <div class="col-md-6">
+
                     <form th:action="@{/ranking/filtrarPorSala/}" method="get">
                         <div class="input-group">
                             <select class="form-select rounded-pill me-2" name="filtroSalas" id="filtroSalas">
@@ -46,7 +51,7 @@
                                         th:text="${sala.nombre}">
                                 </option>
                             </select>
-                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4" id="btn-filtrarRanking" DISABLED>
                                 Filtrar
                             </button>
                         </div>
@@ -54,12 +59,17 @@
                 </div>
             </div>
 
+            <div th:if="${error != null}" th:text="${error}" class="text-danger mt-2 mb-2 fw-bold text-center"></div>
+
             <div class="card p-4 shadow">
-                <h2 class="card-title text-center">Ranking de <span th:text="${sala.nombre}"></span></h2>
+                <h2 class="card-title text-center"><span class="nombre-salas-ranking" th:if="${sala != null}" th:text="'Ranking de ' + ${sala.nombre}"></span>
+                    <span class="sala-no-seleccionada"
+                          th:if="${sala == null}"
+                          th:text="'Selecciona una sala para ver su Ranking'"></span></h2>
                 <table class="table table-striped mt-4">
                     <thead>
                     <tr>
-                        <th scope="col">#</th>
+                        <th scope="col">Puesto</th>
                         <th scope="col">Usuario</th>
                         <th scope="col">Tiempo</th>
                         <th scope="col">Pistas</th>
@@ -69,8 +79,8 @@
                     <tbody>
                     <tr th:each="ranking, i : ${rankings}">
                         <td scope="row" th:text="${i.index + 1}"></td>
-                        <td th:text="${ranking.nombreUsuario}"></td>
-                        <td th:text="${ranking.tiempoFinalizacion}"></td>
+                        <td th:text="${ranking.usuario.nombreUsuario}"></td>
+                        <td th:text="${((ranking.tiempoTotal / 60)) + 'm ' + ((ranking.tiempoTotal % 60)) + 's'}"></td>
                         <td th:text="${ranking.cantidadPistas}"></td>
                         <td th:text="${ranking.puntaje}"></td>
                     </tr>
@@ -82,6 +92,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/ranking.js}"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </body>
 </html>

@@ -30,18 +30,23 @@ body {
 }
 
 .sala-card {
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.38);
     border: none;
     border-radius: 20px;
     padding: 40px;
     position: relative;
-    transition: transform 0.2s;
     min-width: 200px;
     height: 350px;
     display: flex;
     flex-direction: column;
     text-align: center;
-
+    transition: transform 0.4s ease, background-color 0.4s ease;
+    z-index: 0;
+}
+.sala-card:hover{
+    background-color: rgba(44, 44, 44, 0.41);
+    transform: scale(1.01);
+    z-index: 10;
 }
 .texto-card{
     color:white;
@@ -59,11 +64,6 @@ body {
     color: #fafb63;
 }
 
-
-
-.card:hover {
-    transform: scale(1.0);
-}
 .lock-icon {
     position: absolute;
     top: 10px;
@@ -157,4 +157,11 @@ body {
     background-color: #b61f1a;
     color: white;
     transform: scale(1.05);
+}
+
+.lock-icon.unlock-color {
+    color: #28a745;
+}
+.lock-icon.lock-color {
+    color: #dc3545;
 }

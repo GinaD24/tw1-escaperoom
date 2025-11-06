@@ -302,7 +302,7 @@ public class ServicioPartidaImplTest {
     }
 
     @Test
-    public void deberiaDevolverTrueSiORDENOCorrectamenteElAcertijo_DeTipoORDENAR_IMAGEN_ODelTipoSECUENCIA(){
+    public void deberiaDevolverTrueSiORDENOCorrectamenteElAcertijo_DeTipoORDENAR_IMAGEN(){
         Partida partida = new Partida(LocalDateTime.now());
         AcertijoActualDTO acertijoDTO =  new AcertijoActualDTO();
         acertijoDTO.setId(1L);
@@ -328,7 +328,7 @@ public class ServicioPartidaImplTest {
     }
 
     @Test
-    public void deberiaDevolverFalseSi_NoORDENOCorrectamenteElAcertijo_DeTipoORDENAR_IMAGEN_ODelTipoSECUENCIA(){
+    public void deberiaDevolverFalseSi_NoORDENOCorrectamenteElAcertijo_DeTipoORDENAR_IMAGEN(){
         Partida partida = new Partida(LocalDateTime.now());
         AcertijoActualDTO acertijoDTO =  new AcertijoActualDTO();
         acertijoDTO.setId(1L);
@@ -416,6 +416,49 @@ public class ServicioPartidaImplTest {
         assertFalse(validacionDeRespuesta);
     }
 
+    @Test
+    public void deberiaDevolverTrueSiCompletoCorrectamenteElAcertijo_DeTipoSECUENCIA(){
+        Partida partida = new Partida(LocalDateTime.now());
+        Acertijo acertijo = new Acertijo( "lalalal");
+        acertijo.setTipo(TipoAcertijo.SECUENCIA);
+
+        String ordenCorrecto = "1,2,3";
+
+        Long idUsuario = 1L;
+
+        String ordenIngresado = "1,2,3";
+
+        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(), ordenIngresado, idUsuario, ordenCorrecto);
+
+        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+        verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        assertTrue(validacionDeRespuesta);
+    }
+
+    @Test
+    public void deberiaDevolverFalseSiCompletoIncorrectamenteElAcertijo_DeTipoSECUENCIA(){
+        Partida partida = new Partida(LocalDateTime.now());
+        Acertijo acertijo = new Acertijo( "lalalal");
+        acertijo.setTipo(TipoAcertijo.SECUENCIA);
+
+        String ordenCorrecto = "2,3,1";
+
+        Long idUsuario = 1L;
+
+        String ordenIngresado = "1,2,3";
+
+        when(repositorioPartida.buscarAcertijoPorId(acertijo.getId())).thenReturn(acertijo);
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijo.getId(), ordenIngresado, idUsuario, ordenCorrecto);
+
+        verify(repositorioPartida).buscarAcertijoPorId(acertijo.getId());
+        verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        assertFalse(validacionDeRespuesta);
+    }
 
 
 
