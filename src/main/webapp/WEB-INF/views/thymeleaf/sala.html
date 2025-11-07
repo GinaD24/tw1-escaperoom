@@ -39,9 +39,18 @@
         <p class="historia" th:text="${SalaObtenida.historia}"> </p>
 
         <div class="d-flex flex-column align-items-center">
-            <a id="btn-estoyListo" class="btn btn-primary" th:href="@{/partida/sala_{idSala}(idSala=${SalaObtenida.id})}">ESTOY LISTO</a>
-            <a class="btn btn-danger w-25" th:href="@{/inicio/}">ELEGIR OTRA SALA</a>
+            <div th:if="${SalaObtenida.esta_habilitada}">
+                <a id="btn-estoyListo" class="btn btn-primary" th:href="@{/partida/sala_{idSala}(idSala=${SalaObtenida.id})}">ESTOY LISTO</a>
+            </div>
 
+            <div th:if="${!SalaObtenida.esta_habilitada and SalaObtenida.es_paga}">
+                <form th:action="@{/compra/iniciar/{id}(id=${SalaObtenida.id})}" method="post" >
+                    <button type="submit" class="btn btn-success rounded-pill">
+                        Comprar
+                    </button>
+                </form>
+            </div>
+            <a class="btn btn-danger w-25" th:href="@{/inicio/}">ELEGIR OTRA SALA</a>
         </div>
 
         <p class="nota">

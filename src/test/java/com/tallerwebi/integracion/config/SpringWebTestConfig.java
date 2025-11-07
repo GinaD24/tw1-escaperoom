@@ -24,10 +24,10 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 @EnableWebMvc
 @Configuration
-//@PropertySource("classpath:config.properties") // <-- 1. Añadido para cargar propiedades
+@PropertySource("classpath:config.properties")
 @ComponentScan(
         basePackages = {"com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura"},
-        // 2. Añadido para excluir el bean real que falla
+
         excludeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
                 classes = {ServicioGeneradorIAImpl.class}
@@ -56,13 +56,13 @@ public class SpringWebTestConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    // 3. Ya no se necesita @Primary, porque el original fue excluido
+
     public ServicioGeneradorIA servicioGeneradorIAMock() {
-        // Creamos un mock (una simulación) de la interfaz del servicio
+
         return Mockito.mock(ServicioGeneradorIA.class);
     }
 
-    // 4. Añadido para que Spring pueda resolver @Value y ${}
+
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();
