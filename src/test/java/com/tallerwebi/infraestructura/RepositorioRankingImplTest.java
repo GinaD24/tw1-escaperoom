@@ -41,6 +41,7 @@ public class RepositorioRankingImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         sala.setCantidadDeEtapas(5);
+        sala.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala);
 
         Usuario usuario = new Usuario();
