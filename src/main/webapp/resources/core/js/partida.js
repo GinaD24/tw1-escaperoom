@@ -78,3 +78,40 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const zonaSecreta = document.getElementById("zona-secreta");
+    const modalBonus = document.getElementById("modalBonus");
+    const cerrarBonus = document.getElementById("cerrarBonus");
+    const enviarBonus = document.getElementById("enviarBonus");
+    const resultadoBonus = document.getElementById("resultadoBonus");
+    const respuestaBonus = document.getElementById("respuestaBonus");
+
+    if (zonaSecreta) {
+        zonaSecreta.addEventListener("click", () => {
+            modalBonus.style.display = "block";
+        });
+    }
+
+    cerrarBonus.addEventListener("click", () => {
+        modalBonus.style.display = "none";
+        respuestaBonus.value = "";
+        resultadoBonus.textContent = "";
+    });
+
+    enviarBonus.addEventListener("click", () => {
+        const respuesta = respuestaBonus.value.trim().toLowerCase();
+
+        // Acá ponés la lógica del acertijo bonus
+        if (respuesta === "piano") {
+            resultadoBonus.textContent = "¡Correcto! Ganaste 50 puntos extra 🎉";
+            resultadoBonus.style.color = "lime";
+            setTimeout(() => {
+                modalBonus.style.display = "none";
+            }, 2000);
+        } else {
+            resultadoBonus.textContent = "Respuesta incorrecta...";
+            resultadoBonus.style.color = "red";
+        }
+    });
+});
