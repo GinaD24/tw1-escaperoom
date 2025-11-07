@@ -24,7 +24,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 @EnableWebMvc
 @Configuration
-@PropertySource("classpath:config.properties") // <-- 1. Añadido para cargar propiedades
+//@PropertySource("classpath:config.properties") // <-- 1. Añadido para cargar propiedades
 @ComponentScan(
         basePackages = {"com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura"},
         // 2. Añadido para excluir el bean real que falla

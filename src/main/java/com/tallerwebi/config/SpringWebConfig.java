@@ -21,7 +21,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 @EnableWebMvc
 @Configuration
 @ComponentScan({"com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura"})
-@PropertySource("classpath:config.properties")
+//@PropertySource("classpath:config.properties")
 public class SpringWebConfig implements WebMvcConfigurer {
 
     private static final String UPLOAD_DIR_CONFIG = "C:/uploads/imagenes_perfil/";
