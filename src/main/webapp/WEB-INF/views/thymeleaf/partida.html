@@ -86,6 +86,11 @@
             </div>
         </div>
 
+        <div th:if="${etapa.tieneBonus}" class="zona-secreta" id="zona-secreta"
+             th:style="'top:' + ${etapa.bonusTop} + '%; left:' + ${etapa.bonusLeft} + '%;'">
+
+        </div>
+
         <div th:if="${error != null}" th:text="${error}" class="text-danger mt-2 text-center"></div>
 
         <button id="btnPista" class="btn btn-pista rounded-pill mt-3"
@@ -113,6 +118,21 @@
         </div>
     </div>
 </div>
+
+<div id="modalBonus" class="modal">
+    <div class="modal-content bonus">
+        <h3>¡Acertijo Bonus!</h3>
+        <p id="textoBonus">¿Qué tiene llaves pero no puede abrir puertas?</p>
+
+        <input type="text" id="respuestaBonus" placeholder="Tu respuesta">
+        <div class="modal-buttons">
+            <button id="enviarBonus">Enviar</button>
+            <button id="cerrarBonus">Cerrar</button>
+        </div>
+        <p id="resultadoBonus" class="mt-2"></p>
+    </div>
+</div>
+
 
 <script th:src="@{/js/partida.js}"></script>
 <script th:src="@{/js/OrdenarImagenes.js}"></script>

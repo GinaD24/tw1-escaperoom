@@ -31,12 +31,12 @@ INSERT INTO Sala (nombre, dificultad, escenario, historia, es_paga, esta_habilit
                                                                                           ('El hospital psiquiatrico', 'AVANZADO', 'Hospital', 'Te han encerrado en el ala de contención de un hospital clausurado. Los antiguos pacientes no se han ido, y debes encontrar la llave de la morgue para escapar antes de que la medianoche te convierta en uno de ellos.', TRUE,FALSE, 12, 'puerta-psiquiatrico.png', 'hospital-psiquiatrico.png', 10, 'psiquiatrico-ganado.png', 'psiquiatrico-perdido.png');
 
 -- ETAPAS PARA LA SALA 'La Mansión Misteriosa' (id_sala = 1)
-INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
-                                                             ('Lobby', 1, 'La puerta se ha cerrado a tus espaldas. El aire es denso y el único camino es adelante. Resuelve los enigmas del vestíbulo para avanzar.', 1, 'etapa-lobby.png'), --adivinanza
-                                                             ('Biblioteca', 2, 'Entre estanterías polvorientas y libros antiguos, descubres una puerta secreta junto a una serie de botones misteriosos.', 1, 'etapa-biblioteca.png'), -- secuencia
-                                                             ('Salón', 3, 'Un gran salón donde aún resuenan las risas y los lamentos del pasado. La música y el silencio guardan las claves para continuar.', 1, 'etapa-salon.png'), -- ordenar
-                                                             ('Despacho', 4, 'Este era el refugio del antiguo dueño. Sus objetos personales, mapas y cartas, ocultan las piezas finales de su misterio.', 1, 'etapa-despacho.png'), -- adivinanza
-                                                             ('Ático', 5, 'El último piso. Entre baúles y objetos olvidados yace el secreto final que te permitirá encontrar la salida de la mansión.', 1, 'etapa-atico.png'); -- drag drop
+INSERT INTO Etapa (nombre, numero, tieneBonus, bonusTop, bonusLeft, descripcion, id_sala, imagen) VALUES
+                                                             ('Lobby', 1, FALSE, null, null, 'La puerta se ha cerrado a tus espaldas. El aire es denso y el único camino es adelante. Resuelve los enigmas del vestíbulo para avanzar.', 1, 'etapa-lobby.png'), --adivinanza
+                                                             ('Biblioteca', 2,FALSE , null, null,'Entre estanterías polvorientas y libros antiguos, descubres una puerta secreta junto a una serie de botones misteriosos.', 1, 'etapa-biblioteca.png'), -- secuencia
+                                                             ('Salón', 3, TRUE, 85, 15,'Un gran salón donde aún resuenan las risas y los lamentos del pasado. La música y el silencio guardan las claves para continuar.', 1, 'etapa-salon.png'), -- ordenar
+                                                             ('Despacho', 4,FALSE , null, null,'Este era el refugio del antiguo dueño. Sus objetos personales, mapas y cartas, ocultan las piezas finales de su misterio.', 1, 'etapa-despacho.png'), -- adivinanza
+                                                             ('Ático', 5, FALSE, null, null,'El último piso. Entre baúles y objetos olvidados yace el secreto final que te permitirá encontrar la salida de la mansión.', 1, 'etapa-atico.png'); -- drag drop
 
 -- ACERTIJOS ETAPA 1: Lobby (id_etapa = 1)
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
@@ -113,15 +113,15 @@ INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LUPA', TRUE
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('BRUJULA', TRUE, 8);
 
 
-INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
-                                                                     ('Entrada', 1, 'La puerta del laboratorio se cierra detrás de ti. Debes reorganizar los componentes del experimento para avanzar.', 2, 'etapa-entrada-laboratorio.png'),
-                                                                     ('Sala de Reactivos', 2, 'Botellas y tubos de ensayo llenos de líquidos de colores te rodean. Organízalos correctamente para desbloquear la siguiente puerta.', 2, 'etapa-reactivos-laboratorio.png'),
-                                                                     ('Mesa de Experimentos', 3, 'Te encontras con una mesa llena de instrumentos desordenados y experimentos sin terminar. Solo cuando resuelvas el siguiente acertijo podrás continuar.', 2, 'etapa-mesa-laboratorio.png'),
-                                                                     ('Sala de Microscopios', 4, 'Observa las muestras y ordénalas según la secuencia correcta de análisis.', 2, 'etapa-microscopios.png'),
-                                                                     ('Almacén de Equipos', 5, 'Hay varios aparatos de laboratorio tirados por todas partes. Organízalos para avanzar.', 2, 'etapa-almacen-laboratorio.png'),
-                                                                     ('Cámara de Cultivos', 6, 'Estas en la camara de cultivos, las placas contienen bacterias, que podrian ser mortales. Resolve el siguiente acertijo para salir pronto de aqui.', 2, 'etapa-camara-laboratorio.png'),
-                                                                     ('Oficina del Científico', 7, 'El escritorio del científico tiene papeles y herramientas. Colócalos en la secuencia correcta para entender su investigación.', 2, 'etapa-oficina-laboratorio.png'),
-                                                                     ('Laboratorio Secreto', 8, 'El corazón del laboratorio. Solo ordenando correctamente todos los elementos del gran experimento podrás acceder al resultado final.', 2, 'etapa-secreto-laboratorio.png');
+INSERT INTO Etapa (nombre, numero, tieneBonus, bonusTop, bonusLeft, descripcion, id_sala, imagen) VALUES
+                                                                     ('Entrada', 1, FALSE, null, null,'La puerta del laboratorio se cierra detrás de ti. Debes reorganizar los componentes del experimento para avanzar.', 2, 'etapa-entrada-laboratorio.png'),
+                                                                     ('Sala de Reactivos', 2, FALSE, null, null, 'Botellas y tubos de ensayo llenos de líquidos de colores te rodean. Organízalos correctamente para desbloquear la siguiente puerta.', 2, 'etapa-reactivos-laboratorio.png'),
+                                                                     ('Mesa de Experimentos', 3, FALSE, null, null, 'Te encontras con una mesa llena de instrumentos desordenados y experimentos sin terminar. Solo cuando resuelvas el siguiente acertijo podrás continuar.', 2, 'etapa-mesa-laboratorio.png'),
+                                                                     ('Sala de Microscopios', 4, FALSE, null, null, 'Observa las muestras y ordénalas según la secuencia correcta de análisis.', 2, 'etapa-microscopios.png'),
+                                                                     ('Almacén de Equipos', 5, FALSE, null, null, 'Hay varios aparatos de laboratorio tirados por todas partes. Organízalos para avanzar.', 2, 'etapa-almacen-laboratorio.png'),
+                                                                     ('Cámara de Cultivos', 6, FALSE, null, null, 'Estas en la camara de cultivos, las placas contienen bacterias, que podrian ser mortales. Resolve el siguiente acertijo para salir pronto de aqui.', 2, 'etapa-camara-laboratorio.png'),
+                                                                     ('Oficina del Científico', 7, FALSE, null, null, 'El escritorio del científico tiene papeles y herramientas. Colócalos en la secuencia correcta para entender su investigación.', 2, 'etapa-oficina-laboratorio.png'),
+                                                                     ('Laboratorio Secreto', 8,  TRUE, 22, 79,'El corazón del laboratorio. Solo ordenando correctamente todos los elementos del gran experimento podrás acceder al resultado final.', 2, 'etapa-secreto-laboratorio.png');
 
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
                                                        ('ORDENAR_IMAGEN', 'Observa los frascos de diferentes colores. Organízalos siguiendo el cambio gradual de tonalidad de claro a oscuro.', 6),
@@ -201,17 +201,17 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
 -- ------------------------------------------------------------------
 -- ETAPAS PARA LA SALA 3: 'La Carcel Abandonada' (id_sala = 3)
 -- ------------------------------------------------------------------
-INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
-('La Celda', 1, 'Despiertas en una celda fría y oscura. La puerta de barrotes está cerrada. Tu primer desafío es encontrar la forma de salir de aquí.', 3, 'etapa-celda.png'),
-('Pabellón A', 2, 'Has salido de tu celda, pero ahora te encuentras en el pasillo principal del pabellón. Las miradas vacías de otras celdas te observan. Debes encontrar la salida antes de que un guardia te descubra.', 3, 'etapa-pabellon.png'),
-('Comedor', 3, 'El desorden y los restos de una revuelta cubren el suelo del comedor. Entre las mesas y sillas volcadas se esconde la clave para acceder a las áreas de servicio.', 3, 'etapa-comedor.png'),
-('Enfermería', 4, 'Un olor a antiséptico inunda la enfermería. Entre historiales médicos y viejas medicinas, hay algo que te ayudará a neutralizar un obstáculo más adelante.', 3, 'etapa-enfermeria.png'),
-('Patio de Recreo', 5, 'Finalmente, un respiro de aire "libre", aunque rodeado por muros altos y alambre de púas. La libertad parece cerca, pero el camino a la salida está vigilado. Resuelve el acertijo del patio para no llamar la atención.', 3, 'etapa-patio.png'),
-('Sala de Guardias', 6, 'Una pequeña sala con monitores apagados y un tablero de llaves. Es tu oportunidad para conseguir acceso a la zona administrativa, pero cuidado con las alarmas silenciosas.', 3, 'etapa-sala-guardias.png'),
-('Lavandería', 7, 'El vapor y el ruido de las máquinas industriales llenan el ambiente. Un antiguo túnel de servicio se rumorea que conecta esta sala con el exterior. Encuentra la entrada.', 3, 'etapa-lavanderia.png'),
-('Sala de Visitas', 8, 'El cristal blindado que separa a los reclusos de sus familias ahora es un obstáculo para ti. Hay un mensaje críptico dejado en uno de los teléfonos.', 3, 'etapa-visitas.png'),
-('Oficina del Alcaide', 9, 'El corazón de la prisión. Aquí se guardan los secretos y, lo más importante, el control manual de la puerta principal. Resuelve el último enigma para tomar el control.', 3, 'etapa-oficina-alcaide.png'),
-('Puerta Principal', 10, 'Estás a un paso de la libertad. Has desactivado la seguridad desde la oficina del alcaide, pero la puerta principal tiene un último mecanismo de bloqueo. Resuélvelo y escapa.', 3, 'etapa-puerta.png');
+INSERT INTO Etapa (nombre, numero, tieneBonus, bonusTop, bonusLeft, descripcion, id_sala, imagen) VALUES
+('La Celda', 1, FALSE, null, null, 'Despiertas en una celda fría y oscura. La puerta de barrotes está cerrada. Tu primer desafío es encontrar la forma de salir de aquí.', 3, 'etapa-celda.png'),
+('Pabellón A', 2, FALSE, null, null, 'Has salido de tu celda, pero ahora te encuentras en el pasillo principal del pabellón. Las miradas vacías de otras celdas te observan. Debes encontrar la salida antes de que un guardia te descubra.', 3, 'etapa-pabellon.png'),
+('Comedor', 3, FALSE, null, null, 'El desorden y los restos de una revuelta cubren el suelo del comedor. Entre las mesas y sillas volcadas se esconde la clave para acceder a las áreas de servicio.', 3, 'etapa-comedor.png'),
+('Enfermería', 4, FALSE, null, null, 'Un olor a antiséptico inunda la enfermería. Entre historiales médicos y viejas medicinas, hay algo que te ayudará a neutralizar un obstáculo más adelante.', 3, 'etapa-enfermeria.png'),
+('Patio de Recreo', 5, FALSE, null, null, 'Finalmente, un respiro de aire "libre", aunque rodeado por muros altos y alambre de púas. La libertad parece cerca, pero el camino a la salida está vigilado. Resuelve el acertijo del patio para no llamar la atención.', 3, 'etapa-patio.png'),
+('Sala de Guardias', 6, TRUE, 72, 13,'Una pequeña sala con monitores apagados y un tablero de llaves. Es tu oportunidad para conseguir acceso a la zona administrativa, pero cuidado con las alarmas silenciosas.', 3, 'etapa-sala-guardias.png'),
+('Lavandería', 7, FALSE, null, null, 'El vapor y el ruido de las máquinas industriales llenan el ambiente. Un antiguo túnel de servicio se rumorea que conecta esta sala con el exterior. Encuentra la entrada.', 3, 'etapa-lavanderia.png'),
+('Sala de Visitas', 8, FALSE, null, null, 'El cristal blindado que separa a los reclusos de sus familias ahora es un obstáculo para ti. Hay un mensaje críptico dejado en uno de los teléfonos.', 3, 'etapa-visitas.png'),
+('Oficina del Alcaide', 9, FALSE, null, null,'El corazón de la prisión. Aquí se guardan los secretos y, lo más importante, el control manual de la puerta principal. Resuelve el último enigma para tomar el control.', 3, 'etapa-oficina-alcaide.png'),
+('Puerta Principal', 10, FALSE, null, null, 'Estás a un paso de la libertad. Has desactivado la seguridad desde la oficina del alcaide, pero la puerta principal tiene un último mecanismo de bloqueo. Resuélvelo y escapa.', 3, 'etapa-puerta.png');
 
 -- ------------------------------------------------------------------
 -- ACERTIJOS PARA LA SALA 3: 'La Carcel Abandonada'

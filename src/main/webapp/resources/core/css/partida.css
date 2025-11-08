@@ -25,7 +25,7 @@ header {
     margin: auto;
     padding-top: 20px;
     text-align: center;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(1px);
 
 }
 .contenedor-titulo {
@@ -377,4 +377,20 @@ h3 {
     max-width: 120px;
     height: auto;
     border-radius: 5px;
+}
+
+.zona-secreta {
+    position: absolute;
+    top: 72%;      /* Ajustá según dónde querés que esté */
+    left: 13%;
+    width: 70px;  /* Tamaño del área clickeable */
+    height: 70px;
+    cursor: pointer;
+    background-color: transparent;
+    z-index: 50;
+}
+
+/* Solo para pruebas — para ver dónde está. Luego quitás esto. */
+.zona-secreta-debug {
+    background-color: rgba(255, 0, 0, 0.2);
 }
