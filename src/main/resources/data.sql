@@ -528,7 +528,7 @@ INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
 
 -- Acertijo bonus para etapa 3 - Salón - Mansion
 INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
-    ('BONUS', 'Entraste al sótano. Mira la imagen y contesta cuántos objetos de color rojo hay en ella', 3);
+    ('BONUS', 'Entraste al sótano. Podrias decir cuántos objetos de color rojo hay en ella?', 3);
 
 INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
     (45, 'bonus-sotano.png');
@@ -538,11 +538,77 @@ INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
 
 -- Acertijo bonus para etapa 13 - última etapa del Laboratorio secreto
 
--- INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
---     ('BONUS', '', 13);
---
--- INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
---     (46, 'bonus-laboratorio.png');
---
--- INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
---     ('5', TRUE, 46);
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Te acercaste y ves pegada una hoja con un acertijo matematico, resolvelo si te animas', 13);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (46, 'bonus-laboratorio.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('175', TRUE, 46);
+
+-- Acertijo bonus para etapa 19 -  etapa sala de guardias del la carcel abandonada
+
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Te dio sed y quisiste tomar un vaso de agua, encontraste un acertijo que no todos ven', 19);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (47, 'bonus-carcel.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('8415', TRUE, 47);
+
+-- Acertijo bonus para etapa 26 -  etapa muelle de el campamento maldito
+
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Te asomaste al bote, dentro habia muchas cosas, cuantas cosas podes contar que no es comun ver en un bote? ', 26);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (48, 'bonus-muelle-campamento.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('3', TRUE, 48);
+
+-- Acertijo bonus para etapa 27 -  etapa cabaña de vigilancia de el campamento maldito
+
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Abriste el cajon de el encargado de vigilancia, encontraste un acertijo peculiar, podes resolverlo?', 27);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (49, 'bonus-vigilancia-campamento.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('corre', TRUE, 49);
+
+-- Acertijo bonus para etapa 30 -  etapa pasillo de celdas en el hospital psiquiatrico
+
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Tocaste un boton y se abrio una habitacion secreta, cuantos objetos letales hay dentro?', 30);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (50, 'bonus-pasillo-psiquiatrico.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('5', TRUE, 50);
+
+-- Acertijo bonus para etapa 33 -  etapa pasillo de celdas en el hospital psiquiatrico
+
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Encontraste un papel interesante entre tantos, revela el secreto del paciente', 33);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (51, 'bonus-tratamiento-psiquiatrico.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('18', TRUE, 51);
+
+-- Acertijo bonus para etapa 35 -  etapa farmacia en el hospital psiquiatrico
+
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Tocaste un frasco, sin saber que era una palanca que te dirige al sotano de la farmacia, cuantos frascos venenosos ves?', 35);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (52, 'bonus-farmacia-psiquiatrico.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('7', TRUE, 52);

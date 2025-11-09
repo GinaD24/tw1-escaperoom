@@ -5,29 +5,35 @@ document.addEventListener("DOMContentLoaded", function () {
     const formBonus = modalBonus.querySelector("form");
     const inputRespuesta = document.getElementById("input-respuesta");
     const contenedorImagenes = formBonus.querySelector("div.pos-relative");
+    const popupExito = document.getElementById("popup-exito");
+    const animacionPuntos = document.getElementById("animacion-puntos");
+    const valorPuntaje = document.getElementById("valor-puntaje");
+
+    // Crear mensaje de error debajo del input
+    const mensajeError = document.createElement("p");
+    mensajeError.style.color = "red";
+    mensajeError.style.marginTop = "10px";
+    mensajeError.style.textAlign = "center";
+    mensajeError.style.display = "none";
+    formBonus.appendChild(mensajeError);
 
     // 🟣 Cuando el usuario encuentra la zona secreta
     if (zonaSecreta) {
         zonaSecreta.addEventListener("click", function () {
             fetch(`/spring/partida/bonus/`)
                 .then(res => {
-                    if (!res.ok || res.status === 204) {
-                        // Nada que hacer, el backend no devolvió contenido
-                        return null;
-                    }
+                    if (!res.ok || res.status === 204) return null;
                     return res.json();
                 })
                 .then(data => {
-                    if (!data) return; // 👈 no hacer nada
+                    if (!data) return;
                     if (data.error) {
                         alert(data.error);
                         return;
                     }
 
-                    // Limpiar imágenes anteriores (si hubiera)
                     contenedorImagenes.innerHTML = "";
 
-                    // Mostrar las imágenes del acertijo bonus
                     data.imagenes.forEach(nombreArchivo => {
                         const img = document.createElement("img");
                         img.src = `/spring/img/acertijo/${nombreArchivo}`;
@@ -35,22 +41,19 @@ document.addEventListener("DOMContentLoaded", function () {
                         contenedorImagenes.appendChild(img);
                     });
 
-                    // Mostrar la descripción del acertijo
                     const descripcion = document.createElement("p");
                     descripcion.textContent = data.descripcion;
-                    descripcion.classList.add("mb-3", "text-center", "fw-bold");
+                    descripcion.classList.add("mb-3", "text-center");
                     contenedorImagenes.prepend(descripcion);
 
-                    // Mostrar el modal
+                    mensajeError.style.display = "none";
                     modalBonus.style.display = "flex";
                 })
-                .catch(err => {
-                    console.error("Error al obtener acertijo bonus:", err);
-                });
+                .catch(err => console.error("Error al obtener acertijo bonus:", err));
         });
     }
 
-    // 🔴 Botón para cerrar el modal
+    // 🔴 Cerrar modal
     if (cerrarBonus) {
         cerrarBonus.addEventListener("click", function (e) {
             e.preventDefault();
@@ -61,38 +64,69 @@ document.addEventListener("DOMContentLoaded", function () {
     // 🟢 Enviar respuesta del bonus
     formBonus.addEventListener("submit", function (e) {
         e.preventDefault();
+        mensajeError.style.display = "none";
 
         const respuesta = inputRespuesta.value.trim();
         if (!respuesta) {
-            alert("Por favor, escribí una respuesta.");
+            mensajeError.textContent = "Por favor, escribir una respuesta.";
+            mensajeError.style.display = "block";
             return;
         }
 
-        // Obtener los datos dinámicos desde el atributo "th:action" resuelto
         const actionUrl = formBonus.getAttribute("action");
 
         fetch(actionUrl, {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ respuesta: respuesta })
+            body: new URLSearchParams({ respuesta })
         })
             .then(res => res.text())
             .then(data => {
                 if (data === "ok") {
-                    alert("✅ ¡Correcto! Ganaste puntos bonus.");
+                    // ✅ Correcto → cerrar modal + mostrar popup
                     modalBonus.style.display = "none";
                     zonaSecreta.style.pointerEvents = "none";
                     inputRespuesta.value = "";
+
+                    popupExito.style.display = "block";
+                    setTimeout(() => {
+                        popupExito.style.display = "none";
+                    }, 3000);
+
+                    mostrarAnimacionPuntos();
+                    actualizarPuntaje(+50);
                 } else if (data === "error:vacio") {
-                    alert("⚠️ No podés enviar una respuesta vacía.");
+                    mensajeError.textContent = "No se puede enviar una respuesta vacía.";
+                    mensajeError.style.display = "block";
                 } else if (data === "error:incorrecta") {
-                    alert("❌ Respuesta incorrecta, intentá otra vez.");
+                    mensajeError.textContent = "Incorrecto. Intente nuevamente.";
+                    mensajeError.style.display = "block";
                 } else {
-                    alert("Error desconocido: " + data);
+                    mensajeError.textContent = "Error desconocido: " + data;
+                    mensajeError.style.display = "block";
                 }
             })
-            .catch(err => {
-                console.error("Error al validar el bonus:", err);
-            });
+            .catch(err => console.error("Error al validar el bonus:", err));
     });
+
+    function mostrarAnimacionPuntos() {
+        if (!animacionPuntos) return;
+        animacionPuntos.textContent = "+50";
+        animacionPuntos.style.color = "green";
+        animacionPuntos.classList.add("mostrar");
+
+        setTimeout(() => {
+            animacionPuntos.classList.remove("mostrar");
+        }, 2000);
+    }
+
+    function actualizarPuntaje(valor) {
+        if (!valorPuntaje) return;
+        let puntajeActual = parseInt(valorPuntaje.textContent);
+        let nuevoPuntaje = Math.max(0, puntajeActual + valor);
+        valorPuntaje.textContent = nuevoPuntaje;
+    }
+
 });
+
+

@@ -123,6 +123,7 @@
 
             <div class="d-flex flex-column justify-content-center align-items-center mb-4">
 
+                <h2 class="text-success mb-2">Descubriste un bonus!</h2>
                 <form th:action="@{/partida/validarBonus/}"
                       method="post" class="w-100 text-center" style="max-width: 600px;">
                     <div class="pos-relative">
@@ -139,13 +140,15 @@
         </div>
     </div>
 
+<div id="popup-exito" class="popup-exito">¡Correcto! Lo resolviste</div>
+
 
 <script th:src="@{/js/partida.js}"></script>
 <script th:src="@{/js/OrdenarImagenes.js}"></script>
 <script th:src="@{/js/contadorPartida.js}"></script>
 <script th:src="@{/js/dragDrop.js}"></script>
 <script th:src="@{/js/Secuencia.js}"></script>
-<script th:src="@{/js/acertijoBonus.js}"></script>
+<script th:src="@{/js/acertijoBonus.js}" charset="UTF-8"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.js"></script>
 </body>
 </html>
