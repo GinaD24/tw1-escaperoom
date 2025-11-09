@@ -316,12 +316,12 @@ INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LIBERTAD', 
 -- ------------------------------------------------------------------
 -- ETAPAS PARA LA SALA 5: 'El campamento maldito'
 -- ------------------------------------------------------------------
-INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
-                                                 ('La Cabaña de Intrusos', 1, 'Te despiertas encerrado en una pequeña cabaña abandonada. La cerradura de la puerta tiene 7 botones marcados con números.', 4, 'etapa-cabana-intrusos.png'), -- Secuencia sencilla de números (contar nudos).
-                                                 ('El Fuego Muerto', 2, 'Llegas al área de la fogata. Está apagada, pero hay cenizas y una hoja escrita con un acertijo. Resolvelo para continuar', 4, 'etapa-fuego-muerto.png'),
-                                                 ('El Muelle', 3, 'Un muelle deteriorado se adentra en el lago. La niebla es tan espesa que solo ves siluetas. En la barandilla hay cinco fotos viejas de un campista. Debes ordenarlas cronológicamente para revelar la combinación grabada debajo del muelle.', 4, 'etapa-muelle.png'),
-                                                 ('Cabaña de Vigilancia', 4, 'La casa del guardián. El sistema de comunicación está roto. 5 interruptores controlan las luces exteriores. Debes encender las luces en el orden correcto.', 4, 'etapa-cabana-vigilancia.png'),
-                                                 ('El Borde del Bosque', 5, 'El portón está sellado con tres símbolos de elementos: FUEGO, TIERRA y AGUA. Tienes seis objetos que recogiste. Arrastra los objetos que pertenecen a cada elemento correspondiente para abrir la salida.', 4, 'etapa-borde-bosque-elemental.png');
+INSERT INTO Etapa (nombre, numero, tieneBonus, bonusTop, bonusLeft, descripcion, id_sala, imagen) VALUES
+                                                 ('La Cabaña de Intrusos', 1, FALSE, null, null,'Te despiertas encerrado en una pequeña cabaña abandonada. La cerradura de la puerta tiene 7 botones marcados con números.', 4, 'etapa-cabana-intrusos.png'), -- Secuencia sencilla de números (contar nudos).
+                                                 ('El Fuego Muerto', 2,FALSE, null, null, 'Llegas al área de la fogata. Está apagada, pero hay cenizas y una hoja escrita con un acertijo. Resolvelo para continuar', 4, 'etapa-fuego-muerto.png'),
+                                                 ('El Muelle', 3, TRUE, 77, 80,'Un muelle deteriorado se adentra en el lago. La niebla es tan espesa que solo ves siluetas. En la barandilla hay cinco fotos viejas de un campista. Debes ordenarlas cronológicamente para revelar la combinación grabada debajo del muelle.', 4, 'etapa-muelle.png'),
+                                                 ('Cabaña de Vigilancia', 4, TRUE, 115, 70,'La casa del guardián. El sistema de comunicación está roto. 5 interruptores controlan las luces exteriores. Debes encender las luces en el orden correcto.', 4, 'etapa-cabana-vigilancia.png'),
+                                                 ('El Borde del Bosque', 5, FALSE, null, null,'El portón está sellado con tres símbolos de elementos: FUEGO, TIERRA y AGUA. Tienes seis objetos que recogiste. Arrastra los objetos que pertenecen a cada elemento correspondiente para abrir la salida.', 4, 'etapa-borde-bosque-elemental.png');
 
 -- ACERTIJO ETAPA 1: La Cabaña de Intrusos  - SECUENCIA
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
@@ -394,17 +394,17 @@ INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
 -- ------------------------------------------------------------------
 -- ETAPAS PARA LA SALA 'El Hospital Psiquiatrico' (id_sala = 5)
 -- ------------------------------------------------------------------
-INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
-                                                                     ('Dormitorio Principal', 1, 'Estás encerrado en una pequeña celda. La puerta tiene una mirilla que te permite ver el pasillo. Debes descifrar el misterio que te retiene para forzar la cerradura.', 5, 'etapa-dormitorio-principal.png'),
-                                                                     ('Pasillo de Celdas', 2, 'El pasillo principal del ala de dormitorios. Hay un antiguo panel de control que se activa al replicar la secuencia de un patrón periódico.', 5, 'etapa-pasillo-celdas.png'),
-                                                                     ('Sala de Terapia Grupal', 3, 'Una sala llena de objetos rotos. Debes restaurar el orden de unos registros abandonados siguiendo la lógica del hospital para abrir la puerta.', 5, 'etapa-terapia-grupal.png'),
-                                                                     ('Consultorio de Archivos', 4, 'El escritorio está cubierto de expedientes desordenados. Debes clasificar la documentación urgente para encontrar la llave oculta.', 5, 'etapa-consultorio-archivos.png'),
-                                                                     ('Sala de Tratamientos', 5, 'Un equipo obsoleto y un panel de control con luces de advertencia. Debes replicar un patrón visual para desactivar el bloqueo que impide tu paso.', 5, 'etapa-tratamientos.png'),
-                                                                     ('Cocina Industrial', 6, 'Una gran sala con mesas volcadas. Una nota te desafía a resolver un enigma que apunta al objeto más peligroso y prohibido de este lugar.', 5, 'etapa-cocina.png'),
-                                                                     ('Farmacia', 7, 'Miles de frascos y pastillas polvorientas. Debes ordenar el protocolo de una receta olvidada para abrir un compartimento secreto en el mostrador.', 5, 'etapa-farmacia.png'),
-                                                                     ('Baños Comunitarios', 8, 'El vapor y la humedad han cubierto las paredes. Un mensaje críptico te obliga a resolver un enigma sobre una ilusión que aparece en los espejos.', 5, 'etapa-banios.png'),
-                                                                     ('Unidad de Observación', 9, 'Máquinas de soporte vital obsoletas. Debes clasificar el instrumental médico abandonado en esta sala para liberar el acceso al subsuelo.', 5, 'etapa-unidad-observacion.png'),
-                                                                     ('Subsuelo y Calderas', 10, 'El último tramo oscuro. Un panel de control de las calderas es tu única oportunidad. Debes forzar el sistema activando una secuencia precisa para escapar a la Morgue.', 5, 'etapa-subsuelo.png');
+INSERT INTO Etapa (nombre, numero, tieneBonus, bonusTop, bonusLeft, descripcion, id_sala, imagen) VALUES
+                                                                     ('Dormitorio Principal', 1, FALSE, null, null,'Estás encerrado en una pequeña celda. La puerta tiene una mirilla que te permite ver el pasillo. Debes descifrar el misterio que te retiene para forzar la cerradura.', 5, 'etapa-dormitorio-principal.png'),
+                                                                     ('Pasillo de Celdas', 2, TRUE, 62, 90,'El pasillo principal del ala de dormitorios. Hay un antiguo panel de control que se activa al replicar la secuencia de un patrón periódico.', 5, 'etapa-pasillo-celdas.png'),
+                                                                     ('Sala de Terapia Grupal', 3, FALSE, null, null,'Una sala llena de objetos rotos. Debes restaurar el orden de unos registros abandonados siguiendo la lógica del hospital para abrir la puerta.', 5, 'etapa-terapia-grupal.png'),
+                                                                     ('Consultorio de Archivos', 4, FALSE, null, null,'El escritorio está cubierto de expedientes desordenados. Debes clasificar la documentación urgente para encontrar la llave oculta.', 5, 'etapa-consultorio-archivos.png'),
+                                                                     ('Sala de Tratamientos', 5, TRUE, 80, 90,'Un equipo obsoleto y un panel de control con luces de advertencia. Debes replicar un patrón visual para desactivar el bloqueo que impide tu paso.', 5, 'etapa-tratamientos.png'),
+                                                                     ('Cocina Industrial', 6, FALSE, null, null,'Una gran sala con mesas volcadas. Una nota te desafía a resolver un enigma que apunta al objeto más peligroso y prohibido de este lugar.', 5, 'etapa-cocina.png'),
+                                                                     ('Farmacia', 7, TRUE, 95, 10,'Miles de frascos y pastillas polvorientas. Debes ordenar el protocolo de una receta olvidada para abrir un compartimento secreto en el mostrador.', 5, 'etapa-farmacia.png'),
+                                                                     ('Baños Comunitarios', 8, FALSE, null, null,'El vapor y la humedad han cubierto las paredes. Un mensaje críptico te obliga a resolver un enigma sobre una ilusión que aparece en los espejos.', 5, 'etapa-banios.png'),
+                                                                     ('Unidad de Observación', 9, FALSE, null, null,'Máquinas de soporte vital obsoletas. Debes clasificar el instrumental médico abandonado en esta sala para liberar el acceso al subsuelo.', 5, 'etapa-unidad-observacion.png'),
+                                                                     ('Subsuelo y Calderas', 10, FALSE, null, null,'El último tramo oscuro. Un panel de control de las calderas es tu única oportunidad. Debes forzar el sistema activando una secuencia precisa para escapar a la Morgue.', 5, 'etapa-subsuelo.png');
 
 
 -- ACERTIJO ETAPA 1: Dormitorio Principal
@@ -524,3 +524,25 @@ INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
                                                             (44, 'valvula-simbolo-epsilon.png'),
                                                             (44, 'valvula-simbolo-zeta.png'),
                                                             (44, 'valvula-simbolo-psi.png');
+
+
+-- Acertijo bonus para etapa 3 - Salón - Mansion
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Entraste al sótano. Mira la imagen y contesta cuántos objetos de color rojo hay en ella', 3);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (45, 'bonus-sotano.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('6', TRUE, 45);
+
+-- Acertijo bonus para etapa 13 - última etapa del Laboratorio secreto
+
+-- INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+--     ('BONUS', '', 13);
+--
+-- INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+--     (46, 'bonus-laboratorio.png');
+--
+-- INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+--     ('5', TRUE, 46);

@@ -41,7 +41,7 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
                 "LEFT JOIN FETCH a.dragDropItems " +
                 "LEFT JOIN FETCH a.pistas " +
                 "LEFT JOIN FETCH a.respuesta " +
-                "WHERE a.etapa.id = :idEtapa";
+                "WHERE a.etapa.id = :idEtapa AND a.tipo <> 'BONUS'";
         Query<Acertijo> query = this.sessionFactory
                 .getCurrentSession()
                 .createQuery(hql, Acertijo.class);
@@ -182,6 +182,19 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         String hql = "SELECT p FROM Partida p WHERE p.id = :idPartida";
         Query<Partida> query = this.sessionFactory.getCurrentSession().createQuery(hql, Partida.class);
         query.setParameter("idPartida", idPartida);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public Acertijo traerAcertijoBonus(Long idEtapa) {
+        String hql = "SELECT DISTINCT a FROM Acertijo a " +
+                "JOIN FETCH a.imagenes " +
+                "JOIN FETCH a.respuesta " +
+                "WHERE a.etapa.id = :idEtapa AND a.tipo = 'BONUS' AND a.etapa.tieneBonus = TRUE";
+        Query<Acertijo> query = this.sessionFactory
+                .getCurrentSession()
+                .createQuery(hql, Acertijo.class);
+        query.setParameter("idEtapa", idEtapa);
         return query.getResultList().stream().findFirst().orElse(null);
     }
 }

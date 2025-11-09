@@ -86,10 +86,9 @@
             </div>
         </div>
 
-        <div th:if="${etapa.tieneBonus}" class="zona-secreta" id="zona-secreta"
-             th:style="'top:' + ${etapa.bonusTop} + '%; left:' + ${etapa.bonusLeft} + '%;'">
-
-        </div>
+            <div th:if="${etapa.tieneBonus}" class="zona-secreta" id="zona-secreta"
+                 th:style="'top:' + ${etapa.bonusTop} + '%; left:' + ${etapa.bonusLeft} + '%;'">
+            </div>
 
         <div th:if="${error != null}" th:text="${error}" class="text-danger mt-2 text-center"></div>
 
@@ -121,17 +120,24 @@
 
 <div id="modalBonus" class="modal">
     <div class="modal-content bonus">
-        <h3>¡Acertijo Bonus!</h3>
-        <p id="textoBonus">¿Qué tiene llaves pero no puede abrir puertas?</p>
 
-        <input type="text" id="respuestaBonus" placeholder="Tu respuesta">
-        <div class="modal-buttons">
-            <button id="enviarBonus">Enviar</button>
-            <button id="cerrarBonus">Cerrar</button>
+            <div class="d-flex flex-column justify-content-center align-items-center mb-4">
+
+                <form th:action="@{/partida/validarBonus/}"
+                      method="post" class="w-100 text-center" style="max-width: 600px;">
+                    <div class="pos-relative">
+                    </div>
+                        <div class="input-group rounded-pill overflow-hidden w-100">
+                            <input id="input-respuesta" type="text" name="respuesta" class="form-control input-respuesta border-0"
+                                   placeholder="Escriba su respuesta aquí">
+                            <button id="btn-enviar" type="submit" class="btn btn-enviar">Enviar</button>
+                        </div>
+                        <button class="btn btn-danger" id="cerrarBonus">Cerrar acertijo bonus</button>
+
+                </form>
+            </div>
         </div>
-        <p id="resultadoBonus" class="mt-2"></p>
     </div>
-</div>
 
 
 <script th:src="@{/js/partida.js}"></script>
@@ -139,6 +145,7 @@
 <script th:src="@{/js/contadorPartida.js}"></script>
 <script th:src="@{/js/dragDrop.js}"></script>
 <script th:src="@{/js/Secuencia.js}"></script>
+<script th:src="@{/js/acertijoBonus.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.js"></script>
 </body>
 </html>

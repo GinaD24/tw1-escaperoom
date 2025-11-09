@@ -13,6 +13,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class ControladorInicioTest {
     private ServicioSala servicioSala;
     private ServicioCompra servicioCompra;
     private ServicioLogin servicioLogin;
+    HttpServletRequest requestMock;
 
     @BeforeEach
     public void init(){
@@ -34,6 +36,7 @@ public class ControladorInicioTest {
         this.servicioCompra = mock(ServicioCompra.class);
         this.servicioLogin = mock(ServicioLogin.class);
         this.controladorInicio = new ControladorInicio(servicioSala, servicioCompra, servicioLogin);
+        this.requestMock = mock(HttpServletRequest.class);
     }
 
     @Test
@@ -105,8 +108,9 @@ public class ControladorInicioTest {
         Sala sala1 = new Sala(1, "Sala 1", Dificultad.PRINCIPIANTE, "", "", true, 10, "");
         when(servicioSala.obtenerSalaPorId(1)).thenReturn(sala1);
 
+
         // ejecución
-        ModelAndView modelAndView = controladorInicio.verSala(sala1.getId());
+        ModelAndView modelAndView = controladorInicio.verSala(sala1.getId(), requestMock);
 
         // verificación
         assertThat(modelAndView.getModel().get("SalaObtenida"), equalTo(sala1));
@@ -117,9 +121,9 @@ public class ControladorInicioTest {
     public void dadoQueExistenSalasCuandoQuieroVerUnaQueNoExisteMeRedirigeAElInicio() {
         // preparación
         doThrow(SalaInexistente.class).when(servicioSala).obtenerSalaPorId(5);
-
         // ejecución
-        ModelAndView modelAndView = controladorInicio.verSala(5);
+
+        ModelAndView modelAndView = controladorInicio.verSala(5, requestMock);
 
         // verificación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/inicio/"));
@@ -132,9 +136,8 @@ public class ControladorInicioTest {
         Sala sala1 = new Sala(1, "Sala 1", Dificultad.PRINCIPIANTE, "", "", true, 10, "");
 
         when(servicioSala.obtenerSalaPorId(1)).thenReturn(sala1);
-
         // ejecución
-        ModelAndView modelAndView = controladorInicio.verSala(sala1.getId());
+        ModelAndView modelAndView = controladorInicio.verSala(sala1.getId(), requestMock);
 
         Sala salaObtenida = (Sala) modelAndView.getModel().get("SalaObtenida");
 

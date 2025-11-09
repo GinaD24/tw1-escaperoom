@@ -2,6 +2,8 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.entidad.Sala;
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.excepcion.SesionDeUsuarioExpirada;
+import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioLogin;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
@@ -62,12 +64,28 @@ public class ControladorInicio {
 
 
     @GetMapping("/sala/{id}")
-    public ModelAndView verSala(@PathVariable Integer id) {
+    public ModelAndView verSala(@PathVariable Integer id, HttpServletRequest request) {
         ModelMap modelo = new ModelMap();
+        Long id_usuario = null;
+        Usuario usuario = null;
+
+        try{
+            id_usuario = (Long) request.getSession().getAttribute("id_usuario");
+            usuario = servicioLogin.buscarUsuarioPorId(id_usuario);
+
+        } catch(SesionDeUsuarioExpirada e){
+            return new ModelAndView("redirect:/login");
+        }
 
         try{
             Sala sala = servicioSala.obtenerSalaPorId(id);
+
+            if(sala.getEs_paga()){
+                boolean desbloqueada = (usuario != null) && servicioCompra.salaDesbloqueadaParaUsuario(usuario, sala);
+                sala.setEsta_habilitada(desbloqueada);
+            }
             modelo.put("SalaObtenida", sala);
+
         }catch(SalaInexistente e){
 
             return new ModelAndView("redirect:/inicio/");

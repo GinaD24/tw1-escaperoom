@@ -14,6 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -367,4 +370,63 @@ public class ControladorPartida {
 
         return acertijoFabricado;
     }
+
+    @GetMapping("/bonus/")
+    @ResponseBody
+    public Map<String, Object> obtenerAcertijoBonus(
+            @SessionAttribute("id_usuario") Long idUsuario) {
+
+        Long idEtapa = datosPartidaSesion.getIdEtapa();
+        Acertijo acertijoBonus = servicioPartida.obtenerAcertijoBonus(idEtapa, idUsuario);
+
+        // Si no hay acertijo bonus
+        if (acertijoBonus == null) {
+            return Map.of("error", "No hay acertijo bonus");
+        }
+
+        // Si hay acertijo bonus
+        Map<String, Object> response = new HashMap<>();
+        response.put("descripcion", acertijoBonus.getDescripcion());
+        response.put("id", acertijoBonus.getId());
+        response.put("imagenes", acertijoBonus.getImagenes().stream()
+                .map(ImagenAcertijo::getNombreArchivo)
+                .collect(Collectors.toList()));
+
+        return response;
+    }
+
+
+    @PostMapping("/validarBonus/")
+    @ResponseBody
+    public String validarBonus(
+            @RequestParam String respuesta,
+            @SessionAttribute("id_usuario") Long idUsuario) {
+
+        Long idEtapa = datosPartidaSesion.getIdEtapa();
+        Acertijo acertijoActualBonus = servicioPartida.obtenerAcertijoBonus(idEtapa, idUsuario);
+
+        if (acertijoActualBonus == null || !acertijoActualBonus.getTipo().equals(TipoAcertijo.BONUS)) {
+            return "error: no_bonus";
+        }
+
+        AcertijoActualDTO acertijoActualBonusDTO = new AcertijoActualDTO();
+        acertijoActualBonusDTO.setTipo(acertijoActualBonus.getTipo());
+        acertijoActualBonusDTO.setId(acertijoActualBonus.getId());
+        acertijoActualBonusDTO.setRespuestaCorrecta(acertijoActualBonus.getRespuesta().getRespuesta());
+
+        boolean esCorrecta = servicioPartida.validarRespuesta(acertijoActualBonusDTO, respuesta, idUsuario, null);
+
+        if (respuesta.trim().isEmpty()) {
+            return "error:vacio";
+        }
+
+        if (!esCorrecta) {
+            return "error:incorrecta";
+        }
+
+        servicioPartida.sumarPuntajeBonus(idUsuario);
+
+        return "ok";
+    }
+
 }

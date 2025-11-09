@@ -5,7 +5,6 @@ import com.tallerwebi.presentacion.AcertijoActualDTO;
 import org.eclipse.sisu.Nullable;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ServicioPartida {
 
@@ -34,4 +33,8 @@ public interface ServicioPartida {
     Partida buscarPartidaPorId(Long idPartida);
 
     List<ImagenAcertijo> obtenerSecuenciaAleatoria(Acertijo acertijo);
+
+    Acertijo obtenerAcertijoBonus(Long idEtapa, Long idUsuario);
+
+    void sumarPuntajeBonus(Long idUsuario);
 }

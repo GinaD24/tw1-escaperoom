@@ -40,4 +40,6 @@ public interface RepositorioPartida {
     List<DragDropItem> obtenerItemsDragDrop(Long idAcertijo);
 
     Partida buscarPartidaPorId(Long idPartida);
+
+    Acertijo traerAcertijoBonus(Long idEtapa);
 }

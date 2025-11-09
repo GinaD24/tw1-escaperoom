@@ -61,8 +61,8 @@ public class ServicioCompraImpl implements ServicioCompra {
             List<PreferenceItemRequest> items = new ArrayList<>();
             items.add(itemRequest);
 
-            String baseUrl = "https://historical-edythe-semiexternally.ngrok-free.dev";
-            String notificationBaseUrl = "https://historical-edythe-semiexternally.ngrok-free.dev";
+            String baseUrl = "https://obtundent-ashton-lawlessly.ngrok-free.dev";
+            String notificationBaseUrl = "https://obtundent-ashton-lawlessly.ngrok-free.dev";
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
                     .success(baseUrl + "/spring/compra/confirmacion")
                     .failure(baseUrl + "/spring/inicio?pago=fallido")

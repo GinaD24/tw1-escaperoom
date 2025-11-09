@@ -381,8 +381,8 @@ h3 {
 
 .zona-secreta {
     position: absolute;
-    top: 72%;      /* Ajustá según dónde querés que esté */
-    left: 13%;
+    top: 95%;      /* Ajustá según dónde querés que esté */
+    left: 10%;
     width: 70px;  /* Tamaño del área clickeable */
     height: 70px;
     cursor: pointer;
@@ -393,4 +393,16 @@ h3 {
 /* Solo para pruebas — para ver dónde está. Luego quitás esto. */
 .zona-secreta-debug {
     background-color: rgba(255, 0, 0, 0.2);
+}
+
+.modal-content.bonus {
+    background-color: rgba(0 0 0 / 72%);
+    padding: 30px;
+    width: 60%;
+    max-width: 900px;
+    border-radius: 12px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 1.2rem;
+    box-shadow: 0 0 25px rgba(0,0,0,0.4);
 }
