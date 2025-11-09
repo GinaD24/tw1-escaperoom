@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
@@ -38,8 +39,7 @@
             <div class="perfil-foto-area">
                 <div id="previewContainer" class="contenedorFoto">
                     <img th:if="${usuario.fotoPerfil != null}"
-                         th:src="@{'/img/' + ${usuario.fotoPerfil}}"
-                         alt="Foto de perfil" id="preview">
+                         th:src="@{${usuario.fotoPerfil}}" alt="Foto de perfil" id="preview">
 
                     <img th:unless="${usuario.fotoPerfil != null}"
                          th:src="@{/img/perfil-default.png}"
