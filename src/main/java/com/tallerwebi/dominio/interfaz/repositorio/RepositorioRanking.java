@@ -6,9 +6,6 @@ import java.util.List;
 
 public interface RepositorioRanking {
 
-
-    List<Partida> obtenerPartidasPorSala(Integer idSala);
-
-    Integer obtenerIdSalaConPartidaGanada();
+    List<Partida> obtenerTodasLasPartidasGanadas();
 }
 

@@ -1,13 +1,13 @@
 package com.tallerwebi.dominio.interfaz.servicio;
 
-import com.tallerwebi.dominio.entidad.PuestoRanking;
+import com.tallerwebi.dominio.entidad.Partida;
+import com.tallerwebi.dominio.entidad.PuestoRankingDTO;
 
 import java.util.List;
 
 public interface ServicioRanking {
 
-    List<PuestoRanking> obtenerRankingPorSala(Integer idSala);
+    List<PuestoRankingDTO> obtenerRanking();
 
-
-    Integer obtenerIdSalaConPartidaGanada();
+    Double calcularPuntajePonderado(Partida partida);
 }

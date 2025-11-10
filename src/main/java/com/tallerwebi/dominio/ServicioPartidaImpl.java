@@ -57,7 +57,6 @@ public class ServicioPartidaImpl implements ServicioPartida {
         if (partida != null) {
             partida.setPistasUsadas(partida.getPistasUsadas() + 1);
             partida.setPuntaje(partida.getPuntaje() - 25);
-            this.repositorioPartida.registrarPistaEnPartida(idUsuario);
         }
 
     }

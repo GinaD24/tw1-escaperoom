@@ -337,28 +337,6 @@ public class RepositorioPartidaImplTest {
         assertNotNull(partida.getTiempoTotal());
     }
 
-    @Test
-    public void deberiaRegistrarPistaEnPartidaCadaVezQueSePideUna(){
-        Usuario usuario = new Usuario();
-        this.sessionFactory.getCurrentSession().save(usuario);
-
-        Partida partida = new Partida(LocalDateTime.now());
-        partida.setUsuario(usuario);
-        partida.setEsta_activa(true);
-        partida.setPistasUsadas(0);
-        this.sessionFactory.getCurrentSession().save(partida);
-
-        this.repositorioPartida.registrarPistaEnPartida(usuario.getId());
-
-        sessionFactory.getCurrentSession().flush();
-        sessionFactory.getCurrentSession().refresh(partida);
-
-        Integer pistasUsadas = partida.getPistasUsadas();
-
-        assertThat(pistasUsadas, equalTo(1));
-    }
-
-
 
     @Test
     public void deberiaObtenerElOrdenDeImgCorrectoDeLasImagenesDeUnAcertijoDetipo_ORDENAR_IMAGEN(){
