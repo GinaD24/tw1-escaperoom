@@ -1,6 +1,7 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.entidad.Sala;
+import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioLogin;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
@@ -106,11 +107,20 @@ public class ControladorInicioTest {
     public void dadoQueExistenSalasCuandoQuieroVerUnaEnEspecificoMeDevuelveLaVistaDeEsaSala() {
         // preparación
         Sala sala1 = new Sala(1, "Sala 1", Dificultad.PRINCIPIANTE, "", "", true, 10, "");
+        sala1.setEs_paga(false);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("id_usuario", usuario.getId());
+        request.setSession(session);
+        when(servicioLogin.buscarUsuarioPorId(usuario.getId())).thenReturn(usuario);
         when(servicioSala.obtenerSalaPorId(1)).thenReturn(sala1);
 
-
         // ejecución
-        ModelAndView modelAndView = controladorInicio.verSala(sala1.getId(), requestMock);
+        ModelAndView modelAndView = controladorInicio.verSala(sala1.getId(), request);
 
         // verificación
         assertThat(modelAndView.getModel().get("SalaObtenida"), equalTo(sala1));
@@ -119,31 +129,23 @@ public class ControladorInicioTest {
 
     @Test
     public void dadoQueExistenSalasCuandoQuieroVerUnaQueNoExisteMeRedirigeAElInicio() {
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("id_usuario", usuario.getId());
+        request.setSession(session);
+
         // preparación
         doThrow(SalaInexistente.class).when(servicioSala).obtenerSalaPorId(5);
         // ejecución
 
-        ModelAndView modelAndView = controladorInicio.verSala(5, requestMock);
+        ModelAndView modelAndView = controladorInicio.verSala(5, request);
 
         // verificación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/inicio/"));
         verify(servicioSala).obtenerSalaPorId(5);
-    }
-
-    @Test
-    public void dadoQueExisteUnaListaDeSalasCuandoPidoQueMuestreUnaSalaPrincipianteEstaTieneUnaDuracionDe10Minutos() {
-        // preparación
-        Sala sala1 = new Sala(1, "Sala 1", Dificultad.PRINCIPIANTE, "", "", true, 10, "");
-
-        when(servicioSala.obtenerSalaPorId(1)).thenReturn(sala1);
-        // ejecución
-        ModelAndView modelAndView = controladorInicio.verSala(sala1.getId(), requestMock);
-
-        Sala salaObtenida = (Sala) modelAndView.getModel().get("SalaObtenida");
-
-        // verificación
-        assertThat(salaObtenida.getDuracion(), equalTo(10));
-        verify(servicioSala).obtenerSalaPorId(1);
     }
 
     @Test

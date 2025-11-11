@@ -416,10 +416,6 @@ public class ControladorPartida {
 
         boolean esCorrecta = servicioPartida.validarRespuesta(acertijoActualBonusDTO, respuesta, idUsuario, null);
 
-        if (respuesta.trim().isEmpty()) {
-            return "error:vacio";
-        }
-
         if (!esCorrecta) {
             return "error:incorrecta";
         }
