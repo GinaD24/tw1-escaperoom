@@ -21,6 +21,8 @@ public class PuestoRankingDTO {
 
     }
 
+    public PuestoRankingDTO(){}
+
     public Integer getPuesto() {
         return puesto;
     }

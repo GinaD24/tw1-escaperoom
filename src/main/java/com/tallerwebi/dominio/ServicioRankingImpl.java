@@ -42,7 +42,7 @@ public class ServicioRankingImpl implements ServicioRanking {
                 .collect(Collectors.toMap(
                         Partida::getUsuario,
                         p -> p,
-                        (p1, p2) -> calcularPuntajePonderado(p1) >= calcularPuntajePonderado(p2) ? p1 : p2
+                        (p1, p2) -> obtenerPuntajeCalculado(p1) >= obtenerPuntajeCalculado(p2) ? p1 : p2
                 ));
 
         // 3. Convertir a DTO y ordenar por el puntaje ponderado
@@ -53,7 +53,7 @@ public class ServicioRankingImpl implements ServicioRanking {
                         p.getUsuario(),
                         p.getTiempoTotal(),
                         p.getPistasUsadas(),
-                        calcularPuntajePonderado(p) // no se muestra, solo para ordenar
+                        obtenerPuntajeCalculado(p) // no se muestra, solo para ordenar
                 ))
                 .sorted(Comparator.comparing(PuestoRankingDTO::getPuntajeCalculado).reversed())
                 .collect(Collectors.toList());
@@ -67,7 +67,7 @@ public class ServicioRankingImpl implements ServicioRanking {
     }
 
 
-    public Double calcularPuntajePonderado(Partida partida) {
+    public Double obtenerPuntajeCalculado(Partida partida) {
         double puntajeMaximo = partida.getSala().getCantidadDeEtapas() * 100;
         double rendimiento = (partida.getPuntaje() / puntajeMaximo); // entre 0 y 1
 

@@ -9,5 +9,5 @@ public interface ServicioRanking {
 
     List<PuestoRankingDTO> obtenerRanking();
 
-    Double calcularPuntajePonderado(Partida partida);
+    Double obtenerPuntajeCalculado(Partida partida);
 }
