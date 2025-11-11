@@ -43,7 +43,7 @@
             <div th:if="${error != null}" th:text="${error}" class="text-danger mt-2 mb-2 fw-bold text-center"></div>
 
             <div class="card p-4 shadow">
-                <h2 class="card-title text-center" th:text="'Ranking Global'"></h2>
+                <h2 class="card-title text-center">Ranking Global</h2>
 
                 <div class="table-responsive">
                     <table class="table table-striped mt-4 mb-0 text-center align-middle ranking-table">
@@ -60,10 +60,21 @@
                         </thead>
                         <tbody>
                         <tr th:each="ranking, i : ${rankings}">
-                            <td th:text="${ranking.puesto}"></td>
-                            <td th:text="${ranking.usuario.nombreUsuario}"></td>
+
+                            <td>
+                                <img th:if="${ranking.puesto <= 3}"
+                                     th:src="@{/img/puesto-{p}.png(p=${ranking.puesto})}"
+                                     style="width: 50px;">
+                                <p th:if="${ranking.puesto > 3}" th:text="${ranking.puesto}"></p>
+                            </td>
+                            <td class="nombre-u " th:text="${ranking.usuario.nombreUsuario}"></td>
                             <td th:text="${ranking.sala.nombre}"></td>
-                            <td th:text="${ranking.sala.dificultad}"></td>
+                            <td     th:classappend="${
+                                                    #strings.toUpperCase(ranking.sala.dificultad) == 'AVANZADO' ? ' text-danger' :
+                                                    (#strings.toUpperCase(ranking.sala.dificultad) == 'INTERMEDIO' ? ' text-warning' :
+                                                    (#strings.toUpperCase(ranking.sala.dificultad) == 'PRINCIPIANTE' ? ' text-success' : ''))}"
+                                th:text="${ranking.sala.dificultad}">
+                            </td>
                             <td th:text="${(ranking.tiempoTotal / 60) + 'm ' + (ranking.tiempoTotal % 60) + 's'}"></td>
                             <td th:text="${ranking.cantidadPistas}"></td>
                             <td th:text="${ranking.puntaje}"></td>
