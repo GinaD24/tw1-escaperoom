@@ -15,7 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import static org.mockito.ArgumentMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.*;
@@ -286,6 +291,109 @@ public class ControladorPartidaTest {
         assertThat(modelAndView.getModel().get("partida"), equalTo(partida));
         verify(servicioPartida).finalizarPartida(idUsuario, partida.getGanada());
     }
+
+    @Test
+    public void deberiaObtenerUnMapaConLosDatosDelAcertijoBonus() {
+        Long idUsuario = 1L;
+        Etapa etapa = crearEtapaTest();
+        Acertijo acertijo = crearAcertijoTest();
+        acertijo.setTipo(TipoAcertijo.BONUS);
+
+        ImagenAcertijo img1 = new ImagenAcertijo(acertijo, "a");
+        acertijo.setImagenes(new HashSet<>(Set.of(img1)));
+
+        when(datosPartidaSesion.getIdEtapa()).thenReturn(etapa.getId());
+        when(servicioPartida.obtenerAcertijoBonus(etapa.getId(), idUsuario)).thenReturn(acertijo);
+
+        Map<String,Object> datosBonus = controladorPartida.obtenerAcertijoBonus(idUsuario);
+
+        assertThat(datosBonus.get("descripcion"), equalTo(acertijo.getDescripcion()));
+        assertThat(datosBonus.get("id"), equalTo(acertijo.getId()));
+        assertThat(datosBonus.get("imagenes"), equalTo(acertijo.getImagenes().stream().map(ImagenAcertijo::getNombreArchivo).collect(Collectors.toList())));
+        verify(servicioPartida).obtenerAcertijoBonus(etapa.getId(), idUsuario);
+        verify(datosPartidaSesion).getIdEtapa();
+    }
+
+    @Test
+    public void deberiaDevolverUnOK_SiElUsuarioContestoBienElAcertijoBonus() {
+        Long idUsuario = 1L;
+        Etapa etapa = crearEtapaTest();
+        Acertijo acertijo = crearAcertijoTest();
+        acertijo.setTipo(TipoAcertijo.BONUS);
+
+        ImagenAcertijo img1 = new ImagenAcertijo(acertijo, "a");
+        acertijo.setImagenes(new HashSet<>(Set.of(img1)));
+        acertijo.setRespuesta(new Respuesta("si"));
+
+        AcertijoActualDTO acertijoActualBonusDTO = new AcertijoActualDTO();
+        acertijoActualBonusDTO.setTipo(acertijo.getTipo());
+        acertijoActualBonusDTO.setId(acertijo.getId());
+        acertijoActualBonusDTO.setRespuestaCorrecta(acertijo.getRespuesta().getRespuesta());
+
+        String respuesta = "si";
+
+        when(datosPartidaSesion.getIdEtapa()).thenReturn(etapa.getId());
+        when(servicioPartida.obtenerAcertijoBonus(etapa.getId(), idUsuario)).thenReturn(acertijo);
+        when(servicioPartida.validarRespuesta(any(AcertijoActualDTO.class), anyString(), anyLong(), isNull())).thenReturn(true);
+        String resultadoObtenido = controladorPartida.validarBonus(respuesta ,idUsuario);
+
+        assertThat(resultadoObtenido, equalTo("ok"));
+        verify(servicioPartida).obtenerAcertijoBonus(etapa.getId(), idUsuario);
+        verify(datosPartidaSesion).getIdEtapa();
+    }
+
+    @Test
+    public void deberiaDevolverUnErrorNoBonus_SiElTipoDeAcertijoNOEsBonus() {
+        Long idUsuario = 1L;
+        Etapa etapa = crearEtapaTest();
+        Acertijo acertijo = crearAcertijoTest();
+        acertijo.setTipo(TipoAcertijo.DRAG_DROP);
+
+        ImagenAcertijo img1 = new ImagenAcertijo(acertijo, "a");
+        acertijo.setImagenes(new HashSet<>(Set.of(img1)));
+        acertijo.setRespuesta(new Respuesta("si"));
+
+        String respuesta = "si";
+
+        when(datosPartidaSesion.getIdEtapa()).thenReturn(etapa.getId());
+        when(servicioPartida.obtenerAcertijoBonus(etapa.getId(), idUsuario)).thenReturn(acertijo);
+
+        String resultadoObtenido = controladorPartida.validarBonus(respuesta ,idUsuario);
+
+        assertThat(resultadoObtenido, equalTo("error: no_bonus"));
+        verify(servicioPartida).obtenerAcertijoBonus(etapa.getId(), idUsuario);
+        verify(datosPartidaSesion).getIdEtapa();
+    }
+
+    @Test
+    public void deberiaDevolverUnErrorIncorrecta_SiLaRespuestaEstaMal() {
+        Long idUsuario = 1L;
+        Etapa etapa = crearEtapaTest();
+        Acertijo acertijo = crearAcertijoTest();
+        acertijo.setTipo(TipoAcertijo.BONUS);
+
+        ImagenAcertijo img1 = new ImagenAcertijo(acertijo, "a");
+        acertijo.setImagenes(new HashSet<>(Set.of(img1)));
+        acertijo.setRespuesta(new Respuesta("si"));
+
+        AcertijoActualDTO acertijoActualBonusDTO = new AcertijoActualDTO();
+        acertijoActualBonusDTO.setTipo(acertijo.getTipo());
+        acertijoActualBonusDTO.setId(acertijo.getId());
+        acertijoActualBonusDTO.setRespuestaCorrecta(acertijo.getRespuesta().getRespuesta());
+
+        String respuesta = "no";
+
+        when(datosPartidaSesion.getIdEtapa()).thenReturn(etapa.getId());
+        when(servicioPartida.obtenerAcertijoBonus(etapa.getId(), idUsuario)).thenReturn(acertijo);
+        when(servicioPartida.validarRespuesta(any(AcertijoActualDTO.class), eq("no"), anyLong(), isNull())).thenReturn(false);
+        String resultadoObtenido = controladorPartida.validarBonus(respuesta ,idUsuario);
+
+        assertThat(resultadoObtenido, equalTo("error:incorrecta"));
+        verify(servicioPartida).obtenerAcertijoBonus(etapa.getId(), idUsuario);
+        verify(datosPartidaSesion).getIdEtapa();
+    }
+
+
 
 
     private Sala crearSalaTest() {

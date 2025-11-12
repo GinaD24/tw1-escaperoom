@@ -26,8 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -144,7 +143,7 @@ public class ServicioPartidaImplTest {
 
         assertNotNull(acertijoElegido);
         verify(repositorioPartida).obtenerListaDeAcertijos(etapa.getId());
-        verify(repositorioPartida).registrarAcertijoMostrado(any(AcertijoUsuario.class));
+        verify(repositorioPartida).registrarAcertijoMostrado(any());
     }
 
     @Test
@@ -182,7 +181,7 @@ public class ServicioPartidaImplTest {
         verify(repositorioPartida).obtenerAcertijosVistosPorUsuarioPorEtapa(idUsuario, etapa.getId());
         verify(repositorioUsuario).obtenerUsuarioPorId(idUsuario);
         verify(repositorioPartida).buscarEtapaPorId(etapa.getId());
-        verify(repositorioPartida).registrarAcertijoMostrado(any(AcertijoUsuario.class));
+        verify(repositorioPartida).registrarAcertijoMostrado(any());
     }
 
     @Test

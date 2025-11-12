@@ -10,7 +10,7 @@
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
 
     <link rel="stylesheet" th:href="@{/css/ranking-sala.css}"/>
-    <link rel="stylesheet" th:href="@{/css/perfilJugador.css}"/>
+
 
 </head>
 
@@ -36,63 +36,59 @@
     </nav>
 </header>
 
-<div class="container my-5">
+<div class="container-fluid p-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="row justify-content-center mb-4">
-                <div class="col-md-6">
-
-                    <form th:action="@{/ranking/filtrarPorSala/}" method="get">
-                        <div class="input-group">
-                            <select class="form-select rounded-pill me-2" name="filtroSalas" id="filtroSalas">
-                                <option disabled>Filtrar por sala</option>
-                                <option th:each="sala : ${salas}"
-                                        th:value="${sala.id}"
-                                        th:text="${sala.nombre}">
-                                </option>
-                            </select>
-                            <button type="submit" class="btn btn-primary rounded-pill px-4" id="btn-filtrarRanking" DISABLED>
-                                Filtrar
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <div class="col">
 
             <div th:if="${error != null}" th:text="${error}" class="text-danger mt-2 mb-2 fw-bold text-center"></div>
 
             <div class="card p-4 shadow">
-                <h2 class="card-title text-center"><span class="nombre-salas-ranking" th:if="${sala != null}" th:text="'Ranking de ' + ${sala.nombre}"></span>
-                    <span class="sala-no-seleccionada"
-                          th:if="${sala == null}"
-                          th:text="'Selecciona una sala para ver su Ranking'"></span></h2>
-                <table class="table table-striped mt-4">
-                    <thead>
-                    <tr>
-                        <th scope="col">Puesto</th>
-                        <th scope="col">Usuario</th>
-                        <th scope="col">Tiempo</th>
-                        <th scope="col">Pistas</th>
-                        <th scope="col">Puntaje</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="ranking, i : ${rankings}">
-                        <td scope="row" th:text="${i.index + 1}"></td>
-                        <td th:text="${ranking.usuario.nombreUsuario}"></td>
-                        <td th:text="${((ranking.tiempoTotal / 60)) + 'm ' + ((ranking.tiempoTotal % 60)) + 's'}"></td>
-                        <td th:text="${ranking.cantidadPistas}"></td>
-                        <td th:text="${ranking.puntaje}"></td>
-                    </tr>
-                    </tbody>
-                </table>
+                <h2 class="card-title text-center">Ranking Global</h2>
+
+                <div class="table-responsive">
+                    <table class="table table-striped mt-4 mb-0 text-center align-middle ranking-table">
+                        <thead>
+                        <tr>
+                            <th>Puesto</th>
+                            <th>Usuario</th>
+                            <th>Sala</th>
+                            <th>Dificultad</th>
+                            <th>Tiempo</th>
+                            <th>Pistas</th>
+                            <th>Puntaje</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="ranking, i : ${rankings}">
+
+                            <td>
+                                <img th:if="${ranking.puesto <= 3}"
+                                     th:src="@{/img/puesto-{p}.png(p=${ranking.puesto})}"
+                                     style="width: 50px;">
+                                <p th:if="${ranking.puesto > 3}" th:text="${ranking.puesto}"></p>
+                            </td>
+                            <td class="nombre-u " th:text="${ranking.usuario.nombreUsuario}"></td>
+                            <td th:text="${ranking.sala.nombre}"></td>
+                            <td     th:classappend="${
+                                                    #strings.toUpperCase(ranking.sala.dificultad) == 'AVANZADO' ? ' text-danger' :
+                                                    (#strings.toUpperCase(ranking.sala.dificultad) == 'INTERMEDIO' ? ' text-warning' :
+                                                    (#strings.toUpperCase(ranking.sala.dificultad) == 'PRINCIPIANTE' ? ' text-success' : ''))}"
+                                th:text="${ranking.sala.dificultad}">
+                            </td>
+                            <td th:text="${(ranking.tiempoTotal / 60) + 'm ' + (ranking.tiempoTotal % 60) + 's'}"></td>
+                            <td th:text="${ranking.cantidadPistas}"></td>
+                            <td th:text="${ranking.puntaje}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/ranking.js}"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </body>
 </html>

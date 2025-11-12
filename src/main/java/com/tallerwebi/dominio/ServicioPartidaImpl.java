@@ -61,7 +61,6 @@ public class ServicioPartidaImpl implements ServicioPartida {
         if (partida != null) {
             partida.setPistasUsadas(partida.getPistasUsadas() + 1);
             partida.setPuntaje(partida.getPuntaje() - 25);
-            this.repositorioPartida.registrarPistaEnPartida(idUsuario);
         }
     }
 
@@ -151,6 +150,27 @@ public class ServicioPartidaImpl implements ServicioPartida {
         return imagenesAcertijo;
     }
 
+    @Override
+    @Transactional
+    public Acertijo obtenerAcertijoBonus(Long idEtapa, Long idUsuario) {
+        Acertijo acertijoBonusObtenido = this.repositorioPartida.traerAcertijoBonus(idEtapa);
+
+        Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+        AcertijoUsuario acertijoUsuario = new AcertijoUsuario(acertijoBonusObtenido, usuario);
+        Etapa etapa = this.repositorioPartida.buscarEtapaPorId(idEtapa);
+        acertijoUsuario.setEtapa(etapa);
+        this.repositorioPartida.registrarAcertijoMostrado(acertijoUsuario);
+
+        return acertijoBonusObtenido;
+    }
+
+    @Override
+    @Transactional
+    public void sumarPuntajeBonus(Long idUsuario) {
+        Partida partida = repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
+        partida.setPuntaje(partida.getPuntaje() + 50);
+    }
+
 
     @Override
     @Transactional
@@ -203,7 +223,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
         return acertijoSeleccionado;
     }
 
-    @Transactional
+    @Override
     public boolean tiempoExpirado(Partida partida) {
         Integer duracionMinutos = partida.getSala().getDuracion();
         LocalDateTime finEsperado = partida.getInicio().plusMinutes(duracionMinutos);
