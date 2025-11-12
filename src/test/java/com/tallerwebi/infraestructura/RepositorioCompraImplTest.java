@@ -49,8 +49,10 @@ public class RepositorioCompraImplTest {
         usuario2.setEmail("usuario2@test.com");
 
         sala1 = new Sala(4, "El campamento maldito", Dificultad.PRINCIPIANTE, "Campamento", "Estás perdido...", true, 5, "puerta-campamento.png");
+        sala1.setEs_paga(Boolean.TRUE);
         sala1.setCantidadDeEtapas(5);
         sala2 = new Sala(5, "El hospital psiquiatrico", Dificultad.AVANZADO, "Hospital", "Te han encerrado...", true, 12, "puerta-psiquiatrico.png");
+        sala2.setEs_paga(Boolean.TRUE);
         sala2.setCantidadDeEtapas(10);
 
         this.sessionFactory.getCurrentSession().save(usuario1);
