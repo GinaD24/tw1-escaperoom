@@ -1,3 +1,4 @@
+// Archivo: com.tallerwebi.dominio.ServicioPartidaImpl.java (Modificado)
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.*;
@@ -10,7 +11,8 @@ import com.tallerwebi.dominio.interfaz.repositorio.RepositorioSala;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioGeneradorIA;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
-import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
+import com.tallerwebi.dominio.interfaz.servicio.ValidadorAcertijoFactory;
+import com.tallerwebi.dominio.interfaz.servicio.ValidadorAcertijo;
 import com.tallerwebi.presentacion.AcertijoActualDTO;
 import org.eclipse.sisu.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,20 +25,22 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-
 public class ServicioPartidaImpl implements ServicioPartida {
-
 
     private RepositorioPartida repositorioPartida;
     private RepositorioUsuario repositorioUsuario;
     private RepositorioSala repositorioSala;
+    private final ValidadorAcertijoFactory validadorFactory;
 
     @Autowired
     public ServicioPartidaImpl(RepositorioPartida repositorioPartida,
-                               RepositorioUsuario repositorioUsuario, RepositorioSala repositorioSala) {
+                               RepositorioUsuario repositorioUsuario,
+                               RepositorioSala repositorioSala,
+                               ValidadorAcertijoFactory validadorFactory) {
         this.repositorioPartida = repositorioPartida;
         this.repositorioUsuario = repositorioUsuario;
         this.repositorioSala = repositorioSala;
+        this.validadorFactory = validadorFactory;
     }
 
     @Override
@@ -58,95 +62,21 @@ public class ServicioPartidaImpl implements ServicioPartida {
             partida.setPistasUsadas(partida.getPistasUsadas() + 1);
             partida.setPuntaje(partida.getPuntaje() - 25);
         }
-
     }
 
     @Transactional
     @Override
     public Boolean validarRespuesta(AcertijoActualDTO acertijoActual, String respuestaUsuario, Long idUsuario, @Nullable String ordenSecuenciaCorrecto) {
-        TipoAcertijo tipo = acertijoActual.getTipo();
-        Long idAcertijo = acertijoActual.getId();
+
         Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
-        boolean esCorrecta = false;
 
-        switch(tipo){
-            case BONUS:
-            case ADIVINANZA:
-                String respuestaCorrecta = acertijoActual.getRespuestaCorrecta();
-
-                String[] palabrasIngresadas = respuestaUsuario.toLowerCase().split("\\s+");
-                if(Arrays.asList(palabrasIngresadas).contains(respuestaCorrecta.toLowerCase())){
-                    esCorrecta = true;
-                    partida.setPuntaje(partida.getPuntaje() + 100);
-                }
-                break;
-
-            case ORDENAR_IMAGEN:
-                if (idAcertijo == null) {
-                    return false;
-                }
-
-                List<Long> ordenSeleccionado = Arrays.stream(respuestaUsuario.split(","))
-                        .map(Long::valueOf)
-                        .collect(Collectors.toList());
-
-                List<Long> ordenCorrecto = this.repositorioPartida.obtenerOrdenDeImgCorrecto(idAcertijo);
-
-                if (ordenSeleccionado.equals(ordenCorrecto)) {
-                    esCorrecta = true;
-                    partida.setPuntaje(partida.getPuntaje() + 100);
-                }
-                break;
-            case SECUENCIA:
-                if (ordenSecuenciaCorrecto == null) {
-                    throw new IllegalArgumentException("Se requiere el orden correcto para acertijo SECUENCIA");
-                }
-
-
-                List<Long> ordenSeleccionadoSecuencia = null;
-                if(!respuestaUsuario.isEmpty()) {
-                    ordenSeleccionadoSecuencia = Arrays.stream(respuestaUsuario.split(","))
-                            .map(Long::valueOf)
-                            .collect(Collectors.toList());
-                }
-                List<Long> ordenCorrectoList = Arrays.stream(ordenSecuenciaCorrecto.split(","))
-                        .map(Long::valueOf)
-                        .collect(Collectors.toList());
-
-                if (ordenSeleccionadoSecuencia != null && ordenSeleccionadoSecuencia.equals(ordenCorrectoList)) {
-                    esCorrecta = true;
-                    partida.setPuntaje(partida.getPuntaje() + 100);
-                }
-                break;
-
-            case DRAG_DROP:
-                if (idAcertijo == null) {
-                    return false;
-                }
-
-                Map<Long, String> respuestaDragDrop = Arrays.stream(respuestaUsuario.split(","))
-                        .map(pair -> pair.split(":"))
-                        .filter(arr -> arr.length == 2)
-                        .collect(Collectors.toMap(
-                                arr -> Long.valueOf(arr[0]),
-                                arr -> arr[1]
-                        ));
-
-                List<DragDropItem> itemsCorrectos = this.repositorioPartida.obtenerItemsDragDrop(idAcertijo);
-
-                boolean todoCorrecto = itemsCorrectos.stream()
-                        .allMatch(item ->
-                                respuestaDragDrop.containsKey(item.getId()) &&
-                                        respuestaDragDrop.get(item.getId()).equals(item.getCategoriaCorrecta())
-                        );
-                if (todoCorrecto) {
-                    esCorrecta = true;
-                    partida.setPuntaje(partida.getPuntaje() + 100);
-                }
-                break;
-
-
+        if (partida == null) {
+            return false;
         }
+
+        ValidadorAcertijo validador = validadorFactory.getValidador(acertijoActual.getTipo());
+
+        boolean esCorrecta = validador.validar(acertijoActual, respuestaUsuario, partida, ordenSecuenciaCorrecto);
 
         return esCorrecta;
     }
@@ -216,7 +146,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
     @Override
     public List<ImagenAcertijo> obtenerSecuenciaAleatoria(Acertijo acertijo) {
         List<ImagenAcertijo> imagenesAcertijo = new ArrayList<>(acertijo.getImagenes());
-        Collections.shuffle(imagenesAcertijo);
+        Collections.shuffle(imagenesAcertijo); //lo hace de forma aleatoria
         return imagenesAcertijo;
     }
 
@@ -280,7 +210,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
             Random random = new Random();
             do {
                 acertijoSeleccionado = listaDeAcertijosObtenida.get(random.nextInt(listaDeAcertijosObtenida.size()));
-            } while (acertijosVistos != null && acertijosVistos.contains(acertijoSeleccionado));
+            } while (acertijosVistos != null && acertijosVistos.contains(acertijoSeleccionado)); //trae los acertijos random
 
 
             Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(id_usuario);
@@ -299,5 +229,4 @@ public class ServicioPartidaImpl implements ServicioPartida {
         LocalDateTime finEsperado = partida.getInicio().plusMinutes(duracionMinutos);
         return LocalDateTime.now().isAfter(finEsperado);
     }
-
 }

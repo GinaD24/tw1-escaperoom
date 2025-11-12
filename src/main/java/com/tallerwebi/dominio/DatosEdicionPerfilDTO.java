@@ -6,7 +6,7 @@ import com.tallerwebi.dominio.excepcion.DatosIncompletosException;
 import com.tallerwebi.dominio.excepcion.ValidacionInvalidaException;
 import org.springframework.web.multipart.MultipartFile;
 
-public class DatosEdicionPerfilDTO {
+public class DatosEdicionPerfilDTO { //objeto simple de Java que solo contiene campos (atributos), y métodos para acceder y modificar esos campo
 
     private Long id;
     private String nombreUsuario;

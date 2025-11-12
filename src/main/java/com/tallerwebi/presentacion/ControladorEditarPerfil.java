@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/configuracion")
+@RequestMapping("/configuracion") //
 public class ControladorEditarPerfil {
 
     private final ServicioEditarPerfil servicioEditarPerfil;
@@ -31,7 +31,7 @@ public class ControladorEditarPerfil {
 
     @RequestMapping(path = "/editar", method = RequestMethod.GET)
     public ModelAndView vistaEditarPerfil(HttpSession session) {
-        ModelMap modelo = new ModelMap();
+        ModelMap modelo = new ModelMap(); //vista cn los datos actuales
         Long idUsuario = (Long) session.getAttribute("id_usuario");
 
         if (idUsuario == null) {
@@ -61,7 +61,7 @@ public class ControladorEditarPerfil {
 
         // bloque try-catch para validaciones DTO
         try {
-            datos.validarDatos();
+            datos.validarDatos(); //validacion antes de guaradr cambios
         } catch (DatosIncompletosException | ValidacionInvalidaException e) {
             atributos.addFlashAttribute("error", "Error de validación: " + e.getMessage());
             atributos.addFlashAttribute("datosPerfil", datos);
@@ -74,7 +74,7 @@ public class ControladorEditarPerfil {
 
 
         //  bloque try-catch para actualizar el perfil
-        try {
+        try { //actualiza los datos y vuelve al perfil con losd atos editados
             datos.setId(idUsuario);
             servicioEditarPerfil.actualizarPerfil(datos);
 
