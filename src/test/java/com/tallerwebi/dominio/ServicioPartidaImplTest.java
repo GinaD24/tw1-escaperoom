@@ -9,9 +9,9 @@ import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPartida;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioSala;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
-
 import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
-
+import com.tallerwebi.dominio.interfaz.servicio.ValidadorAcertijo;
+import com.tallerwebi.dominio.interfaz.servicio.ValidadorAcertijoFactory;
 import com.tallerwebi.infraestructura.RepositorioPartidaImpl;
 import com.tallerwebi.infraestructura.RepositorioSalaImpl;
 import com.tallerwebi.infraestructura.RepositorioUsuarioImpl;
@@ -34,17 +34,21 @@ import static org.mockito.Mockito.*;
 public class ServicioPartidaImplTest {
 
     private RepositorioPartida repositorioPartida;
-    private ServicioPartida servicioPartida;
     private RepositorioUsuario repositorioUsuario;
     private RepositorioSala repositorioSala;
+    private ValidadorAcertijoFactory validadorFactory;
+    private ServicioPartida servicioPartida;
 
     @BeforeEach
     public void init() {
-        this.repositorioPartida = mock(RepositorioPartidaImpl.class);
-        this.repositorioUsuario = mock(RepositorioUsuarioImpl.class);
-        this.repositorioSala = mock(RepositorioSalaImpl.class);
-        this.servicioPartida = new ServicioPartidaImpl(repositorioPartida, repositorioUsuario, repositorioSala);
+        this.repositorioPartida = mock(RepositorioPartida.class);
+        this.repositorioUsuario = mock(RepositorioUsuario.class);
+        this.repositorioSala = mock(RepositorioSala.class);
+        this.validadorFactory = mock(ValidadorAcertijoFactory.class);
+
+        this.servicioPartida = new ServicioPartidaImpl(repositorioPartida, repositorioUsuario, repositorioSala, validadorFactory);
     }
+
 
     @Test
     public void deberiaSolicitarAlRepositorioPartidaQueGuardeLaPartida() {
@@ -56,6 +60,8 @@ public class ServicioPartidaImplTest {
         usuario.setId(1L);
 
         when(this.repositorioUsuario.obtenerUsuarioPorId(usuario.getId())).thenReturn(usuario);
+        when(this.repositorioSala.obtenerSalaPorId(sala.getId())).thenReturn(sala); // Mock para obtener la sala
+
         this.servicioPartida.guardarPartida(partida, usuario.getId(), sala.getId());
 
         verify(repositorioPartida).guardarPartida(partida);
@@ -67,10 +73,6 @@ public class ServicioPartidaImplTest {
                 true, 10,"puerta-mansion.png");
         Partida partida = new Partida(LocalDateTime.now());
         partida.setSala(sala);
-        Usuario usuario = new Usuario();
-        usuario.setId(1L);
-
-        when(this.repositorioUsuario.obtenerUsuarioPorId(usuario.getId())).thenReturn(usuario);
 
         assertThrows(SesionDeUsuarioExpirada.class, () -> {
             this.servicioPartida.guardarPartida(partida, null, sala.getId());
@@ -84,14 +86,13 @@ public class ServicioPartidaImplTest {
                 true, 10,"puerta-mansion.png");
         Partida partida = new Partida(LocalDateTime.now());
         partida.setSala(sala);
-        Usuario usuario = new Usuario();
-        usuario.setId(1L);
+        Long idUsuario = 1L;
 
-        when(this.repositorioUsuario.obtenerUsuarioPorId(usuario.getId())).thenReturn(null);
-
+        when(this.repositorioUsuario.obtenerUsuarioPorId(idUsuario)).thenReturn(null);
+        when(this.repositorioSala.obtenerSalaPorId(sala.getId())).thenReturn(sala); // Se necesita este mock
 
         assertThrows(UsuarioInexistente.class, () -> {
-            this.servicioPartida.guardarPartida(partida, usuario.getId(), sala.getId());
+            this.servicioPartida.guardarPartida(partida, idUsuario, sala.getId());
         });
 
     }
@@ -105,8 +106,10 @@ public class ServicioPartidaImplTest {
 
         when(repositorioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(etapa);
 
-        this.servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
+        Etapa etapaObtenida = this.servicioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
+
         verify(repositorioPartida).obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
+        assertThat(etapaObtenida, equalTo(etapa));
     }
 
     @Test
@@ -114,7 +117,6 @@ public class ServicioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
-        etapa.setId(1L);
 
         when(repositorioPartida.obtenerEtapaPorNumero(sala.getId(), etapa.getNumero())).thenReturn(null);
 
@@ -134,6 +136,7 @@ public class ServicioPartidaImplTest {
         Usuario usuarioMock = new Usuario();
 
         when(repositorioPartida.obtenerListaDeAcertijos(etapa.getId())).thenReturn(listaDeAcertijos);
+        when(repositorioPartida.obtenerAcertijosVistosPorUsuarioPorEtapa(anyLong(), anyLong())).thenReturn(new ArrayList<>()); // Evitar NullPointerException
         when(repositorioUsuario.obtenerUsuarioPorId(idUsuario)).thenReturn(usuarioMock);
         when(repositorioPartida.buscarEtapaPorId(etapa.getId())).thenReturn(etapa);
 
@@ -188,16 +191,21 @@ public class ServicioPartidaImplTest {
         acertijoDTO.setTipo(TipoAcertijo.ADIVINANZA);
         acertijoDTO.setRespuestaCorrecta("Respuesta");
 
-        Respuesta respuestaIngresada = new Respuesta("Respuesta");
         Long idUsuario = 1L;
-
-
         Partida partida = new Partida(LocalDateTime.now());
-        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+        ValidadorAcertijo validadorMock = mock(ValidadorAcertijo.class); // Mock del validador
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO,respuestaIngresada.getRespuesta(), idUsuario, null);
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+        // Configura el Factory para que devuelva el mock específico para ADIVINANZA
+        when(validadorFactory.getValidador(TipoAcertijo.ADIVINANZA)).thenReturn(validadorMock);
+        // Simula que la validación fue exitosa
+        when(validadorMock.validar(eq(acertijoDTO), eq("Respuesta"), eq(partida), isNull())).thenReturn(true);
+
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, "Respuesta", idUsuario, null);
 
         assertTrue(validacionDeRespuesta);
+        // Verifica que se haya llamado al validador correcto
+        verify(validadorMock).validar(eq(acertijoDTO), eq("Respuesta"), eq(partida), isNull());
     }
 
     @Test
@@ -207,14 +215,18 @@ public class ServicioPartidaImplTest {
         acertijoDTO.setRespuestaCorrecta("Respuesta");
 
         Long idUsuario = 1L;
-        Respuesta respuestaIngresada = new Respuesta("LA Respuesta INGRESADA");
-
+        String respuestaIngresada = "LA Respuesta INGRESADA"; // Respuesta con contenido
         Partida partida = new Partida(LocalDateTime.now());
-        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+        ValidadorAcertijo validadorMock = mock(ValidadorAcertijo.class);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO,respuestaIngresada.getRespuesta(), idUsuario, null);
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+        when(validadorFactory.getValidador(TipoAcertijo.ADIVINANZA)).thenReturn(validadorMock);
+        when(validadorMock.validar(eq(acertijoDTO), eq(respuestaIngresada), eq(partida), isNull())).thenReturn(true);
+
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, respuestaIngresada, idUsuario, null);
 
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        verify(validadorMock).validar(eq(acertijoDTO), eq(respuestaIngresada), eq(partida), isNull());
         assertTrue(validacionDeRespuesta);
     }
 
@@ -225,15 +237,20 @@ public class ServicioPartidaImplTest {
         acertijoDTO.setTipo(TipoAcertijo.ADIVINANZA);
         acertijoDTO.setRespuestaCorrecta("Respuesta");
 
-        Respuesta respuestaIngresada = new Respuesta("akhsdgauysduiaRespuestahbsduykhagsdygasdyi");
+        String respuestaIngresada = "akhsdgauysduiaRespuestahbsduykhagsdygasdyi";
         Long idUsuario = 1L;
 
         Partida partida = new Partida(LocalDateTime.now());
-        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+        ValidadorAcertijo validadorMock = mock(ValidadorAcertijo.class);
 
-        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO,respuestaIngresada.getRespuesta(), idUsuario, null);
+        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+        when(validadorFactory.getValidador(TipoAcertijo.ADIVINANZA)).thenReturn(validadorMock);
+        when(validadorMock.validar(eq(acertijoDTO), eq(respuestaIngresada), eq(partida), isNull())).thenReturn(false);
+
+        Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, respuestaIngresada, idUsuario, null);
 
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        verify(validadorMock).validar(eq(acertijoDTO), eq(respuestaIngresada), eq(partida), isNull());
         assertFalse(validacionDeRespuesta);
     }
 
@@ -244,22 +261,18 @@ public class ServicioPartidaImplTest {
         acertijoDTO.setId(1L);
         acertijoDTO.setTipo(TipoAcertijo.ORDENAR_IMAGEN);
 
-        List<Long> ordenCorrecto = new ArrayList<>();
-        ordenCorrecto.add(1L);
-        ordenCorrecto.add(2L);
-        ordenCorrecto.add(3L);
-
         Long idUsuario = 1L;
-
         String ordenIngresado = "1,2,3";
+        ValidadorAcertijo validadorMock = mock(ValidadorAcertijo.class);
 
-        when(repositorioPartida.obtenerOrdenDeImgCorrecto(acertijoDTO.getId())).thenReturn(ordenCorrecto);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+        when(validadorFactory.getValidador(TipoAcertijo.ORDENAR_IMAGEN)).thenReturn(validadorMock);
+        when(validadorMock.validar(eq(acertijoDTO), eq(ordenIngresado), eq(partida), isNull())).thenReturn(true);
 
         Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario, null);
 
-        verify(repositorioPartida).obtenerOrdenDeImgCorrecto(acertijoDTO.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        verify(validadorMock).validar(eq(acertijoDTO), eq(ordenIngresado), eq(partida), isNull());
         assertTrue(validacionDeRespuesta);
     }
 
@@ -270,22 +283,18 @@ public class ServicioPartidaImplTest {
         acertijoDTO.setId(1L);
         acertijoDTO.setTipo(TipoAcertijo.ORDENAR_IMAGEN);
 
-        List<Long> ordenCorrecto = new ArrayList<>();
-        ordenCorrecto.add(1L);
-        ordenCorrecto.add(2L);
-        ordenCorrecto.add(3L);
-
         Long idUsuario = 1L;
-
         String ordenIngresado = "2,1,3";
+        ValidadorAcertijo validadorMock = mock(ValidadorAcertijo.class);
 
-        when(repositorioPartida.obtenerOrdenDeImgCorrecto(acertijoDTO.getId())).thenReturn(ordenCorrecto);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+        when(validadorFactory.getValidador(TipoAcertijo.ORDENAR_IMAGEN)).thenReturn(validadorMock);
+        when(validadorMock.validar(eq(acertijoDTO), eq(ordenIngresado), eq(partida), isNull())).thenReturn(false);
 
         Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario, null);
 
-        verify(repositorioPartida).obtenerOrdenDeImgCorrecto(acertijoDTO.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        verify(validadorMock).validar(eq(acertijoDTO), eq(ordenIngresado), eq(partida), isNull());
         assertFalse(validacionDeRespuesta);
     }
 
@@ -296,30 +305,21 @@ public class ServicioPartidaImplTest {
         acertijoDTO.setId(1L);
         acertijoDTO.setTipo(TipoAcertijo.DRAG_DROP);
 
-        DragDropItem item1 = new DragDropItem();
-        item1.setCategoriaCorrecta("cat1");
-        item1.setId(1L);
-        DragDropItem item2 = new DragDropItem();
-        item2.setId(2L);
-        item2.setCategoriaCorrecta("cat2");
-
-        List<DragDropItem> items = new ArrayList<>();
-        items.add(item1);
-        items.add(item2);
-
         Long idUsuario = 1L;
-
         String ordenIngresado = "1:cat1,2:cat2";
+        ValidadorAcertijo validadorMock = mock(ValidadorAcertijo.class);
 
-        when(repositorioPartida.obtenerItemsDragDrop(acertijoDTO.getId())).thenReturn(items);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+        when(validadorFactory.getValidador(TipoAcertijo.DRAG_DROP)).thenReturn(validadorMock);
+        when(validadorMock.validar(eq(acertijoDTO), eq(ordenIngresado), eq(partida), isNull())).thenReturn(true);
 
         Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario, null);
 
-        verify(repositorioPartida).obtenerItemsDragDrop(acertijoDTO.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        verify(validadorMock).validar(eq(acertijoDTO), eq(ordenIngresado), eq(partida), isNull());
         assertTrue(validacionDeRespuesta);
     }
+
     @Test
     public void deberiaDevolverFalseSiNOResolvioCorrectamenteElAcertijo_DeTipoDRAG_DROP(){
         Partida partida = new Partida(LocalDateTime.now());
@@ -327,28 +327,18 @@ public class ServicioPartidaImplTest {
         acertijoDTO.setId(1L);
         acertijoDTO.setTipo(TipoAcertijo.DRAG_DROP);
 
-        DragDropItem item1 = new DragDropItem();
-        item1.setCategoriaCorrecta("cat1");
-        item1.setId(1L);
-        DragDropItem item2 = new DragDropItem();
-        item2.setId(2L);
-        item2.setCategoriaCorrecta("cat2");
-
-        List<DragDropItem> items = new ArrayList<>();
-        items.add(item1);
-        items.add(item2);
-
         Long idUsuario = 1L;
-
         String ordenIngresado = "1:cat2,2:cat1";
+        ValidadorAcertijo validadorMock = mock(ValidadorAcertijo.class);
 
-        when(repositorioPartida.obtenerItemsDragDrop(acertijoDTO.getId())).thenReturn(items);
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+        when(validadorFactory.getValidador(TipoAcertijo.DRAG_DROP)).thenReturn(validadorMock);
+        when(validadorMock.validar(eq(acertijoDTO), eq(ordenIngresado), eq(partida), isNull())).thenReturn(false);
 
         Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario, null);
 
-        verify(repositorioPartida).obtenerItemsDragDrop(acertijoDTO.getId());
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        verify(validadorMock).validar(eq(acertijoDTO), eq(ordenIngresado), eq(partida), isNull());
         assertFalse(validacionDeRespuesta);
     }
 
@@ -360,16 +350,18 @@ public class ServicioPartidaImplTest {
         acertijoDTO.setTipo(TipoAcertijo.SECUENCIA);
 
         String ordenCorrecto = "1,2,3";
-
         Long idUsuario = 1L;
-
         String ordenIngresado = "1,2,3";
+        ValidadorAcertijo validadorMock = mock(ValidadorAcertijo.class);
 
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+        when(validadorFactory.getValidador(TipoAcertijo.SECUENCIA)).thenReturn(validadorMock);
+        when(validadorMock.validar(eq(acertijoDTO), eq(ordenIngresado), eq(partida), eq(ordenCorrecto))).thenReturn(true);
 
         Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario, ordenCorrecto);
 
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        verify(validadorMock).validar(eq(acertijoDTO), eq(ordenIngresado), eq(partida), eq(ordenCorrecto));
         assertTrue(validacionDeRespuesta);
     }
 
@@ -381,20 +373,20 @@ public class ServicioPartidaImplTest {
         acertijoDTO.setTipo(TipoAcertijo.SECUENCIA);
 
         String ordenCorrecto = "2,3,1";
-
         Long idUsuario = 1L;
-
         String ordenIngresado = "1,2,3";
+        ValidadorAcertijo validadorMock = mock(ValidadorAcertijo.class);
 
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
+        when(validadorFactory.getValidador(TipoAcertijo.SECUENCIA)).thenReturn(validadorMock);
+        when(validadorMock.validar(eq(acertijoDTO), eq(ordenIngresado), eq(partida), eq(ordenCorrecto))).thenReturn(false);
 
         Boolean validacionDeRespuesta = this.servicioPartida.validarRespuesta(acertijoDTO, ordenIngresado, idUsuario, ordenCorrecto);
 
         verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
+        verify(validadorMock).validar(eq(acertijoDTO), eq(ordenIngresado), eq(partida), eq(ordenCorrecto));
         assertFalse(validacionDeRespuesta);
     }
-
-
 
     @Test
     public void deberiaDevolverUnaEtapaPorID(){
@@ -430,6 +422,7 @@ public class ServicioPartidaImplTest {
         partida.setSala(sala);
         Usuario usuario = new Usuario();
         usuario.setId(1L);
+        partida.setInicio(LocalDateTime.now().minusMinutes(5));
 
         when(repositorioPartida.obtenerPartidaActivaPorUsuario(usuario.getId())).thenReturn(partida);
 
@@ -468,6 +461,7 @@ public class ServicioPartidaImplTest {
         itemsDD.add(item2);
 
         Acertijo acertijo = new Acertijo( "a1");
+        acertijo.setId(1L);
         acertijo.setTipo(TipoAcertijo.DRAG_DROP);
         acertijo.setDragDropItems(itemsDD);
 
@@ -482,6 +476,7 @@ public class ServicioPartidaImplTest {
     @Test
     public void deberiaDevolverUnaPartida_CuandoLaBuscoporId(){
         Partida partida = new Partida(LocalDateTime.now());
+        partida.setId(1L);
 
         when(repositorioPartida.buscarPartidaPorId(partida.getId())).thenReturn(partida);
 
@@ -490,6 +485,4 @@ public class ServicioPartidaImplTest {
         assertThat(partidaObtenida, equalTo(partida));
         verify(repositorioPartida).buscarPartidaPorId(partida.getId());
     }
-
-
 }

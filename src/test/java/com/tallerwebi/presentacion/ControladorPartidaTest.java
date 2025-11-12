@@ -132,8 +132,6 @@ public class ControladorPartidaTest {
 
         mockUsuarioSesion(requestMock, sessionMock, idUsuario);
 
-        // Pasamos 'null' para acertijoDTO para simular que no hay acertijo previo
-        // en la sesión, forzando la ejecución de 'actualizarSesion'.
         mockDatosPartidaSesion(datosPartidaSesion, sala.getId(), etapa.getNumero(), null, null);
 
         DatosPartidaDTO dto = new DatosPartidaDTO(sala, etapa, acertijo);
@@ -222,7 +220,6 @@ public class ControladorPartidaTest {
         verify(servicioSala).obtenerSalaPorId(sala.getId());
         verify(servicioPartida).obtenerEtapaPorNumero(sala.getId(), etapa.getNumero());
 
-        // Verificamos que NO se llamó a buscarAcertijoPorId (porque es ADIVINANZA)
         verify(servicioPartida, times(0)).buscarAcertijoPorId(any());
     }
 
