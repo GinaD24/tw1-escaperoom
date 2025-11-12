@@ -68,7 +68,8 @@ public class ServicioRankingImpl implements ServicioRanking {
 
 
     public Double obtenerPuntajeCalculado(Partida partida) {
-        double puntajeMaximo = partida.getSala().getCantidadDeEtapas() * 100;
+        Integer cantidadDeBonus = this.repositorioRanking.obtenerCantidadDeBonusPorSala(partida.getSala().getId());
+        double puntajeMaximo = (partida.getSala().getCantidadDeEtapas() * 100) + (cantidadDeBonus * 50);
         double rendimiento = (partida.getPuntaje() / puntajeMaximo); // entre 0 y 1
 
         double factorDificultad = obtenerFactorDificultad(partida.getSala().getDificultad());

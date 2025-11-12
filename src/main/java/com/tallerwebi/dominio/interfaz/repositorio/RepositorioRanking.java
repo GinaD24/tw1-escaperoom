@@ -7,5 +7,7 @@ import java.util.List;
 public interface RepositorioRanking {
 
     List<Partida> obtenerTodasLasPartidasGanadas();
+
+    Integer obtenerCantidadDeBonusPorSala(Integer idSala);
 }
 
