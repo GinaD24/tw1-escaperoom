@@ -26,8 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -141,7 +140,7 @@ public class ServicioPartidaImplTest {
 
         assertNotNull(acertijoElegido);
         verify(repositorioPartida).obtenerListaDeAcertijos(etapa.getId());
-        verify(repositorioPartida).registrarAcertijoMostrado(any(AcertijoUsuario.class));
+        verify(repositorioPartida).registrarAcertijoMostrado(any());
     }
 
     @Test
@@ -179,7 +178,7 @@ public class ServicioPartidaImplTest {
         verify(repositorioPartida).obtenerAcertijosVistosPorUsuarioPorEtapa(idUsuario, etapa.getId());
         verify(repositorioUsuario).obtenerUsuarioPorId(idUsuario);
         verify(repositorioPartida).buscarEtapaPorId(etapa.getId());
-        verify(repositorioPartida).registrarAcertijoMostrado(any(AcertijoUsuario.class));
+        verify(repositorioPartida).registrarAcertijoMostrado(any());
     }
 
     @Test
@@ -490,6 +489,52 @@ public class ServicioPartidaImplTest {
         assertThat(partidaObtenida, equalTo(partida));
         verify(repositorioPartida).buscarPartidaPorId(partida.getId());
     }
+
+    @Test
+    public void deberiaDevolverUnaListaDeImagenesOrdenadaDeManeraAleatoria(){
+        Acertijo acertijo = new Acertijo( "a1");
+        acertijo.setId(1L);
+
+        ImagenAcertijo img1 = new ImagenAcertijo(acertijo, "a");
+        ImagenAcertijo img2 = new ImagenAcertijo(acertijo, "b");
+        ImagenAcertijo img3 = new ImagenAcertijo(acertijo, "c");
+
+        acertijo.setImagenes(new HashSet<>(Set.of(img1, img2, img3)));
+
+        List<ImagenAcertijo> imagenesOrdenadas = new ArrayList<>(List.of(img1, img2, img3));
+
+        List<ImagenAcertijo> imagenesObtenidas = this.servicioPartida.obtenerSecuenciaAleatoria(acertijo);
+
+        assertThat(new HashSet<>(imagenesObtenidas), equalTo(new HashSet<>(imagenesOrdenadas)));
+        assertThat(imagenesObtenidas, not(equalTo(imagenesOrdenadas)));
+    }
+
+    @Test
+    public void deberiaDevolverUnAcertijoDeTipoBONUSYRegistrarElAcertijoMostrado(){
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
+        etapa.setId(1L);
+
+        Acertijo acertijo = new Acertijo( "a1");
+        acertijo.setId(1L);
+        acertijo.setTipo(TipoAcertijo.BONUS);
+
+        AcertijoUsuario acertijoUsuario = new AcertijoUsuario(acertijo, usuario);
+
+        when(repositorioPartida.traerAcertijoBonus(etapa.getId())).thenReturn(acertijo);
+        when(repositorioUsuario.obtenerUsuarioPorId(usuario.getId())).thenReturn(usuario);
+        when(repositorioPartida.buscarEtapaPorId(etapa.getId())).thenReturn(etapa);
+
+        Acertijo acertijoObtenido = this.servicioPartida.obtenerAcertijoBonus(etapa.getId(), usuario.getId());
+
+        assertThat(acertijoObtenido, equalTo(acertijo));
+        verify(repositorioPartida).buscarEtapaPorId(etapa.getId());
+        verify(repositorioPartida).traerAcertijoBonus(etapa.getId());
+        verify(repositorioUsuario).obtenerUsuarioPorId(usuario.getId());
+        verify(repositorioPartida).registrarAcertijoMostrado(any());
+    }
+
 
 
 }

@@ -21,6 +21,15 @@ public class Etapa {
     @Column
     private String imagen;
 
+    @Column
+    private Boolean tieneBonus;
+
+    @Column
+    private Integer bonusTop;
+
+    @Column
+    private Integer bonusLeft;
+
     @ManyToOne
     @JoinColumn(name = "id_sala")
     private Sala sala;
@@ -80,5 +89,29 @@ public class Etapa {
 
     public void setSala(Sala sala) {
         this.sala = sala;
+    }
+
+    public Integer getBonusLeft() {
+        return bonusLeft;
+    }
+
+    public void setBonusLeft(Integer bonusLeft) {
+        this.bonusLeft = bonusLeft;
+    }
+
+    public Integer getBonusTop() {
+        return bonusTop;
+    }
+
+    public void setBonusTop(Integer bonusTop) {
+        this.bonusTop = bonusTop;
+    }
+
+    public Boolean getTieneBonus() {
+        return tieneBonus;
+    }
+
+    public void setTieneBonus(Boolean tieneBonus) {
+        this.tieneBonus = tieneBonus;
     }
 }

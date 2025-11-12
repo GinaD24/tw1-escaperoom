@@ -71,6 +71,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
         boolean esCorrecta = false;
 
         switch(tipo){
+            case BONUS:
             case ADIVINANZA:
                 String respuestaCorrecta = acertijoActual.getRespuestaCorrecta();
 
@@ -102,15 +103,18 @@ public class ServicioPartidaImpl implements ServicioPartida {
                     throw new IllegalArgumentException("Se requiere el orden correcto para acertijo SECUENCIA");
                 }
 
-                List<Long> ordenSeleccionadoSecuencia = Arrays.stream(respuestaUsuario.split(","))
-                        .map(Long::valueOf)
-                        .collect(Collectors.toList());
 
+                List<Long> ordenSeleccionadoSecuencia = null;
+                if(!respuestaUsuario.isEmpty()) {
+                    ordenSeleccionadoSecuencia = Arrays.stream(respuestaUsuario.split(","))
+                            .map(Long::valueOf)
+                            .collect(Collectors.toList());
+                }
                 List<Long> ordenCorrectoList = Arrays.stream(ordenSecuenciaCorrecto.split(","))
                         .map(Long::valueOf)
                         .collect(Collectors.toList());
 
-                if (ordenSeleccionadoSecuencia.equals(ordenCorrectoList)) {
+                if (ordenSeleccionadoSecuencia != null && ordenSeleccionadoSecuencia.equals(ordenCorrectoList)) {
                     esCorrecta = true;
                     partida.setPuntaje(partida.getPuntaje() + 100);
                 }
@@ -141,6 +145,8 @@ public class ServicioPartidaImpl implements ServicioPartida {
                     partida.setPuntaje(partida.getPuntaje() + 100);
                 }
                 break;
+
+
         }
 
         return esCorrecta;
@@ -215,6 +221,27 @@ public class ServicioPartidaImpl implements ServicioPartida {
         return imagenesAcertijo;
     }
 
+    @Override
+    @Transactional
+    public Acertijo obtenerAcertijoBonus(Long idEtapa, Long idUsuario) {
+        Acertijo acertijoBonusObtenido = this.repositorioPartida.traerAcertijoBonus(idEtapa);
+
+        Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+        AcertijoUsuario acertijoUsuario = new AcertijoUsuario(acertijoBonusObtenido, usuario);
+        Etapa etapa = this.repositorioPartida.buscarEtapaPorId(idEtapa);
+        acertijoUsuario.setEtapa(etapa);
+        this.repositorioPartida.registrarAcertijoMostrado(acertijoUsuario);
+
+        return acertijoBonusObtenido;
+    }
+
+    @Override
+    @Transactional
+    public void sumarPuntajeBonus(Long idUsuario) {
+        Partida partida = repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
+        partida.setPuntaje(partida.getPuntaje() + 50);
+    }
+
 
     @Override
     @Transactional
@@ -267,7 +294,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
         return acertijoSeleccionado;
     }
 
-    @Transactional
+    @Override
     public boolean tiempoExpirado(Partida partida) {
         Integer duracionMinutos = partida.getSala().getDuracion();
         LocalDateTime finEsperado = partida.getInicio().plusMinutes(duracionMinutos);
