@@ -1,3 +1,4 @@
+// Archivo: com.tallerwebi.dominio.ServicioPartidaImpl.java (Modificado)
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.*;
@@ -8,10 +9,13 @@ import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPartida;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioSala;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioGeneradorIA;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
-import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
+import com.tallerwebi.dominio.interfaz.servicio.ValidadorAcertijoFactory;
+import com.tallerwebi.dominio.interfaz.servicio.ValidadorAcertijo;
+import com.tallerwebi.presentacion.AcertijoActualDTO;
+import org.eclipse.sisu.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,21 +25,22 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-
 public class ServicioPartidaImpl implements ServicioPartida {
 
-    private ServicioSala servicioSala;
     private RepositorioPartida repositorioPartida;
     private RepositorioUsuario repositorioUsuario;
     private RepositorioSala repositorioSala;
+    private final ValidadorAcertijoFactory validadorFactory;
 
     @Autowired
-    public ServicioPartidaImpl(ServicioSala servicioSala, RepositorioPartida repositorioPartida,
-                               RepositorioUsuario repositorioUsuario, RepositorioSala repositorioSala) {
-        this.servicioSala = servicioSala;
+    public ServicioPartidaImpl(RepositorioPartida repositorioPartida,
+                               RepositorioUsuario repositorioUsuario,
+                               RepositorioSala repositorioSala,
+                               ValidadorAcertijoFactory validadorFactory) {
         this.repositorioPartida = repositorioPartida;
         this.repositorioUsuario = repositorioUsuario;
         this.repositorioSala = repositorioSala;
+        this.validadorFactory = validadorFactory;
     }
 
     @Override
@@ -50,116 +55,28 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
     @Override
     @Transactional
-    public Pista obtenerSiguientePista(Long idAcertijo, Long id_usuario) {
+    public void registrarUsoDePista(Long idUsuario) {
+        Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
 
-        Integer pistasUsadas = this.repositorioPartida.obtenerPistasUsadas(idAcertijo, id_usuario);
-
-
-        List<Pista> listaObtenidaDePistas = this.repositorioPartida.obtenerListaDePistas(idAcertijo);
-        Pista pistaSeleccionada = null;
-
-        while (pistasUsadas < listaObtenidaDePistas.size() && pistaSeleccionada == null) {
-
-            switch (pistasUsadas) {
-                case 0:
-                    pistaSeleccionada = listaObtenidaDePistas.get(0);
-                    this.repositorioPartida.sumarPistaUsada(idAcertijo, id_usuario);
-                    break;
-                case 1:
-                    pistaSeleccionada = listaObtenidaDePistas.get(1);
-                    this.repositorioPartida.sumarPistaUsada(idAcertijo, id_usuario);
-                    break;
-                case 2:
-                    pistaSeleccionada = listaObtenidaDePistas.get(2);
-                    this.repositorioPartida.sumarPistaUsada(idAcertijo, id_usuario);
-                    break;
-            }
-
-        }
-        if (pistaSeleccionada != null) {
-            this.repositorioPartida.registrarPistaEnPartida(id_usuario);
-            Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(id_usuario);
+        if (partida != null) {
+            partida.setPistasUsadas(partida.getPistasUsadas() + 1);
             partida.setPuntaje(partida.getPuntaje() - 25);
         }
-
-        return pistaSeleccionada;
     }
 
-    @Override
     @Transactional
-    public Boolean validarRespuesta(Long idAcertijo, String respuesta, Long idUsuario, @Nullable String ordenSecuenciaCorrecto) {
+    @Override
+    public Boolean validarRespuesta(AcertijoActualDTO acertijoActual, String respuestaUsuario, Long idUsuario, @Nullable String ordenSecuenciaCorrecto) {
+
         Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
-        boolean esCorrecta = false;
 
-        Acertijo acertijo = this.repositorioPartida.buscarAcertijoPorId(idAcertijo);
-
-        switch(acertijo.getTipo()){
-            case ADIVINANZA:
-                String[] palabrasIngresadas = respuesta.toLowerCase().split("\\s+");
-
-                Respuesta correcta =this.repositorioPartida.obtenerRespuestaCorrecta(idAcertijo);
-                if(Arrays.asList(palabrasIngresadas).contains(correcta.getRespuesta().toLowerCase())){
-                    esCorrecta = true;
-                    partida.setPuntaje(partida.getPuntaje() + 100);
-                }
-                break;
-
-            case ORDENAR_IMAGEN:
-                List<Long> ordenSeleccionado = Arrays.stream(respuesta.split(","))
-                        .map(Long::valueOf)
-                        .collect(Collectors.toList());
-
-                List<Long> ordenCorrecto = this.repositorioPartida.obtenerOrdenDeImgCorrecto(idAcertijo);
-
-                if (ordenSeleccionado.equals(ordenCorrecto)) {
-                    esCorrecta = true;
-                    partida.setPuntaje(partida.getPuntaje() + 100);
-                }
-                break;
-
-            case SECUENCIA:
-
-                if (ordenSecuenciaCorrecto == null) {
-                    throw new IllegalArgumentException("Se requiere el orden correcto para acertijo SECUENCIA");
-                }
-
-                List<Long> ordenSeleccionadoSecuencia = Arrays.stream(respuesta.split(","))
-                        .map(Long::valueOf)
-                        .collect(Collectors.toList());
-
-                List<Long> ordenCorrectoList = Arrays.stream(ordenSecuenciaCorrecto.split(","))
-                        .map(Long::valueOf)
-                        .collect(Collectors.toList());
-
-                if (ordenSeleccionadoSecuencia.equals(ordenCorrectoList)) {
-                    esCorrecta = true;
-                    partida.setPuntaje(partida.getPuntaje() + 100);
-                }
-                break;
-
-            case DRAG_DROP:
-                Map<Long, String> respuestaUsuario = Arrays.stream(respuesta.split(","))
-                        .map(pair -> pair.split(":"))
-                        .filter(arr -> arr.length == 2)
-                        .collect(Collectors.toMap(
-                                arr -> Long.valueOf(arr[0]),
-                                arr -> arr[1]
-                        ));
-
-                List<DragDropItem> itemsCorrectos = this.repositorioPartida.obtenerItemsDragDrop(idAcertijo);
-
-                boolean todoCorrecto = itemsCorrectos.stream()
-                        .allMatch(item ->
-                                respuestaUsuario.containsKey(item.getId()) &&
-                                        respuestaUsuario.get(item.getId()).equals(item.getCategoriaCorrecta())
-                        );
-                if (todoCorrecto) {
-                    esCorrecta = true;
-                    partida.setPuntaje(partida.getPuntaje() + 100);
-                }
-                break;
-
+        if (partida == null) {
+            return false;
         }
+
+        ValidadorAcertijo validador = validadorFactory.getValidador(acertijoActual.getTipo());
+
+        boolean esCorrecta = validador.validar(acertijoActual, respuestaUsuario, partida, ordenSecuenciaCorrecto);
 
         return esCorrecta;
     }
@@ -229,8 +146,29 @@ public class ServicioPartidaImpl implements ServicioPartida {
     @Override
     public List<ImagenAcertijo> obtenerSecuenciaAleatoria(Acertijo acertijo) {
         List<ImagenAcertijo> imagenesAcertijo = new ArrayList<>(acertijo.getImagenes());
-        Collections.shuffle(imagenesAcertijo);
+        Collections.shuffle(imagenesAcertijo); //lo hace de forma aleatoria
         return imagenesAcertijo;
+    }
+
+    @Override
+    @Transactional
+    public Acertijo obtenerAcertijoBonus(Long idEtapa, Long idUsuario) {
+        Acertijo acertijoBonusObtenido = this.repositorioPartida.traerAcertijoBonus(idEtapa);
+
+        Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+        AcertijoUsuario acertijoUsuario = new AcertijoUsuario(acertijoBonusObtenido, usuario);
+        Etapa etapa = this.repositorioPartida.buscarEtapaPorId(idEtapa);
+        acertijoUsuario.setEtapa(etapa);
+        this.repositorioPartida.registrarAcertijoMostrado(acertijoUsuario);
+
+        return acertijoBonusObtenido;
+    }
+
+    @Override
+    @Transactional
+    public void sumarPuntajeBonus(Long idUsuario) {
+        Partida partida = repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
+        partida.setPuntaje(partida.getPuntaje() + 50);
     }
 
 
@@ -272,7 +210,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
             Random random = new Random();
             do {
                 acertijoSeleccionado = listaDeAcertijosObtenida.get(random.nextInt(listaDeAcertijosObtenida.size()));
-            } while (acertijosVistos != null && acertijosVistos.contains(acertijoSeleccionado));
+            } while (acertijosVistos != null && acertijosVistos.contains(acertijoSeleccionado)); //trae los acertijos random
 
 
             Usuario usuario = repositorioUsuario.obtenerUsuarioPorId(id_usuario);
@@ -285,10 +223,10 @@ public class ServicioPartidaImpl implements ServicioPartida {
         return acertijoSeleccionado;
     }
 
+    @Override
     public boolean tiempoExpirado(Partida partida) {
         Integer duracionMinutos = partida.getSala().getDuracion();
         LocalDateTime finEsperado = partida.getInicio().plusMinutes(duracionMinutos);
         return LocalDateTime.now().isAfter(finEsperado);
     }
-
 }

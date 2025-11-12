@@ -89,6 +89,9 @@ public class ServicioLoginImpl implements ServicioLogin {
 
     @Override
     public Usuario buscarUsuarioPorId(Long idUsuario) {
+        if(idUsuario == null){
+            throw new SesionDeUsuarioExpirada();
+        }
         return repositorioUsuario.obtenerUsuarioPorId(idUsuario);
     }
 

@@ -22,20 +22,21 @@ VALUES (
            'USUARIO');
 
 
-INSERT INTO Sala (nombre, dificultad, escenario, historia, esta_habilitada, duracion, imagenPuerta, imagenSala, cantidadDeEtapas, imagenGanada, imagenPerdida)VALUES
-                                                                                          ('La Mansión Misteriosa', 'PRINCIPIANTE', 'Mansion', 'Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.', TRUE, 5,'puerta-mansion.png', 'mansion-misteriosa.png', 5, 'mansion-ganada.png', 'mansion-perdida.png'),
-                                                                                          ('El Laboratorio Secreto', 'INTERMEDIO', 'Laboratorio', 'Un científico desaparecido dejo pistas en su laboratorio. ¿Podras descubrir que tramaba?', TRUE, 10, 'puerta-laboratorio.png', 'laboratorio-secreto.png', 8, 'laboratorio-ganado.png', 'laboratorio-perdido.png'),
-                                                                                          ('La Carcel Abandonada', 'AVANZADO', 'Prision', 'Despiertas en una celda oxidada. Solo resolviendo complejos acertijos podras escapar.', TRUE, 12,'puerta-prision.png', 'carcel-abandonada.png', 10, 'carcel-ganada.png', 'carcel-perdida.png'),
-                                                                                          ('El campamento maldito', 'PRINCIPIANTE', 'Campamento', 'Estás perdido en un campamento de verano olvidado, envuelto en una densa niebla. Hay pistas de un ritual a medio terminar y debes buscar la llave del predio y encontrar el camino antes de que ''algo'' te encuentre.', TRUE, 5, 'puerta-campamento.png', 'campamento-maldito.png', 5, 'campamento-ganado.png', 'campamento-perdido.png'),
-                                                                                          ('El hospital psiquiatrico', 'AVANZADO', 'Hospital', 'Te han encerrado en el ala de contención de un hospital clausurado. Los antiguos pacientes no se han ido, y debes encontrar la llave de la morgue para escapar antes de que la medianoche te convierta en uno de ellos.', TRUE, 12, 'puerta-psiquiatrico.png', 'hospital-psiquiatrico.png', 10, 'psiquiatrico-ganado.png', 'psiquiatrico-perdido.png');
+
+INSERT INTO Sala (nombre, dificultad, escenario, historia, es_paga, esta_habilitada, duracion, imagenPuerta, imagenSala, cantidadDeEtapas, imagenGanada, imagenPerdida)VALUES
+                                                                                          ('La Mansión Misteriosa', 'PRINCIPIANTE', 'Mansion', 'Una tormenta te obliga a refugiarte en una mansión detenida en el tiempo. Cada habitación oculta enigmas y secretos del pasado. Escapa antes de que la casa te atrape.', FALSE, TRUE, 5,'puerta-mansion.png', 'mansion-misteriosa.png', 5, 'mansion-ganada.png', 'mansion-perdida.png'),
+                                                                                          ('El Laboratorio Secreto', 'INTERMEDIO', 'Laboratorio', 'Tras la desaparición de un científico, quedas atrapado en su laboratorio. Entre fórmulas inestables y máquinas fuera de control, debes escapar antes del colapso.', FALSE,TRUE, 10, 'puerta-laboratorio.png', 'laboratorio-secreto.png', 8, 'laboratorio-ganado.png', 'laboratorio-perdido.png'),
+                                                                                          ('La Carcel Abandonada', 'AVANZADO', 'Prision', 'Atrapado en una celda olvidada, descubres que los guardias no son tu único problema. Descifra los códigos y huye antes de que llegue el próximo relevo.', FALSE,TRUE, 12,'puerta-prision.png', 'carcel-abandonada.png', 10, 'carcel-ganada.png', 'carcel-perdida.png'),
+                                                                                          ('El campamento maldito', 'PRINCIPIANTE', 'Campamento', 'Estás perdido en un campamento de verano olvidado, envuelto en una densa niebla. Hay pistas de un ritual a medio terminar y debes buscar la llave del predio y encontrar el camino antes de que ''algo'' te encuentre.', TRUE,FALSE, 5, 'puerta-campamento.png', 'campamento-maldito.png', 5, 'campamento-ganado.png', 'campamento-perdido.png'),
+                                                                                          ('El hospital psiquiatrico', 'AVANZADO', 'Hospital', 'Te han encerrado en el ala de contención de un hospital clausurado. Los antiguos pacientes no se han ido, y debes encontrar la llave de la morgue para escapar antes de que la medianoche te convierta en uno de ellos.', TRUE,FALSE, 12, 'puerta-psiquiatrico.png', 'hospital-psiquiatrico.png', 10, 'psiquiatrico-ganado.png', 'psiquiatrico-perdido.png');
 
 -- ETAPAS PARA LA SALA 'La Mansión Misteriosa' (id_sala = 1)
-INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
-                                                             ('Lobby', 1, 'La puerta se ha cerrado a tus espaldas. El aire es denso y el único camino es adelante. Resuelve los enigmas del vestíbulo para avanzar.', 1, 'etapa-lobby.png'), --adivinanza
-                                                             ('Biblioteca', 2, 'Entre estanterías polvorientas y libros antiguos, descubres una puerta secreta junto a una serie de botones misteriosos.', 1, 'etapa-biblioteca.png'), -- secuencia
-                                                             ('Salón', 3, 'Un gran salón donde aún resuenan las risas y los lamentos del pasado. La música y el silencio guardan las claves para continuar.', 1, 'etapa-salon.png'), -- ordenar
-                                                             ('Despacho', 4, 'Este era el refugio del antiguo dueño. Sus objetos personales, mapas y cartas, ocultan las piezas finales de su misterio.', 1, 'etapa-despacho.png'), -- adivinanza
-                                                             ('Ático', 5, 'El último piso. Entre baúles y objetos olvidados yace el secreto final que te permitirá encontrar la salida de la mansión.', 1, 'etapa-atico.png'); -- drag drop
+INSERT INTO Etapa (nombre, numero, tieneBonus, bonusTop, bonusLeft, descripcion, id_sala, imagen) VALUES
+                                                             ('Lobby', 1, FALSE, null, null, 'La puerta se ha cerrado a tus espaldas. El aire es denso y el único camino es adelante. Resuelve los enigmas del vestíbulo para avanzar.', 1, 'etapa-lobby.png'), --adivinanza
+                                                             ('Biblioteca', 2,FALSE , null, null,'Entre estanterías polvorientas y libros antiguos, descubres una puerta secreta junto a una serie de botones misteriosos.', 1, 'etapa-biblioteca.png'), -- secuencia
+                                                             ('Salón', 3, TRUE, 85, 15,'Un gran salón donde aún resuenan las risas y los lamentos del pasado. La música y el silencio guardan las claves para continuar.', 1, 'etapa-salon.png'), -- ordenar
+                                                             ('Despacho', 4,FALSE , null, null,'Este era el refugio del antiguo dueño. Sus objetos personales, mapas y cartas, ocultan las piezas finales de su misterio.', 1, 'etapa-despacho.png'), -- adivinanza
+                                                             ('Ático', 5, FALSE, null, null,'El último piso. Entre baúles y objetos olvidados yace el secreto final que te permitirá encontrar la salida de la mansión.', 1, 'etapa-atico.png'); -- drag drop
 
 -- ACERTIJOS ETAPA 1: Lobby (id_etapa = 1)
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
@@ -92,35 +93,35 @@ INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Todos los contened
 
 --13 aacertijos
 -- PISTAS Y RESPUESTAS PARA ACERTIJOS 1-3 (Etapa 1)
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Busca tu propio reflejo en la sala.', 1, 1);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Busca tu propio reflejo en la sala.', 1, 1);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('ESPEJO', TRUE, 1);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('El tiempo es la clave. Escucha su constante pasar en el vestíbulo.', 1, 2);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('El tiempo es la clave. Escucha su constante pasar en el vestíbulo.', 1, 2);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('RELOJ', TRUE, 2);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('No puedes tocarme, pero siempre estoy contigo cuando hay una fuente de luz.', 1, 3);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('No puedes tocarme, pero siempre estoy contigo cuando hay una fuente de luz.', 1, 3);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('SOMBRA', TRUE, 3);
 
 -- PISTAS Y RESPUESTAS PARA ACERTIJOS 10-12 (Etapa 4)
-    INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Se esconde en el cajón más pequeño del escritorio, esperando abrir algo importante.', 1, 6);
+ --    INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Se esconde en el cajón más pequeño del escritorio, esperando abrir algo importante.', 1, 6);
     INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LLAVE', TRUE, 6);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los detalles más pequeños son a menudo los más importantes.', 1, 7); -- Pista nueva
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los detalles más pequeños son a menudo los más importantes.', 1, 7); -- Pista nueva
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LUPA', TRUE, 7); -- Respuesta nueva
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Incluso en la quietud de esta habitación, siempre busca el norte.', 1, 8);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Incluso en la quietud de esta habitación, siempre busca el norte.', 1, 8);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('BRUJULA', TRUE, 8);
 
 
-INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
-                                                                     ('Entrada', 1, 'La puerta del laboratorio se cierra detrás de ti. Debes reorganizar los componentes del experimento para avanzar.', 2, 'etapa-entrada-laboratorio.png'),
-                                                                     ('Sala de Reactivos', 2, 'Botellas y tubos de ensayo llenos de líquidos de colores te rodean. Organízalos correctamente para desbloquear la siguiente puerta.', 2, 'etapa-reactivos-laboratorio.png'),
-                                                                     ('Mesa de Experimentos', 3, 'Te encontras con una mesa llena de instrumentos desordenados y experimentos sin terminar. Solo cuando resuelvas el siguiente acertijo podrás continuar.', 2, 'etapa-mesa-laboratorio.png'),
-                                                                     ('Sala de Microscopios', 4, 'Observa las muestras y ordénalas según la secuencia correcta de análisis.', 2, 'etapa-microscopios.png'),
-                                                                     ('Almacén de Equipos', 5, 'Hay varios aparatos de laboratorio tirados por todas partes. Organízalos para avanzar.', 2, 'etapa-almacen-laboratorio.png'),
-                                                                     ('Cámara de Cultivos', 6, 'Estas en la camara de cultivos, las placas contienen bacterias, que podrian ser mortales. Resolve el siguiente acertijo para salir pronto de aqui.', 2, 'etapa-camara-laboratorio.png'),
-                                                                     ('Oficina del Científico', 7, 'El escritorio del científico tiene papeles y herramientas. Colócalos en la secuencia correcta para entender su investigación.', 2, 'etapa-oficina-laboratorio.png'),
-                                                                     ('Laboratorio Secreto', 8, 'El corazón del laboratorio. Solo ordenando correctamente todos los elementos del gran experimento podrás acceder al resultado final.', 2, 'etapa-secreto-laboratorio.png');
+INSERT INTO Etapa (nombre, numero, tieneBonus, bonusTop, bonusLeft, descripcion, id_sala, imagen) VALUES
+                                                                     ('Entrada', 1, FALSE, null, null,'La puerta del laboratorio se cierra detrás de ti. Debes reorganizar los componentes del experimento para avanzar.', 2, 'etapa-entrada-laboratorio.png'),
+                                                                     ('Sala de Reactivos', 2, FALSE, null, null, 'Botellas y tubos de ensayo llenos de líquidos de colores te rodean. Organízalos correctamente para desbloquear la siguiente puerta.', 2, 'etapa-reactivos-laboratorio.png'),
+                                                                     ('Mesa de Experimentos', 3, FALSE, null, null, 'Te encontras con una mesa llena de instrumentos desordenados y experimentos sin terminar. Solo cuando resuelvas el siguiente acertijo podrás continuar.', 2, 'etapa-mesa-laboratorio.png'),
+                                                                     ('Sala de Microscopios', 4, FALSE, null, null, 'Observa las muestras y ordénalas según la secuencia correcta de análisis.', 2, 'etapa-microscopios.png'),
+                                                                     ('Almacén de Equipos', 5, FALSE, null, null, 'Hay varios aparatos de laboratorio tirados por todas partes. Organízalos para avanzar.', 2, 'etapa-almacen-laboratorio.png'),
+                                                                     ('Cámara de Cultivos', 6, FALSE, null, null, 'Estas en la camara de cultivos, las placas contienen bacterias, que podrian ser mortales. Resolve el siguiente acertijo para salir pronto de aqui.', 2, 'etapa-camara-laboratorio.png'),
+                                                                     ('Oficina del Científico', 7, FALSE, null, null, 'El escritorio del científico tiene papeles y herramientas. Colócalos en la secuencia correcta para entender su investigación.', 2, 'etapa-oficina-laboratorio.png'),
+                                                                     ('Laboratorio Secreto', 8,  TRUE, 22, 79,'El corazón del laboratorio. Solo ordenando correctamente todos los elementos del gran experimento podrás acceder al resultado final.', 2, 'etapa-secreto-laboratorio.png');
 
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
                                                        ('ORDENAR_IMAGEN', 'Observa los frascos de diferentes colores. Organízalos siguiendo el cambio gradual de tonalidad de claro a oscuro.', 6),
@@ -141,7 +142,8 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
                                                                          (11, 'ReactivoA.png', 'Quimicos'),
                                                                          (11, 'ReactivoB.png', 'Quimicos');
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Algunos extinguen llamas, otros las avivan.', 1, 12);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los químicos tienen etiquetas.', 1, 11);
+
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('GAS', TRUE, 12);
 
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
@@ -167,7 +169,7 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
 INSERT INTO Acertijo ( tipo, descripcion, id_etapa) VALUES
 ( 'ADIVINANZA', 'Paso siempre adelante pero nunca me muevo de mi sitio. Soy crucial para todo experimento, pero no me puedes guardar en un frasco. ¿Qué soy?', 11);
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los relojes y los calendarios son mis sirvientes.', 1, 15);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los relojes y los calendarios son mis sirvientes.', 1, 15);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('TIEMPO', TRUE, 15);
 
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
@@ -187,6 +189,8 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
 (16, 'objeto-diario.png', 'Estante de lectura'),
 (16, 'objeto-pinza.png', 'Caja de herramientas');
 
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('El cuaderno forma parte del cajón de escritura.', 1, 16);
+
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
 ('DRAG_DROP', '¡Alerta de Fusión del Núcleo! El reactor está fallando. Para desviar la energía a la puerta de escape, debes arrastrar los componentes funcionales al "Núcleo" y desechar los defectuosos en el "Contenedor de Residuos". ¡No te equivoques!', 13);
 
@@ -198,20 +202,22 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
 (17, 'engranaje-nuevo.png', 'Nucleo'),
 (17, 'bateria-rota.png', 'Residuos');
 
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Ambos contenedores tienen la misma cantidad de objetos.', 1, 17);
+
 -- ------------------------------------------------------------------
 -- ETAPAS PARA LA SALA 3: 'La Carcel Abandonada' (id_sala = 3)
 -- ------------------------------------------------------------------
-INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
-('La Celda', 1, 'Despiertas en una celda fría y oscura. La puerta de barrotes está cerrada. Tu primer desafío es encontrar la forma de salir de aquí.', 3, 'etapa-celda.png'),
-('Pabellón A', 2, 'Has salido de tu celda, pero ahora te encuentras en el pasillo principal del pabellón. Las miradas vacías de otras celdas te observan. Debes encontrar la salida antes de que un guardia te descubra.', 3, 'etapa-pabellon.png'),
-('Comedor', 3, 'El desorden y los restos de una revuelta cubren el suelo del comedor. Entre las mesas y sillas volcadas se esconde la clave para acceder a las áreas de servicio.', 3, 'etapa-comedor.png'),
-('Enfermería', 4, 'Un olor a antiséptico inunda la enfermería. Entre historiales médicos y viejas medicinas, hay algo que te ayudará a neutralizar un obstáculo más adelante.', 3, 'etapa-enfermeria.png'),
-('Patio de Recreo', 5, 'Finalmente, un respiro de aire "libre", aunque rodeado por muros altos y alambre de púas. La libertad parece cerca, pero el camino a la salida está vigilado. Resuelve el acertijo del patio para no llamar la atención.', 3, 'etapa-patio.png'),
-('Sala de Guardias', 6, 'Una pequeña sala con monitores apagados y un tablero de llaves. Es tu oportunidad para conseguir acceso a la zona administrativa, pero cuidado con las alarmas silenciosas.', 3, 'etapa-sala-guardias.png'),
-('Lavandería', 7, 'El vapor y el ruido de las máquinas industriales llenan el ambiente. Un antiguo túnel de servicio se rumorea que conecta esta sala con el exterior. Encuentra la entrada.', 3, 'etapa-lavanderia.png'),
-('Sala de Visitas', 8, 'El cristal blindado que separa a los reclusos de sus familias ahora es un obstáculo para ti. Hay un mensaje críptico dejado en uno de los teléfonos.', 3, 'etapa-visitas.png'),
-('Oficina del Alcaide', 9, 'El corazón de la prisión. Aquí se guardan los secretos y, lo más importante, el control manual de la puerta principal. Resuelve el último enigma para tomar el control.', 3, 'etapa-oficina-alcaide.png'),
-('Puerta Principal', 10, 'Estás a un paso de la libertad. Has desactivado la seguridad desde la oficina del alcaide, pero la puerta principal tiene un último mecanismo de bloqueo. Resuélvelo y escapa.', 3, 'etapa-puerta.png');
+INSERT INTO Etapa (nombre, numero, tieneBonus, bonusTop, bonusLeft, descripcion, id_sala, imagen) VALUES
+('La Celda', 1, FALSE, null, null, 'Despiertas en una celda fría y oscura. La puerta de barrotes está cerrada. Tu primer desafío es encontrar la forma de salir de aquí.', 3, 'etapa-celda.png'),
+('Pabellón A', 2, FALSE, null, null, 'Has salido de tu celda, pero ahora te encuentras en el pasillo principal del pabellón. Las miradas vacías de otras celdas te observan. Debes encontrar la salida antes de que un guardia te descubra.', 3, 'etapa-pabellon.png'),
+('Comedor', 3, FALSE, null, null, 'El desorden y los restos de una revuelta cubren el suelo del comedor. Entre las mesas y sillas volcadas se esconde la clave para acceder a las áreas de servicio.', 3, 'etapa-comedor.png'),
+('Enfermería', 4, FALSE, null, null, 'Un olor a antiséptico inunda la enfermería. Entre historiales médicos y viejas medicinas, hay algo que te ayudará a neutralizar un obstáculo más adelante.', 3, 'etapa-enfermeria.png'),
+('Patio de Recreo', 5, FALSE, null, null, 'Finalmente, un respiro de aire "libre", aunque rodeado por muros altos y alambre de púas. La libertad parece cerca, pero el camino a la salida está vigilado. Resuelve el acertijo del patio para no llamar la atención.', 3, 'etapa-patio.png'),
+('Sala de Guardias', 6, TRUE, 72, 13,'Una pequeña sala con monitores apagados y un tablero de llaves. Es tu oportunidad para conseguir acceso a la zona administrativa, pero cuidado con las alarmas silenciosas.', 3, 'etapa-sala-guardias.png'),
+('Lavandería', 7, FALSE, null, null, 'El vapor y el ruido de las máquinas industriales llenan el ambiente. Un antiguo túnel de servicio se rumorea que conecta esta sala con el exterior. Encuentra la entrada.', 3, 'etapa-lavanderia.png'),
+('Sala de Visitas', 8, FALSE, null, null, 'El cristal blindado que separa a los reclusos de sus familias ahora es un obstáculo para ti. Hay un mensaje críptico dejado en uno de los teléfonos.', 3, 'etapa-visitas.png'),
+('Oficina del Alcaide', 9, FALSE, null, null,'El corazón de la prisión. Aquí se guardan los secretos y, lo más importante, el control manual de la puerta principal. Resuelve el último enigma para tomar el control.', 3, 'etapa-oficina-alcaide.png'),
+('Puerta Principal', 10, FALSE, null, null, 'Estás a un paso de la libertad. Has desactivado la seguridad desde la oficina del alcaide, pero la puerta principal tiene un último mecanismo de bloqueo. Resuélvelo y escapa.', 3, 'etapa-puerta.png');
 
 -- ------------------------------------------------------------------
 -- ACERTIJOS PARA LA SALA 3: 'La Carcel Abandonada'
@@ -220,7 +226,7 @@ INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
 -- ACERTIJO ETAPA 1: La Celda (id_etapa = 14) - ADIVINANZA
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
 (18, 'ADIVINANZA', 'Te retengo sin tocarte, te observo sin tener ojos y aunque soy fuerte, un pequeño objeto es mi amo. ¿Qué soy?', 14);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Busca en la puerta de tu celda, es lo único que te impide salir.', 1, 18);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Busca en la puerta de tu celda, es lo único que te impide salir.', 1, 18);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('CERRADURA', TRUE, 18);
 
 -- ACERTIJO ETAPA 2: Pabellón A (id_etapa = 15) - SECUENCIA
@@ -259,8 +265,8 @@ INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
 -- ACERTIJO ETAPA 5: Patio de Recreo (id_etapa = 18) - ADIVINANZA
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
     (22, 'ADIVINANZA', 'Siempre estoy cerca pero no me ves, observo cada movimiento y aunque todos me ignoran, nunca me pierdo nada. ¿Qué soy?', 18);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
-    ('Vigila sin moverse y está en todas partes en la carcel.', 1, 22);
+ -- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
+ --   ('Vigila sin moverse y está en todas partes en la carcel.', 1, 22);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
     ('CAMARA', TRUE, 22);
 
@@ -309,19 +315,19 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
 -- ACERTIJO ETAPA 10: Puerta Principal (id_etapa = 23) - ADIVINANZA
 INSERT INTO Acertijo (id, tipo, descripcion, id_etapa) VALUES
 (27, 'ADIVINANZA', 'Todos me anhelan aquí dentro, pero no tengo peso ni forma. No se me puede ver ni tocar, pero se siente cuando se ha ido. Para conseguirme, debes resolverlo todo. ¿Qué soy?', 23);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Es lo que has estado buscando desde que despertaste en la celda.', 1, 27);
+-- INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Es lo que has estado buscando desde que despertaste en la celda.', 1, 27);
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LIBERTAD', TRUE, 27);
 
 
 -- ------------------------------------------------------------------
 -- ETAPAS PARA LA SALA 5: 'El campamento maldito'
 -- ------------------------------------------------------------------
-INSERT INTO Etapa (nombre, numero, descripcion, id_sala, imagen) VALUES
-                                                 ('La Cabaña de Intrusos', 1, 'Te despiertas encerrado en una pequeña cabaña abandonada. La cerradura de la puerta tiene 7 botones marcados con números.', 4, 'etapa-cabana-intrusos.png'), -- Secuencia sencilla de números (contar nudos).
-                                                 ('El Fuego Muerto', 2, 'Llegas al área de la fogata. Está apagada, pero hay cenizas y una hoja escrita con un acertijo. Resolvelo para continuar', 4, 'etapa-fuego-muerto.png'),
-                                                 ('El Muelle', 3, 'Un muelle deteriorado se adentra en el lago. La niebla es tan espesa que solo ves siluetas. En la barandilla hay cuatro fotos viejas de un campista. Debes ordenarlas cronológicamente para revelar la combinación grabada debajo del muelle.', 4, 'etapa-muelle.png'),
-                                                 ('Cabaña de Vigilancia', 4, 'La casa del guardián. El sistema de comunicación está roto. 5 interruptores controlan las luces exteriores. Debes encender las luces en el orden correcto.', 4, 'etapa-cabana-vigilancia.png'),
-                                                 ('El Borde del Bosque', 5, 'El portón está sellado con tres símbolos de elementos: FUEGO, TIERRA y AGUA. Tienes seis objetos que recogiste. Arrastra los objetos que pertenecen a cada elemento correspondiente para abrir la salida.', 4, 'etapa-borde-bosque-elemental.png');
+INSERT INTO Etapa (nombre, numero, tieneBonus, bonusTop, bonusLeft, descripcion, id_sala, imagen) VALUES
+                                                 ('La Cabaña de Intrusos', 1, FALSE, null, null,'Te despiertas encerrado en una pequeña cabaña abandonada. La cerradura de la puerta tiene 7 botones marcados con números.', 4, 'etapa-cabana-intrusos.png'), -- Secuencia sencilla de números (contar nudos).
+                                                 ('El Fuego Muerto', 2,FALSE, null, null, 'Llegas al área de la fogata. Está apagada, pero hay cenizas y una hoja escrita con un acertijo. Resolvelo para continuar', 4, 'etapa-fuego-muerto.png'),
+                                                 ('El Muelle', 3, TRUE, 77, 80,'Un muelle deteriorado se adentra en el lago. La niebla es tan espesa que solo ves siluetas. En la barandilla hay cinco fotos viejas de un campista. Debes ordenarlas cronológicamente para revelar la combinación grabada debajo del muelle.', 4, 'etapa-muelle.png'),
+                                                 ('Cabaña de Vigilancia', 4, TRUE, 115, 70,'La casa del guardián. El sistema de comunicación está roto. 5 interruptores controlan las luces exteriores. Debes encender las luces en el orden correcto.', 4, 'etapa-cabana-vigilancia.png'),
+                                                 ('El Borde del Bosque', 5, FALSE, null, null,'El portón está sellado con tres símbolos de elementos: FUEGO, TIERRA y AGUA. Tienes seis objetos que recogiste. Arrastra los objetos que pertenecen a cada elemento correspondiente para abrir la salida.', 4, 'etapa-borde-bosque-elemental.png');
 
 -- ACERTIJO ETAPA 1: La Cabaña de Intrusos  - SECUENCIA
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
@@ -338,22 +344,19 @@ INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
 -- ACERTIJO ETAPA 2: El Fuego Muerto - ADIVINANZA
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
     ('ADIVINANZA', 'Cuando vivo, no hago ruido. Cuando muero, canto. Mi vida se cuenta en anillos, pero mi fin es dar calor. ¿Qué soy?', 25);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
-    ('Se encuentra apilado cerca de la fogata y es usado para hacer fuego.', 1, 29);
+
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
     ('MADERA', TRUE, 29);
 
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
     ('ADIVINANZA', 'Tengo costa pero no arenas, siempre estoy mojado. Guardo el reflejo de la luna y mis profundidades esconden secretos.', 25);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
-    ('Es el gran cuerpo de agua que rodea el muelle.', 1, 30);
+
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
     ('LAGO', TRUE, 30);
 
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
     ( 'ADIVINANZA', 'No tengo cuerpo ni alas, pero viajo sin cesar. Oculto el camino y el destino, y si me ves muy cerca, es porque estás perdido.', 25);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
-    ('Es una densa capa que envuelve el campamento, mencionada en la historia de la Sala.', 1, 31);
+
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
     ('NIEBLA', TRUE, 31);
 
@@ -391,3 +394,227 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
                                                                          (34, 'item-botella-agua.png', 'AGUA');
 INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
     ('Busca elementos que puedan arder, que provengan del suelo o que sean nativos del lago.', 1, 34);
+
+-- SALA 5 AVANZADA
+
+-- ------------------------------------------------------------------
+-- ETAPAS PARA LA SALA 'El Hospital Psiquiatrico' (id_sala = 5)
+-- ------------------------------------------------------------------
+INSERT INTO Etapa (nombre, numero, tieneBonus, bonusTop, bonusLeft, descripcion, id_sala, imagen) VALUES
+                                                                     ('Dormitorio Principal', 1, FALSE, null, null,'Estás encerrado en una pequeña celda. La puerta tiene una mirilla que te permite ver el pasillo. Debes descifrar el misterio que te retiene para forzar la cerradura.', 5, 'etapa-dormitorio-principal.png'),
+                                                                     ('Pasillo de Celdas', 2, TRUE, 62, 90,'El pasillo principal del ala de dormitorios. Hay un antiguo panel de control que se activa al replicar la secuencia de un patrón periódico.', 5, 'etapa-pasillo-celdas.png'),
+                                                                     ('Sala de Terapia Grupal', 3, FALSE, null, null,'Una sala llena de objetos rotos. Debes restaurar el orden de unos registros abandonados siguiendo la lógica del hospital para abrir la puerta.', 5, 'etapa-terapia-grupal.png'),
+                                                                     ('Consultorio de Archivos', 4, FALSE, null, null,'El escritorio está cubierto de expedientes desordenados. Debes clasificar la documentación urgente para encontrar la llave oculta.', 5, 'etapa-consultorio-archivos.png'),
+                                                                     ('Sala de Tratamientos', 5, TRUE, 80, 90,'Un equipo obsoleto y un panel de control con luces de advertencia. Debes replicar un patrón visual para desactivar el bloqueo que impide tu paso.', 5, 'etapa-tratamientos.png'),
+                                                                     ('Cocina Industrial', 6, FALSE, null, null,'Una gran sala con mesas volcadas. Una nota te desafía a resolver un enigma que apunta al objeto más peligroso y prohibido de este lugar.', 5, 'etapa-cocina.png'),
+                                                                     ('Farmacia', 7, TRUE, 95, 10,'Miles de frascos y pastillas polvorientas. Debes ordenar el protocolo de una receta olvidada para abrir un compartimento secreto en el mostrador.', 5, 'etapa-farmacia.png'),
+                                                                     ('Baños Comunitarios', 8, FALSE, null, null,'El vapor y la humedad han cubierto las paredes. Un mensaje críptico te obliga a resolver un enigma sobre una ilusión que aparece en los espejos.', 5, 'etapa-banios.png'),
+                                                                     ('Unidad de Observación', 9, FALSE, null, null,'Máquinas de soporte vital obsoletas. Debes clasificar el instrumental médico abandonado en esta sala para liberar el acceso al subsuelo.', 5, 'etapa-unidad-observacion.png'),
+                                                                     ('Subsuelo y Calderas', 10, FALSE, null, null,'El último tramo oscuro. Un panel de control de las calderas es tu única oportunidad. Debes forzar el sistema activando una secuencia precisa para escapar a la Morgue.', 5, 'etapa-subsuelo.png');
+
+
+-- ACERTIJO ETAPA 1: Dormitorio Principal
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('ADIVINANZA', 'Vivo en tu cabeza, pero no soy tu cerebro. Me hago más fuerte cuando estás solo y me alimento de tus miedos. Aunque intentes gritar, soy la voz que nadie escucha. ¿Qué soy?', 29);
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('LOCURA', TRUE, 35);
+
+-- ------------------------------------------------------------------
+-- ACERTIJO PARA ETAPA 2: Pasillo de Celdas (id_etapa = 30)
+
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('SECUENCIA', 'Los botones de este panel corresponden a los colores de los uniformes del personal. Observa la secuencia visual de colores que se muestra y replícala para abrir la puerta.', 30);
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+                                                            (36, 'boton-uniforme-gris.png'),
+                                                            (36, 'boton-uniforme-azul.png'),
+                                                            (36, 'boton-uniforme-blanco.png'),
+                                                            (36, 'boton-uniforme-rojo.png'),
+                                                            (36, 'boton-uniforme-verde.png');
+
+-- ------------------------------------------------------------------
+-- ETAPA 3: Sala de Terapia Grupal (id_etapa = 31)
+
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('ORDENAR_IMAGEN', 'Encuentras cinco fichas de pacientes. Ordénalas según el proceso lógico de tratamiento en el hospital, desde la entrada hasta la salida.', 31);
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
+                                                                           (37, 'paso-admision.png', 1),     -- Entrada al hospital
+                                                                           (37, 'paso-diagnostico.png', 2),  -- Evaluación médica
+                                                                           (37, 'paso-medicacion.png', 3),   -- Inicio del tratamiento
+                                                                           (37, 'paso-sesion-grupal.png', 4), -- Terapia de grupo (o individual)
+                                                                           (37, 'paso-alta-medica.png', 5);    -- Salida (Alta)
+
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES
+    ('El orden comienza con la entrada del paciente y termina con su salida del centro.', 1, 37);
+
+-- ------------------------------------------------------------------
+-- ACERTIJO ETAPA 4: Consultorio de Archivos (id_etapa = 32)
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('DRAG_DROP', 'Clasifica los historiales médicos: el sello verde es para expedientes "Cerrados" y el sello rojo para "Abiertos".', 32);
+INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
+                                                                         (38, 'expediente-sello-rojo-abierto.png', 'Abiertos'),
+                                                                         (38, 'expediente-sello-verde-cerrado.png', 'Cerrados'),
+                                                                         (38, 'expediente-sello-rojo-abierto2.png', 'Abiertos'),
+                                                                         (38, 'expediente-sello-verde-cerrado2.png', 'Cerrados'),
+                                                                         (38, 'expediente-sello-rojo-abierto3.png', 'Abiertos'),
+                                                                         (38, 'expediente-sello-verde-cerrado3.png', 'Cerrados');
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('El color rojo siempre indica una alerta, un caso que aún está en proceso.', 1, 38);
+
+-- ------------------------------------------------------------------
+-- ETAPA 5: Sala de Tratamientos (id_etapa = 33)
+
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('SECUENCIA', 'El panel de control tiene luces de advertencia. Observa la secuencia que se muestra en el monitor y replícala en los botones de colores para detener la sobrecarga del sistema.', 33);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+                                                            (39, 'boton-luz-roja.png'),
+                                                            (39, 'boton-luz-naranja.png'),
+                                                            (39, 'boton-luz-amarilla.png'),
+                                                            (39, 'boton-luz-verde.png'),
+                                                            (39, 'boton-luz-azul.png'),
+                                                            (39, 'boton-luz-violeta.png');
+
+-- ------------------------------------------------------------------
+-- ETAPA 6: Cocina Industrial (id_etapa = 34)
+
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('ADIVINANZA', 'Tengo filo sin ser herramienta, sirvo a la mano que me empuña y divido todo lo que toco. En estos muros, mi ausencia era ley y mi encuentro, un gran peligro. ¿Qué soy?', 34);
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('CUCHILLO', TRUE, 40);
+
+-- ------------------------------------------------------------------
+-- ACERTIJO ETAPA 7: Farmacia Antigua (id_etapa = 35)
+
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('ORDENAR_IMAGEN', 'Un recetario polvoriento muestra los pasos para preparar un potente sedante. Ordénalos correctamente para que la fórmula funcione y puedas avanzar sin ser notado.', 35);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
+                                                                           (41, 'paso-pesar-ingredientes.png', 1),
+                                                                           (41, 'paso-mezclar-liquidos.png', 2),
+                                                                           (41, 'paso-calentar-suave.png', 3),
+                                                                           (41, 'paso-verter-frasco.png', 4);
+
+-- ------------------------------------------------------------------
+--ETAPA 8: Baños Comunitarios (id_etapa = 36)
+
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('ADIVINANZA', 'No tengo cuerpo, pero puedo ocultarte la visión. Lleno este cuarto sin ser invitado y hago que tu reflejo en el espejo se desvanezca por completo. Solo el frío me hace desaparecer. ¿Qué soy?', 36);
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('VAPOR', TRUE, 42);
+
+
+-- ------------------------------------------------------------------
+-- ACERTIJO ETAPA 9: Unidad de Observación (id_etapa = 37)
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('DRAG_DROP', 'Clasifica los objetos abandonados en "Instrumental de Cirugía" y "Equipo Básico" para desechar lo que no sirve.', 37);
+INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
+                                                                         (43, 'obj-bisturi.png', 'Instrumental de Cirugia'),
+                                                                         (43, 'obj-martillo-reflejos.png', 'Equipo Basico'),
+                                                                         (43, 'obj-tijeras-medicas.png', 'Instrumental de Cirugia'),
+                                                                         (43, 'obj-estetoscopio.png', 'Equipo Basico'),
+                                                                         (43, 'obj-vendas-gasa.png', 'Equipo Basico'),
+                                                                         (43, 'obj-pinzas-quirurgicas.png', 'Instrumental de Cirugia'),
+                                                                         (43, 'obj-termometro.png', 'Equipo Basico');
+
+
+-- ------------------------------------------------------------------
+-- ETAPA 10: Subsuelo y Calderas (id_etapa = 38)
+INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
+    ('SECUENCIA', 'Un antiguo panel de control monitorea las 7 válvulas principales de presión que bloquean la puerta de la Morgue. Observa la secuencia y actívalas en orden para sobrecargar el sistema de seguridad y forzar tu escape.', 38);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+                                                            (44, 'valvula-simbolo-alfa.png'),
+                                                            (44, 'valvula-simbolo-beta.png'),
+                                                            (44, 'valvula-simbolo-gamma.png'),
+                                                            (44, 'valvula-simbolo-delta.png'),
+                                                            (44, 'valvula-simbolo-epsilon.png'),
+                                                            (44, 'valvula-simbolo-zeta.png'),
+                                                            (44, 'valvula-simbolo-psi.png');
+
+
+-- Acertijo bonus para etapa 3 - Salón - Mansion
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Entraste al sótano. Podrias decir cuántos objetos de color rojo hay en ella?', 3);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (45, 'bonus-sotano.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('6', TRUE, 45);
+
+-- Acertijo bonus para etapa 13 - última etapa del Laboratorio secreto
+
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Te acercaste y ves pegada una hoja con un acertijo matematico, resolvelo si te animas', 13);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (46, 'bonus-laboratorio.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('175', TRUE, 46);
+
+-- Acertijo bonus para etapa 19 -  etapa sala de guardias del la carcel abandonada
+
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Te dio sed y quisiste tomar un vaso de agua, encontraste un acertijo que no todos ven', 19);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (47, 'bonus-carcel.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('8415', TRUE, 47);
+
+-- Acertijo bonus para etapa 26 -  etapa muelle de el campamento maldito
+
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Te asomaste al bote, dentro habia muchas cosas, cuantas cosas podes contar que no es comun ver en un bote? ', 26);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (48, 'bonus-muelle-campamento.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('3', TRUE, 48);
+
+-- Acertijo bonus para etapa 27 -  etapa cabaña de vigilancia de el campamento maldito
+
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Abriste el cajon de el encargado de vigilancia, encontraste un acertijo peculiar, podes resolverlo?', 27);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (49, 'bonus-vigilancia-campamento.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('corre', TRUE, 49);
+
+-- Acertijo bonus para etapa 30 -  etapa pasillo de celdas en el hospital psiquiatrico
+
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Tocaste un boton y se abrio una habitacion secreta, cuantos objetos letales hay dentro?', 30);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (50, 'bonus-pasillo-psiquiatrico.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('5', TRUE, 50);
+
+-- Acertijo bonus para etapa 33 -  etapa pasillo de celdas en el hospital psiquiatrico
+
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Encontraste un papel interesante entre tantos, revela el secreto del paciente', 33);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (51, 'bonus-tratamiento-psiquiatrico.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('18', TRUE, 51);
+
+-- Acertijo bonus para etapa 35 -  etapa farmacia en el hospital psiquiatrico
+
+INSERT INTO Acertijo(tipo, descripcion, id_etapa) VALUES
+    ('BONUS', 'Tocaste un frasco, sin saber que era una palanca que te dirige al sotano de la farmacia, cuantos frascos venenosos ves?', 35);
+
+INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo) VALUES
+    (52, 'bonus-farmacia-psiquiatrico.png');
+
+INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES
+    ('7', TRUE, 52);

@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+{<!DOCTYPE HTML>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>Inicio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <!-- Bootstrap core css -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
@@ -63,69 +64,54 @@
 
         <div class="row justify-content-center g-4">
             <div class="col-md-4" th:each="sala : ${salas}">
-                <a th:if="${sala.sala.id != 4 and sala.sala.id != 5}"
-                   th:attr="id=${'sala-' + sala.sala.id}"
-                   th:href="@{/inicio/sala/{id}(id=${sala.sala.id})}"
+                <a th:if="${sala.esta_habilitada}"
+                   th:attr="id=${'sala-' + sala.id}"
+                   th:href="@{/inicio/sala/{id}(id=${sala.id})}"
                    style="text-decoration: none;">
-                    <div class="card text-center shadow sala-card">
+                    <div class="card text-center shadow sala-card"
+                         th:style="'--bg-image: url(/spring/img/' + ${sala.imagenSala} + ');'">
                         <span class="lock-icon unlock-color">
                             <i class="bi bi-unlock-fill"></i>
                         </span>
+                        <div class="texto-card">
+                            <h5 class="mt-1" th:text="${sala.nombre}"></h5>
+                            <p class="mt-1" th:text="${sala.dificultad}"></p>
+                        </div>
                         <div>
                             <img class="mx-auto d-block" style="width: 70px" alt="puerta"
-                                 th:src="@{'/img/' + ${sala.sala.imagenPuerta}}">
-                        </div>
-                        <div class="texto-card">
-                            <h5 class="mt-1" th:text="${sala.sala.nombre}"></h5>
-                            <p class="mt-3" th:text="'Dificultad: ' + ${sala.sala.dificultad}"></p>
+                                 th:src="@{'/img/' + ${sala.imagenPuerta}}">
                         </div>
                     </div>
                 </a>
 
-                <a th:if="${(sala.sala.id == 4 or sala.sala.id == 5) and sala.desbloqueada}"
-                   th:attr="id=${'sala-' + sala.sala.id}"
-                   th:href="@{/inicio/sala/{id}(id=${sala.sala.id})}"
+                <a th:if="${!sala.esta_habilitada and sala.es_paga}"
+                   th:attr="id=${'sala-' + sala.id}"
+                   th:href="@{/inicio/sala/{id}(id=${sala.id})}"
                    style="text-decoration: none;">
-                    <div class="card text-center shadow sala-card">
-                        <span class="lock-icon unlock-color">
-                            <i class="bi bi-unlock-fill"></i>
-                        </span>
-                        <div>
-                            <img class="mx-auto d-block" style="width: 70px" alt="puerta"
-                                 th:src="@{'/img/' + ${sala.sala.imagenPuerta}}">
-                        </div>
-                        <div class="texto-card">
-                            <h5 class="mt-1" th:text="${sala.sala.nombre}"></h5>
-                            <p class="mt-3" th:text="'Dificultad: ' + ${sala.sala.dificultad}"></p>
-                        </div>
-                    </div>
-                </a>
-
-                <div th:if="${(sala.sala.id == 4 or sala.sala.id == 5) and !sala.desbloqueada}"
-                     class="card text-center shadow sala-card">
+                    <div class="card text-center shadow sala-card"
+                         th:style="'--bg-image: url(/spring/img/' + ${sala.imagenSala} + ');'">
                     <span class="lock-icon lock-color">
                         <i class="bi bi-lock-fill"></i>
                     </span>
-                    <div>
-                        <img class="mx-auto d-block" style="width: 70px" alt="puerta"
-                             th:src="@{'/img/' + ${sala.sala.imagenPuerta}}">
+                        <div class="texto-card">
+                            <h5 class="mt-1" th:text="${sala.nombre}"></h5>
+                            <p class="mt-3" th:text="${sala.dificultad}"></p>
+                        </div>
+                        <div>
+                            <img class="mx-auto d-block" style="width: 70px" alt="puerta"
+                                 th:src="@{'/img/' + ${sala.imagenPuerta}}">
+                        </div>
+
+                        <p class="mt-3 texto-paga">Esta sala es paga</p>
+
                     </div>
-                    <div class="texto-card">
-                        <h5 class="mt-1" th:text="${sala.sala.nombre}"></h5>
-                        <p class="mt-3" th:text="'Dificultad: ' + ${sala.sala.dificultad}"></p>
-                    </div>
-                    <form th:action="@{/compra/iniciar/{id}(id=${sala.sala.id})}" method="post">
-                        <button type="submit" class="btn btn-success">
-                            Comprar
-                        </button>
-                    </form>
-                </div>
+                </a>
+
             </div>
         </div>
     </div>
 </main>
 
-</main>
 
 <div class="boton-cerrar-container">
     <a th:href="@{/cerrarSesion}">
@@ -134,6 +120,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/apiMercado.js}"></script>
 </body>
 </html>
+}

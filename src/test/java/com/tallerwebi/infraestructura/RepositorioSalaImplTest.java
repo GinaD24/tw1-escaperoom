@@ -46,6 +46,9 @@ public class RepositorioSalaImplTest {
         sala1.setCantidadDeEtapas(5);
         sala2.setCantidadDeEtapas(8);
         sala3.setCantidadDeEtapas(10);
+        sala1.setEs_paga(false);
+        sala2.setEs_paga(false);
+        sala3.setEs_paga(false);
 
         this.sessionFactory.getCurrentSession().save(sala1);
         this.sessionFactory.getCurrentSession().save(sala2);
@@ -72,6 +75,9 @@ public class RepositorioSalaImplTest {
         sala1.setCantidadDeEtapas(5);
         sala2.setCantidadDeEtapas(8);
         sala3.setCantidadDeEtapas(10);
+        sala1.setEs_paga(false);
+        sala2.setEs_paga(false);
+        sala3.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala1);
         this.sessionFactory.getCurrentSession().save(sala2);
         this.sessionFactory.getCurrentSession().save(sala3);
@@ -98,6 +104,10 @@ public class RepositorioSalaImplTest {
         sala2.setCantidadDeEtapas(8);
         sala3.setCantidadDeEtapas(10);
         sala4.setCantidadDeEtapas(5);
+        sala1.setEs_paga(false);
+        sala2.setEs_paga(false);
+        sala3.setEs_paga(false);
+        sala4.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala1);
         this.sessionFactory.getCurrentSession().save(sala2);
         this.sessionFactory.getCurrentSession().save(sala3);

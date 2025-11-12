@@ -4,5 +4,6 @@ public enum TipoAcertijo {
     ADIVINANZA,
     DRAG_DROP,
     ORDENAR_IMAGEN,
-    SECUENCIA
+    SECUENCIA,
+    BONUS
 }

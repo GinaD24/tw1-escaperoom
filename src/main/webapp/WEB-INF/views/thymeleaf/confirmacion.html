@@ -5,10 +5,12 @@
     <title>Confirmación de Pago</title>
     <!-- Bootstrap core css -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/confirmacion.css}"/>
 </head>
 <body>
-<h1>Procesando confirmación...</h1>
+<h1 class="mt-5">Procesando confirmación...</h1>
 <div th:if="${mensaje}" th:text="${mensaje}"></div>
 <div th:if="${error}" th:text="${error}"></div>
 <script>

@@ -1,6 +1,7 @@
 package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.entidad.*;
+import com.tallerwebi.dominio.enums.TipoAcertijo;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPartida;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -38,7 +39,9 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         String hql = "SELECT DISTINCT a FROM Acertijo a " +
                 "LEFT JOIN FETCH a.imagenes " +
                 "LEFT JOIN FETCH a.dragDropItems " +
-                "WHERE a.etapa.id = :idEtapa";
+                "LEFT JOIN FETCH a.pistas " +
+                "LEFT JOIN FETCH a.respuesta " +
+                "WHERE a.etapa.id = :idEtapa AND a.tipo <> 'BONUS'";
         Query<Acertijo> query = this.sessionFactory
                 .getCurrentSession()
                 .createQuery(hql, Acertijo.class);
@@ -59,7 +62,7 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         String hql = "SELECT r FROM Respuesta r WHERE r.acertijo.id = :idAcertijo AND r.es_correcta = true";
         Query<Respuesta> query = this.sessionFactory.getCurrentSession().createQuery(hql, Respuesta.class);
         query.setParameter("idAcertijo", idAcertijo);
-        return query.getSingleResult();
+        return query.getResultList().stream().findFirst().orElse(null);
     }
 
     @Override
@@ -82,7 +85,7 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
                 "SET au.pistasUsadas = au.pistasUsadas + 1 " +
                 "WHERE au.acertijo.id = :idAcertijo AND au.usuario.id = :idUsuario";
 
-         int updated = sessionFactory.getCurrentSession()
+        sessionFactory.getCurrentSession()
                 .createQuery(hql)
                 .setParameter("idAcertijo", idAcertijo)
                 .setParameter("idUsuario", idUsuario)
@@ -112,6 +115,8 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         String hql = "SELECT a FROM Acertijo a " +
                 "LEFT JOIN FETCH a.imagenes " +
                 "LEFT JOIN FETCH a.dragDropItems " +
+                "LEFT JOIN FETCH a.pistas " +
+                "LEFT JOIN FETCH a.respuesta " +
                 "WHERE a.id = :idAcertijo";
         Query<Acertijo> query = this.sessionFactory
                 .getCurrentSession()
@@ -142,18 +147,6 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         this.sessionFactory.getCurrentSession().update(partida);
     }
 
-    @Override
-    public void registrarPistaEnPartida(Long idUsuario) {
-        String hql = "UPDATE Partida p " +
-                "SET p.pistasUsadas = p.pistasUsadas + 1 " +
-                "WHERE p.usuario.id = :idUsuario AND p.esta_activa = true";
-
-        int updated = sessionFactory.getCurrentSession()
-                .createQuery(hql)
-                .setParameter("idUsuario", idUsuario)
-                .executeUpdate();
-    }
-
 
     @Override
     public List<Long> obtenerOrdenDeImgCorrecto(Long idAcertijo) {
@@ -163,6 +156,7 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         return query.getResultList();
     }
 
+    @Override
     public List<DragDropItem> obtenerItemsDragDrop(Long idAcertijo) {
         String hql = "FROM DragDropItem d WHERE d.acertijo.id = :idAcertijo";
         return sessionFactory.getCurrentSession()
@@ -176,6 +170,19 @@ public class RepositorioPartidaImpl implements RepositorioPartida {
         String hql = "SELECT p FROM Partida p WHERE p.id = :idPartida";
         Query<Partida> query = this.sessionFactory.getCurrentSession().createQuery(hql, Partida.class);
         query.setParameter("idPartida", idPartida);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public Acertijo traerAcertijoBonus(Long idEtapa) {
+        String hql = "SELECT DISTINCT a FROM Acertijo a " +
+                "JOIN FETCH a.imagenes " +
+                "JOIN FETCH a.respuesta " +
+                "WHERE a.etapa.id = :idEtapa AND a.tipo = 'BONUS' AND a.etapa.tieneBonus = TRUE";
+        Query<Acertijo> query = this.sessionFactory
+                .getCurrentSession()
+                .createQuery(hql, Acertijo.class);
+        query.setParameter("idEtapa", idEtapa);
         return query.getResultList().stream().findFirst().orElse(null);
     }
 }

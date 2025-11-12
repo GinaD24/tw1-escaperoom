@@ -5,23 +5,37 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (btnPista) {
         btnPista.addEventListener("click", function() {
-            const idAcertijo = this.dataset.acertijo;
 
-            fetch(`/spring/partida/acertijo/${idAcertijo}/pista`)
-                .then(response => response.text())
+
+            fetch(`/spring/partida/pista`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al obtener la pista');
+                    }
+                    return response.text();
+                })
                 .then(text => {
                     const pistaDiv = document.getElementById("pista");
-                    pistaDiv.innerText = text;
+                    pistaDiv.innerHTML = `<p class="pista-texto">${text}</p>`;
 
                     if (text.trim() !== "Ya no quedan pistas.") {
                         mostrarAnimacionPuntos();
                         actualizarPuntaje(-25);
+                    } else {
+
+                        btnPista.disabled = true;
                     }
+                })
+                .catch(error => {
+                     console.error('Error:', error);
+                     const pistaDiv = document.getElementById("pista");
+                     pistaDiv.innerHTML = `<p class="text-danger">No se pudo cargar la pista.</p>`;
                 });
         });
     }
 
     function mostrarAnimacionPuntos() {
+        if (!animacionPuntos) return;
         animacionPuntos.textContent = "-25";
         animacionPuntos.classList.add("mostrar");
 
@@ -31,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function actualizarPuntaje(valor) {
+        if (!valorPuntaje) return;
         let puntajeActual = parseInt(valorPuntaje.textContent);
         let nuevoPuntaje = Math.max(0, puntajeActual + valor);
         valorPuntaje.textContent = nuevoPuntaje;
@@ -39,20 +54,29 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+
     const btnSalir = document.getElementById("btnSalir");
     const modal = document.getElementById("modalSalir");
     const btnCancelar = document.getElementById("cancelarSalir");
     const btnConfirmar = document.getElementById("confirmarSalir");
 
-    btnSalir.addEventListener("click", () => {
-        modal.style.display = "flex";
-    });
+    if (btnSalir) {
+        btnSalir.addEventListener("click", () => {
+            if (modal) modal.style.display = "flex";
+        });
+    }
 
-    btnCancelar.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
+    if (btnCancelar) {
+        btnCancelar.addEventListener("click", () => {
+            if (modal) modal.style.display = "none";
+        });
+    }
 
-    btnConfirmar.addEventListener("click", () => {
-        window.location.href = "/spring/partida/finalizarPartida";
-    });
+    if (btnConfirmar) {
+        btnConfirmar.addEventListener("click", () => {
+            window.location.href = "/spring/partida/finalizarPartida";
+        });
+    }
 });
+
+

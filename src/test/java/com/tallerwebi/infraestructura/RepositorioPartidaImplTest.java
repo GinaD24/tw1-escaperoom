@@ -15,7 +15,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -41,6 +43,7 @@ public class RepositorioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         sala.setCantidadDeEtapas(5);
+        sala.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala);
 
         Partida partida = new Partida(LocalDateTime.now());
@@ -57,6 +60,7 @@ public class RepositorioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         sala.setCantidadDeEtapas(5);
+        sala.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala);
 
         Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
@@ -73,6 +77,7 @@ public class RepositorioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         sala.setCantidadDeEtapas(5);
+        sala.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala);
 
         Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
@@ -290,6 +295,7 @@ public class RepositorioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         sala.setCantidadDeEtapas(5);
+        sala.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala);
 
         Usuario usuario = new Usuario();
@@ -312,6 +318,7 @@ public class RepositorioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         sala.setCantidadDeEtapas(5);
+        sala.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala);
 
         Usuario usuario = new Usuario();
@@ -331,28 +338,6 @@ public class RepositorioPartidaImplTest {
         assertNotNull(partida.getFin());
         assertNotNull(partida.getTiempoTotal());
     }
-
-    @Test
-    public void deberiaRegistrarPistaEnPartidaCadaVezQueSePideUna(){
-        Usuario usuario = new Usuario();
-        this.sessionFactory.getCurrentSession().save(usuario);
-
-        Partida partida = new Partida(LocalDateTime.now());
-        partida.setUsuario(usuario);
-        partida.setEsta_activa(true);
-        partida.setPistasUsadas(0);
-        this.sessionFactory.getCurrentSession().save(partida);
-
-        this.repositorioPartida.registrarPistaEnPartida(usuario.getId());
-
-        sessionFactory.getCurrentSession().flush();
-        sessionFactory.getCurrentSession().refresh(partida);
-
-        Integer pistasUsadas = partida.getPistasUsadas();
-
-        assertThat(pistasUsadas, equalTo(1));
-    }
-
 
 
     @Test
@@ -408,6 +393,7 @@ public class RepositorioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         sala.setCantidadDeEtapas(5);
+        sala.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala);
 
         Usuario usuario = new Usuario();
@@ -424,5 +410,34 @@ public class RepositorioPartidaImplTest {
         assertThat(partidaObtenida, equalTo(partida));
     }
 
+    @Test
+    public void deberiaObtenerElAcertijoBonusDeUnaEtapa(){
+        Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
+        etapa.setTieneBonus(true);
+        this.sessionFactory.getCurrentSession().save(etapa);
+
+        Acertijo acertijo = new Acertijo( "a1");
+        acertijo.setEtapa(etapa);
+        acertijo.setTipo(TipoAcertijo.BONUS);
+
+        Respuesta respuesta = new Respuesta("a");
+        respuesta.setEs_correcta(true);
+        respuesta.setAcertijo(acertijo);
+
+        acertijo.setRespuesta(respuesta);
+
+        this.sessionFactory.getCurrentSession().save(acertijo);
+        this.sessionFactory.getCurrentSession().save(respuesta);
+
+        ImagenAcertijo imagen1 = new ImagenAcertijo(acertijo, "i1");
+        this.sessionFactory.getCurrentSession().save(imagen1);
+
+        acertijo.setImagenes(new HashSet<>(Set.of(imagen1)));
+
+        this.sessionFactory.getCurrentSession().update(acertijo);
+
+        Acertijo acertijoBonusObtenido = this.repositorioPartida.traerAcertijoBonus(etapa.getId());
+        assertThat(acertijoBonusObtenido, equalTo(acertijo));
+    }
 
 }

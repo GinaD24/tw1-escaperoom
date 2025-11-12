@@ -6,8 +6,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.tallerwebi.dominio.entidad.Partida;
-import com.tallerwebi.dominio.entidad.PuestoRanking;
+import com.tallerwebi.dominio.entidad.PuestoRankingDTO;
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.excepcion.SalaSinRanking;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioRanking;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioRanking;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 @Service
+@Transactional
 public class ServicioRankingImpl implements ServicioRanking {
 
     private final RepositorioRanking repositorioRanking;
@@ -28,43 +30,68 @@ public class ServicioRankingImpl implements ServicioRanking {
 
 
     @Override
-    @Transactional
-    public List<PuestoRanking> obtenerRankingPorSala(Integer idSala) {
-        // Obtener todas las partidas de la sala
-        List<Partida> listaDePartidas = this.repositorioRanking.obtenerPartidasPorSala(idSala);
+    public List<PuestoRankingDTO> obtenerRanking() {
+        List<Partida> listaDePartidas = this.repositorioRanking.obtenerTodasLasPartidasGanadas();
 
         if (listaDePartidas.isEmpty()) {
             throw new SalaSinRanking();
         }
 
-        // Mapear a un Map<Usuario, Partida> para quedarnos solo con la mejor partida de cada usuario
+        // 2. Agrupar por usuario y elegir su mejor partida según puntaje ponderado
         Map<Usuario, Partida> mejorPartidaPorUsuario = listaDePartidas.stream()
                 .collect(Collectors.toMap(
                         Partida::getUsuario,
                         p -> p,
-                        (p1, p2) -> { // si hay más de una partida del mismo usuario, quedarnos con la mejor
-                            if (p1.getPuntaje() > p2.getPuntaje()) return p1;
-                            if (p1.getPuntaje() < p2.getPuntaje()) return p2;
-                            // si el puntaje es igual, quedarse con menor tiempo
-                            return p1.getTiempoTotal() <= p2.getTiempoTotal() ? p1 : p2;
-                        }
+                        (p1, p2) -> obtenerPuntajeCalculado(p1) >= obtenerPuntajeCalculado(p2) ? p1 : p2
                 ));
 
-        // Transformar a Ranking y ordenar
-        List<PuestoRanking> rankingsDeSala = mejorPartidaPorUsuario.values().stream()
-                .map(partida -> new PuestoRanking(
-                        partida.getSala().getId(),
-                        partida.getPuntaje(),
-                        partida.getUsuario(),
-                        partida.getTiempoTotal(),
-                        partida.getPistasUsadas()))
-                .sorted(Comparator
-                        .comparing(PuestoRanking::getPuntaje).reversed()
-                        .thenComparing(PuestoRanking::getTiempoTotal)
-                )
+        // 3. Convertir a DTO y ordenar por el puntaje ponderado
+        List<PuestoRankingDTO> rankingGlobal = mejorPartidaPorUsuario.values().stream()
+                .map(p -> new PuestoRankingDTO(
+                        p.getSala(),
+                        p.getPuntaje(),
+                        p.getUsuario(),
+                        p.getTiempoTotal(),
+                        p.getPistasUsadas(),
+                        obtenerPuntajeCalculado(p) // no se muestra, solo para ordenar
+                ))
+                .sorted(Comparator.comparing(PuestoRankingDTO::getPuntajeCalculado).reversed())
                 .collect(Collectors.toList());
 
-        return rankingsDeSala;
+        // 4. Asignar los puestos
+        for (int i = 0; i < rankingGlobal.size(); i++) {
+            rankingGlobal.get(i).setPuesto(i + 1);
+        }
+
+        return rankingGlobal;
+    }
+
+
+    public Double obtenerPuntajeCalculado(Partida partida) {
+        Integer cantidadDeBonus = this.repositorioRanking.obtenerCantidadDeBonusPorSala(partida.getSala().getId());
+        double puntajeMaximo = (partida.getSala().getCantidadDeEtapas() * 100) + (cantidadDeBonus * 50);
+        double rendimiento = (partida.getPuntaje() / puntajeMaximo); // entre 0 y 1
+
+        double factorDificultad = obtenerFactorDificultad(partida.getSala().getDificultad());
+
+        double penalizacionPistas = 1.0 / (1 + partida.getPistasUsadas() * 0.1);
+
+        double duracionSalaEnSegundos = partida.getSala().getDuracion() * 60.0;
+        double ratio = partida.getTiempoTotal() / duracionSalaEnSegundos;
+        if (ratio > 1) ratio = 1; // por si acaso alguien se pasa del límite
+        double bonusTiempo = 0.7 + (1 - ratio) * 0.3;
+
+        return rendimiento * factorDificultad * penalizacionPistas * bonusTiempo * 100.0;
+    }
+
+
+    private double obtenerFactorDificultad(Dificultad dificultad) {
+        switch (dificultad) {
+            case PRINCIPIANTE: return 1.0;
+            case INTERMEDIO: return 1.1;
+            case AVANZADO: return 1.25;
+        }
+        return 0;
     }
 
 

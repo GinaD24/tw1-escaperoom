@@ -28,6 +28,9 @@ public class Sala {
     private Boolean esta_habilitada;
 
     @Column(nullable = false)
+    private Boolean es_paga;
+
+    @Column(nullable = false)
     private Integer duracion;
 
     @Column
@@ -155,4 +158,13 @@ public class Sala {
     public void setImagenPerdida(String imagenPerdida) {
         this.imagenPerdida = imagenPerdida;
     }
+
+    public Boolean getEs_paga() {
+        return es_paga;
+    }
+
+    public void setEs_paga(Boolean es_paga) {
+        this.es_paga = es_paga;
+    }
 }
+

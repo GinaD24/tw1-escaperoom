@@ -1,11 +1,13 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.entidad.ImagenAcertijo;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Component
 @SessionScope
@@ -16,7 +18,7 @@ public class DatosPartidaSesion {
     private Integer idSalaActual;
     private Integer numeroEtapaActual;
     private Long idEtapa;
-    private Long idAcertijo;
+    private AcertijoActualDTO acertijoActualDTO;
     private Boolean partidaGanada;
     private Long idPartida;
 
@@ -24,14 +26,6 @@ public class DatosPartidaSesion {
     public DatosPartidaSesion(ServicioPartida servicioPartida, HttpSession session) {
         this.servicioPartida = servicioPartida;
         this.session = session;
-    }
-
-    public Long getIdAcertijo() {
-        return (Long) session.getAttribute("id_acertijo");
-    }
-
-    public void setIdAcertijo(Long idAcertijo) {
-        session.setAttribute("id_acertijo", idAcertijo);
     }
 
     public Long getIdEtapa() {
@@ -58,6 +52,13 @@ public class DatosPartidaSesion {
         session.setAttribute("numero_etapa_actual", numeroEtapaActual);
     }
 
+    public AcertijoActualDTO getAcertijoActual() {
+        return (AcertijoActualDTO) session.getAttribute("acertijo_actual");
+    }
+    public void setAcertijoActual(AcertijoActualDTO estado) {
+        session.setAttribute("acertijo_actual", estado);
+    }
+
     public Boolean getPartidaGanada() {
         return (Boolean) session.getAttribute("partida_ganada");
     }
@@ -81,7 +82,18 @@ public class DatosPartidaSesion {
     }
 
     public void limpiarSesionIdEtapaAcertijo() {
-        session.removeAttribute("id_acertijo");
+        limpiarAcertijoActual();
         session.removeAttribute("id_etapa");
+    }
+
+    public void limpiarAcertijoActual() {
+        session.removeAttribute("acertijo_actual");
+    }
+    public void guardarSecuencia(List<ImagenAcertijo> imagenesDeSecuencia) {
+        session.setAttribute("imagenesDeSecuencia", imagenesDeSecuencia);
+    }
+
+    public List<ImagenAcertijo> getSecuencia() {
+        return (List<ImagenAcertijo>) session.getAttribute("imagenesDeSecuencia");
     }
 }

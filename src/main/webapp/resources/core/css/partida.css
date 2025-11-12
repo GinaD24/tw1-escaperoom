@@ -25,7 +25,7 @@ header {
     margin: auto;
     padding-top: 20px;
     text-align: center;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(1px);
 
 }
 .contenedor-titulo {
@@ -377,4 +377,56 @@ h3 {
     max-width: 120px;
     height: auto;
     border-radius: 5px;
+}
+
+.zona-secreta {
+    position: absolute;
+    top: 95%;      /* Ajustá según dónde querés que esté */
+    left: 10%;
+    width: 70px;  /* Tamaño del área clickeable */
+    height: 70px;
+    cursor: pointer;
+    background-color: transparent;
+    z-index: 50;
+}
+
+/* Solo para pruebas — para ver dónde está. Luego quitás esto. */
+.zona-secreta-debug {
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+.modal-content.bonus {
+    background-color: rgba(0 0 0 / 72%);
+    padding: 30px;
+    width: 60%;
+    max-width: 900px;
+    border-radius: 12px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 1.2rem;
+    box-shadow: 0 0 25px rgba(0,0,0,0.4);
+}
+
+.popup-exito {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(135, 172, 102, 0.84);
+    color: #1f4911;
+    padding: 20px 30px;
+    border-radius: 15px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    z-index: 9999;
+    text-align: center;
+    animation: fadeInOut 3s ease;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translate(-50%, -55%); }
+    10% { opacity: 1; transform: translate(-50%, -50%); }
+    90% { opacity: 1; transform: translate(-50%, -50%); }
+    100% { opacity: 0; transform: translate(-50%, -45%); }
 }
