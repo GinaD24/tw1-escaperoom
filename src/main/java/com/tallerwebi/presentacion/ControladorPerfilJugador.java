@@ -6,11 +6,11 @@ import com.tallerwebi.dominio.interfaz.servicio.ServicioPerfil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 
 @Controller
@@ -19,9 +19,8 @@ public class ControladorPerfilJugador {
 
     private final ServicioPerfil servicioPerfil;
 
-
     @Autowired
-    public ControladorPerfilJugador(ServicioPerfil servicioPerfil) { // <-- 2. Inyección en Constructor
+    public ControladorPerfilJugador(ServicioPerfil servicioPerfil) {
         this.servicioPerfil = servicioPerfil;
     }
 
@@ -35,14 +34,18 @@ public class ControladorPerfilJugador {
             }
 
             Usuario usuario = servicioPerfil.obtenerPerfil(idUsuario);
+
+            if (usuario.getFotoPerfil() != null &&
+                    !usuario.getFotoPerfil().startsWith("/img/") &&
+                    !usuario.getFotoPerfil().contains("/uploads/")) {
+
+                usuario.setFotoPerfil("/img/" + usuario.getFotoPerfil());
+            }
+
             modelo.put("usuario", usuario);
             return new ModelAndView("perfil-jugador", modelo);
         } catch (IDUsuarioInvalido e) {
             return new ModelAndView("redirect:/inicio/");
         }
     }
-
 }
-
-
-

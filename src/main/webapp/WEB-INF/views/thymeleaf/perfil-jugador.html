@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
@@ -38,8 +39,7 @@
             <div class="perfil-foto-area">
                 <div id="previewContainer" class="contenedorFoto">
                     <img th:if="${usuario.fotoPerfil != null}"
-                         th:src="@{'/img/' + ${usuario.fotoPerfil}}"
-                         alt="Foto de perfil" id="preview">
+                         th:src="@{${usuario.fotoPerfil}}" alt="Foto de perfil" id="preview">
 
                     <img th:unless="${usuario.fotoPerfil != null}"
                          th:src="@{/img/perfil-default.png}"
@@ -48,9 +48,6 @@
                 </div>
 
                 <div id="fileUpload" class="mt-2 text-center fileUpload">
-                    <a class="btn btn-sm btn-foto" id="botonCambiarFoto" >
-                        <img th:src="@{/img/cambiar-foto.png}" style="width:40px; margin:auto;">
-                    </a>
                     <input id="imagen" type="file" hidden name="imagen" accept=".png, .jpg, .jpeg">
                 </div>
             </div>
