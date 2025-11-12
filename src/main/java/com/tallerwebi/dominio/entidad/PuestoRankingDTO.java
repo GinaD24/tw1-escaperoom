@@ -1,30 +1,50 @@
 package com.tallerwebi.dominio.entidad;
 
-public class PuestoRanking {
+public class PuestoRankingDTO {
 
-    private Integer idSala;
+    private Sala sala;
     private Integer puntaje;
     private Usuario usuario;
     private Long tiempoTotal;
     private Integer cantidadPistas;
+    private Double puntajeCalculado;
+    private Integer puesto;
 
-    public PuestoRanking() {}
 
-    public PuestoRanking(Integer idSala, Integer puntaje, Usuario usuario, Long tiempoTotal, Integer cantidadPistas){
-        this.idSala = idSala;
+    public PuestoRankingDTO(Sala sala, Integer puntaje, Usuario usuario, Long tiempoTotal, Integer cantidadPistas, Double puntajeCalculado) {
+        this.sala = sala;
         this.puntaje = puntaje;
         this.usuario = usuario;
         this.tiempoTotal = tiempoTotal;
         this.cantidadPistas = cantidadPistas;
+        this.puntajeCalculado = puntajeCalculado;
 
     }
 
-    public Integer getIdSala() {
-        return idSala;
+    public PuestoRankingDTO(){}
+
+    public Integer getPuesto() {
+        return puesto;
     }
 
-    public void setIdSala(Integer idSala) {
-        this.idSala = idSala;
+    public void setPuesto(Integer puesto) {
+        this.puesto = puesto;
+    }
+
+    public Double getPuntajeCalculado() {
+        return puntajeCalculado;
+    }
+
+    public void setPuntajeCalculado(Double puntajeCalculado) {
+        this.puntajeCalculado = puntajeCalculado;
+    }
+
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
     }
 
     public Integer getPuntaje() {

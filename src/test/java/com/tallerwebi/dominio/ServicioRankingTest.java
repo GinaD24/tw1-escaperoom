@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,15 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tallerwebi.dominio.entidad.Partida;
-import com.tallerwebi.dominio.entidad.PuestoRanking;
+import com.tallerwebi.dominio.entidad.PuestoRankingDTO;
 import com.tallerwebi.dominio.entidad.Sala;
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioRanking;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ServicioRankingTest {
-    
+
     private ServicioRankingImpl servicioRanking;
     private RepositorioRanking repositorioRanking;
 
@@ -30,164 +32,138 @@ public class ServicioRankingTest {
         this.servicioRanking = new ServicioRankingImpl(repositorioRanking);
     }
 
-
     @Test
-    public void deberiaDevolverUnaListaDePuestoRankingSiendoElPrimerPuesto_ElQueTerminoConMayorPuntajeLaPartida(){
+    public void deberiaDevolverElPuntajeCalculadoDeUnaPartida_TeniendoEnCuentaLaDificultadYDuracionDeLaSala_YElPedidoDePistas(){
         Sala sala = new Sala();
         sala.setId(1);
+        sala.setCantidadDeEtapas(5);
+        sala.setDificultad(Dificultad.PRINCIPIANTE);
+        sala.setDuracion(5);
 
         Usuario usuario = new Usuario();
         usuario.setId(1L);
         Usuario usuario2 = new Usuario();
         usuario.setId(2L);
 
-        List<Partida> listaDePartidas  = new ArrayList<>();
 
-        Partida partida = new Partida();
-        partida.setId(1L);
-        partida.setInicio(LocalDateTime.now());
-        partida.setSala(sala);
-        partida.setPuntaje(500);
-        partida.setEsta_activa(false);
-        partida.setUsuario(usuario);
-        partida.setPistasUsadas(0);
-        partida.setGanada(true);
-        partida.setTiempoTotal(60L);
+        Partida partida = dadoQueExisteUnaPartida(1L, sala, 500, usuario, 0, 30L);
+
+        //mismo tiempo pero con una pista pedida
+        Partida partida2 = dadoQueExisteUnaPartida(2L, sala, 475, usuario2, 1, 30L);
 
 
-        Partida partida2 = new Partida();
-        partida2.setId(2L);
-        partida2.setInicio(LocalDateTime.now());
-        partida2.setSala(sala);
-        partida2.setPuntaje(450); //50 puntos menos
-        partida2.setEsta_activa(false);
-        partida2.setUsuario(usuario2);
-        partida2.setPistasUsadas(0);
-        partida2.setGanada(true);
-        partida2.setTiempoTotal(60L); //mismo tiempo
+        Double puntajeCalculadoPartida1 = this.servicioRanking.obtenerPuntajeCalculado(partida);
+        Double puntajeCalculadoPartida2 = this.servicioRanking.obtenerPuntajeCalculado(partida2);
 
-        listaDePartidas.add(partida);
-        listaDePartidas.add(partida2);
-
-        List<PuestoRanking> listaDePuestoRanking = new ArrayList<>();
-        listaDePuestoRanking.add(new PuestoRanking(sala.getId(), partida.getPuntaje(), usuario, partida.getTiempoTotal(), 0 ));
-        listaDePuestoRanking.add(new PuestoRanking(sala.getId(), partida2.getPuntaje(), usuario2, partida2.getTiempoTotal(), 0));
-
-        when(repositorioRanking.obtenerPartidasPorSala(sala.getId())).thenReturn(listaDePartidas);
-
-        List<PuestoRanking> puestosObtenidos = this.servicioRanking.obtenerRankingPorSala(sala.getId());
-
-        assertThat(puestosObtenidos.get(0).getUsuario(), equalTo(usuario));
-        assertThat(puestosObtenidos.get(0).getPuntaje(), equalTo(partida.getPuntaje()));
-        assertThat(puestosObtenidos.get(1).getUsuario(), equalTo(usuario2));
-        assertThat(puestosObtenidos.get(1).getPuntaje(), equalTo(partida2.getPuntaje()));
-        verify(repositorioRanking).obtenerPartidasPorSala(sala.getId());
+        assertThat(puntajeCalculadoPartida1, greaterThan(puntajeCalculadoPartida2));
     }
 
     @Test
-    public void deberiaDevolverUnaListaDePuestoRankingSiendoElPrimerPuesto_ElQueTerminoAntesLaPartida(){
+    public void deberiaDevolverMenosPuntajeCalculadoSItardasMasTiempo_TeniendoEnCuentaLaDificultadYDuracionDeLaSala_YElPedidoDePistas(){
         Sala sala = new Sala();
         sala.setId(1);
+        sala.setCantidadDeEtapas(5);
+        sala.setDificultad(Dificultad.PRINCIPIANTE);
+        sala.setDuracion(5);
 
         Usuario usuario = new Usuario();
         usuario.setId(1L);
         Usuario usuario2 = new Usuario();
         usuario.setId(2L);
 
-        List<Partida> listaDePartidas  = new ArrayList<>();
 
-        Partida partida = new Partida();
-        partida.setId(1L);
-        partida.setInicio(LocalDateTime.now());
-        partida.setSala(sala);
-        partida.setPuntaje(500);
-        partida.setEsta_activa(false);
-        partida.setUsuario(usuario);
-        partida.setPistasUsadas(0);
-        partida.setGanada(true);
-        partida.setTiempoTotal(60L); //tarda 60 segs
+        Partida partida = dadoQueExisteUnaPartida(1L, sala, 500, usuario, 0, 30L);
+
+        //mismo puntaje, mismas pistas pero mas tiempo
+        Partida partida2 = dadoQueExisteUnaPartida(2L, sala, 500, usuario2, 0, 40L);
 
 
-        Partida partida2 = new Partida();
-        partida2.setId(2L);
-        partida2.setInicio(LocalDateTime.now());
-        partida2.setSala(sala);
-        partida2.setPuntaje(500);
-        partida2.setEsta_activa(false);
-        partida2.setUsuario(usuario2);
-        partida2.setPistasUsadas(0);
-        partida2.setGanada(true);
-        partida2.setTiempoTotal(120L);//tarda 120 segs
+        Double puntajeCalculadoPartida1 = this.servicioRanking.obtenerPuntajeCalculado(partida);
+        Double puntajeCalculadoPartida2 = this.servicioRanking.obtenerPuntajeCalculado(partida2);
 
-        listaDePartidas.add(partida);
-        listaDePartidas.add(partida2);
-
-        List<PuestoRanking> listaDePuestoRanking = new ArrayList<>();
-        listaDePuestoRanking.add(new PuestoRanking(sala.getId(), partida.getPuntaje(), usuario, partida.getTiempoTotal(), 0 ));
-        listaDePuestoRanking.add(new PuestoRanking(sala.getId(), partida2.getPuntaje(), usuario2, partida2.getTiempoTotal(), 0));
-
-        when(repositorioRanking.obtenerPartidasPorSala(sala.getId())).thenReturn(listaDePartidas);
-
-        List<PuestoRanking> puestosObtenidos = this.servicioRanking.obtenerRankingPorSala(sala.getId());
-
-        assertThat(puestosObtenidos.get(0).getUsuario(), equalTo(usuario));
-        assertThat(puestosObtenidos.get(0).getPuntaje(), equalTo(partida.getPuntaje()));
-        assertThat(puestosObtenidos.get(1).getUsuario(), equalTo(usuario2));
-        assertThat(puestosObtenidos.get(1).getPuntaje(), equalTo(partida2.getPuntaje()));
-        verify(repositorioRanking).obtenerPartidasPorSala(sala.getId());
+        assertThat(puntajeCalculadoPartida1, greaterThan(puntajeCalculadoPartida2));
     }
 
     @Test
-    public void deberiaDevolverUnaListaDePuestoRankingSiendoElPrimerPuesto_ElQueNoUsoPistas(){
-        Sala sala = new Sala();
-        sala.setId(1);
+    public void deberiaDevolverMasPuntajeAUnaPartidaConSalaAvanzada_AunqueHayaSolicitadoPistaYTardadoMas(){
+        Sala salaPrincipiante = new Sala();
+        salaPrincipiante.setId(1);
+        salaPrincipiante.setCantidadDeEtapas(5);
+        salaPrincipiante.setDificultad(Dificultad.PRINCIPIANTE);
+        salaPrincipiante.setDuracion(5);
+
+        Sala salaAvanzada = new Sala();
+        salaAvanzada.setId(2);
+        salaAvanzada.setCantidadDeEtapas(10);
+        salaAvanzada.setDificultad(Dificultad.AVANZADO);
+        salaAvanzada.setDuracion(12);
 
         Usuario usuario = new Usuario();
         usuario.setId(1L);
         Usuario usuario2 = new Usuario();
         usuario.setId(2L);
 
-        List<Partida> listaDePartidas  = new ArrayList<>();
 
+        Partida partida = dadoQueExisteUnaPartida(1L, salaPrincipiante, 500, usuario, 0, 40L);
+
+        Partida partida2 = dadoQueExisteUnaPartida(2L, salaAvanzada, 1000, usuario2, 1, 60L);
+
+
+        Double puntajeCalculadoPartida1 = this.servicioRanking.obtenerPuntajeCalculado(partida);
+        Double puntajeCalculadoPartida2 = this.servicioRanking.obtenerPuntajeCalculado(partida2);
+
+        assertThat(puntajeCalculadoPartida2, greaterThan(puntajeCalculadoPartida1));
+    }
+
+    @Test
+    public void deberiaDevolverUnaListaDePuestoRankingSiendoElPrimerPuesto_ElQueTerminoConMayorPuntajeCalculado(){
+        Sala sala = new Sala();
+        sala.setId(1);
+        sala.setCantidadDeEtapas(5);
+        sala.setDificultad(Dificultad.PRINCIPIANTE);
+        sala.setDuracion(5);
+
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        Usuario usuario2 = new Usuario();
+        usuario.setId(2L);
+
+        List<Partida> listaDePartidasGanadas  = new ArrayList<>();
+
+        Partida partida = dadoQueExisteUnaPartida(1L, sala, 500, usuario, 0, 30L);
+        Partida partida2 = dadoQueExisteUnaPartida(2L, sala, 300, usuario2, 0, 50L);
+
+        listaDePartidasGanadas.add(partida);
+        listaDePartidasGanadas.add(partida2);
+
+        List<PuestoRankingDTO> listaDePuestoRankingDTO = new ArrayList<>();
+        listaDePuestoRankingDTO.add(new PuestoRankingDTO(sala, partida.getPuntaje(), usuario, partida.getTiempoTotal(), 0 , null));
+        listaDePuestoRankingDTO.add(new PuestoRankingDTO(sala, partida2.getPuntaje(), usuario2, partida2.getTiempoTotal(), 0, null));
+
+        when(repositorioRanking.obtenerTodasLasPartidasGanadas()).thenReturn(listaDePartidasGanadas);
+
+        List<PuestoRankingDTO> puestosRankingObtenidos = this.servicioRanking.obtenerRanking();
+
+        assertThat(puestosRankingObtenidos.get(0).getUsuario(), equalTo(usuario));
+        assertThat(puestosRankingObtenidos.get(0).getPuntaje(), equalTo(partida.getPuntaje()));
+        assertThat(puestosRankingObtenidos.get(1).getUsuario(), equalTo(usuario2));
+        assertThat(puestosRankingObtenidos.get(1).getPuntaje(), equalTo(partida2.getPuntaje()));
+        verify(repositorioRanking).obtenerTodasLasPartidasGanadas();
+    }
+
+    public Partida dadoQueExisteUnaPartida(Long id, Sala sala, Integer puntaje,  Usuario usuario, Integer pistasUsadas, Long tiempoTotal) {
         Partida partida = new Partida();
-        partida.setId(1L);
+        partida.setId(id);
         partida.setInicio(LocalDateTime.now());
         partida.setSala(sala);
-        partida.setPuntaje(500);
+        partida.setPuntaje(puntaje);
         partida.setEsta_activa(false);
         partida.setUsuario(usuario);
-        partida.setPistasUsadas(0);
+        partida.setPistasUsadas(pistasUsadas);
         partida.setGanada(true);
-        partida.setTiempoTotal(60L);
+        partida.setTiempoTotal(tiempoTotal);
 
-
-        Partida partida2 = new Partida();
-        partida2.setId(2L);
-        partida2.setInicio(LocalDateTime.now());
-        partida2.setSala(sala);
-        partida2.setPuntaje(500);
-        partida2.setEsta_activa(false);
-        partida2.setUsuario(usuario2);
-        partida2.setPistasUsadas(1); //pista usada
-        partida2.setGanada(true);
-        partida2.setTiempoTotal(60L); //mismo puntaje, mismo tiempo
-
-        listaDePartidas.add(partida);
-        listaDePartidas.add(partida2);
-
-        List<PuestoRanking> listaDePuestoRanking = new ArrayList<>();
-        listaDePuestoRanking.add(new PuestoRanking(sala.getId(), partida.getPuntaje(), usuario, partida.getTiempoTotal(), 0 ));
-        listaDePuestoRanking.add(new PuestoRanking(sala.getId(), partida2.getPuntaje(), usuario2, partida2.getTiempoTotal(), 0));
-
-        when(repositorioRanking.obtenerPartidasPorSala(sala.getId())).thenReturn(listaDePartidas);
-
-        List<PuestoRanking> puestosObtenidos = this.servicioRanking.obtenerRankingPorSala(sala.getId());
-
-        assertThat(puestosObtenidos.get(0).getUsuario(), equalTo(usuario));
-        assertThat(puestosObtenidos.get(0).getPuntaje(), equalTo(partida.getPuntaje()));
-        assertThat(puestosObtenidos.get(1).getUsuario(), equalTo(usuario2));
-        assertThat(puestosObtenidos.get(1).getPuntaje(), equalTo(partida2.getPuntaje()));
-        verify(repositorioRanking).obtenerPartidasPorSala(sala.getId());
+        return  partida;
     }
 
 }

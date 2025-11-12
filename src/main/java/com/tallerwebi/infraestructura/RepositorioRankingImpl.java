@@ -20,18 +20,9 @@ public class RepositorioRankingImpl implements RepositorioRanking {
 
 
     @Override
-    public List<Partida> obtenerPartidasPorSala(Integer idSala) {
-            String hql = "SELECT p FROM Partida p WHERE p.sala.id = :idSala AND p.ganada = true";
-            Query<Partida> query = this.sessionFactory.getCurrentSession().createQuery(hql, Partida.class);
-            query.setParameter("idSala", idSala);
-            return query.getResultList();
-        }
-
-    @Override
-    public Integer obtenerIdSalaConPartidaGanada() {
-        String hql = "SELECT p.sala.id FROM Partida p WHERE p.ganada = true";
-        Query<Integer> query = this.sessionFactory.getCurrentSession().createQuery(hql, Integer.class);
-        return query.getResultList().stream().findFirst().orElse(null);
+    public List<Partida> obtenerTodasLasPartidasGanadas() {
+        String hql = "FROM Partida p WHERE ganada = true";
+        Query<Partida> query = this.sessionFactory.getCurrentSession().createQuery(hql, Partida.class);
+        return query.getResultList();
     }
-
 }
