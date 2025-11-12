@@ -9,9 +9,9 @@ import com.tallerwebi.dominio.excepcion.UsuarioInexistente;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioPartida;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioSala;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
-import com.tallerwebi.dominio.interfaz.servicio.ServicioGeneradorIA;
+
 import com.tallerwebi.dominio.interfaz.servicio.ServicioPartida;
-import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
+
 import com.tallerwebi.infraestructura.RepositorioPartidaImpl;
 import com.tallerwebi.infraestructura.RepositorioSalaImpl;
 import com.tallerwebi.infraestructura.RepositorioUsuarioImpl;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -36,18 +35,15 @@ public class ServicioPartidaImplTest {
 
     private RepositorioPartida repositorioPartida;
     private ServicioPartida servicioPartida;
-    private ServicioSala servicioSala;
     private RepositorioUsuario repositorioUsuario;
     private RepositorioSala repositorioSala;
-    private ServicioGeneradorIA servicioGeneradorIA;
 
     @BeforeEach
     public void init() {
         this.repositorioPartida = mock(RepositorioPartidaImpl.class);
         this.repositorioUsuario = mock(RepositorioUsuarioImpl.class);
         this.repositorioSala = mock(RepositorioSalaImpl.class);
-        this.servicioGeneradorIA = mock(ServicioGeneradorIA.class);
-        this.servicioPartida = new ServicioPartidaImpl(servicioSala,repositorioPartida, repositorioUsuario, repositorioSala, servicioGeneradorIA );
+        this.servicioPartida = new ServicioPartidaImpl(repositorioPartida, repositorioUsuario, repositorioSala);
     }
 
     @Test
@@ -185,67 +181,7 @@ public class ServicioPartidaImplTest {
         verify(repositorioPartida).buscarEtapaPorId(etapa.getId());
         verify(repositorioPartida).registrarAcertijoMostrado(any(AcertijoUsuario.class));
     }
-    /*
-    @Test
-    public void deberiaDevolverLaPrimeraPistaDelAcertijo(){
-        Long idUsuario = 1L;
-        Acertijo acertijo = new Acertijo( "lalalal");
-        acertijo.setId(1L);
-        Pista pista1 = new Pista("pista", 1);
-        Pista pista2 = new Pista("pista", 2);
-        Pista pista3 = new Pista("pista", 3);
 
-        List<Pista> listaDePistas = new ArrayList<>();
-
-        listaDePistas.add(pista1);
-        listaDePistas.add(pista2);
-        listaDePistas.add(pista3);
-
-        Partida partida = new Partida(LocalDateTime.now());
-        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
-
-        when(repositorioPartida.obtenerListaDePistas(acertijo.getId())).thenReturn(listaDePistas);
-
-        Pista pista = this.servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario);
-
-        verify(repositorioPartida).obtenerListaDePistas(acertijo.getId());
-        verify(repositorioPartida).obtenerPartidaActivaPorUsuario(idUsuario);
-        assertThat(pista, equalTo(listaDePistas.get(0)));
-    }
-     - - - - - - - - - - -  - - - - - - - - - - -  - - - - - - - - -  - - - - - -  - - - - -
-    @Test
-    public void deberiaDevolverLaSegundaPistaDelAcertijo_UnaVezQueYaPidioLaPrimera(){
-        Acertijo acertijo = new Acertijo( "lalalal");
-        acertijo.setId(1L);
-        Pista pista1 = new Pista("pista", 1);
-        Pista pista2 = new Pista("pista", 2);
-        Long idUsuario = 1L;
-
-        List<Pista> listaDePistas = new ArrayList<>();
-        listaDePistas.add(pista1);
-        listaDePistas.add(pista2);
-
-        AtomicInteger pistasUsadas = new AtomicInteger(0);
-
-        when(repositorioPartida.obtenerListaDePistas(acertijo.getId())).thenReturn(listaDePistas);
-        when(repositorioPartida.obtenerPistasUsadas(acertijo.getId(), idUsuario)).thenAnswer(invocation -> pistasUsadas.get());
-
-        doAnswer(invocation -> {
-            pistasUsadas.incrementAndGet();
-            return null;
-        }).when(repositorioPartida).sumarPistaUsada(acertijo.getId(), idUsuario);
-
-        Partida partida = new Partida(LocalDateTime.now());
-        when(repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario)).thenReturn(partida);
-
-        this.servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario);
-        Pista pista = this.servicioPartida.obtenerSiguientePista(acertijo.getId(), idUsuario);
-
-        verify(repositorioPartida, times(2)).obtenerListaDePistas(acertijo.getId());
-        verify(repositorioPartida, times(2)).obtenerPartidaActivaPorUsuario(idUsuario);
-        assertThat(pista, equalTo(listaDePistas.get(1)));
-    }
-    */
     @Test
     public void deberiaDevolverTrueSiSeRespondioCorrectamenteElAcertijo_DeTipoADIVINANZA(){
         AcertijoActualDTO acertijoDTO =  new AcertijoActualDTO();

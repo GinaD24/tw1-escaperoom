@@ -26,21 +26,17 @@ import java.util.stream.Collectors;
 
 public class ServicioPartidaImpl implements ServicioPartida {
 
-    private ServicioSala servicioSala;
+
     private RepositorioPartida repositorioPartida;
     private RepositorioUsuario repositorioUsuario;
     private RepositorioSala repositorioSala;
-    private ServicioGeneradorIA servicioGeneradorIA;
 
     @Autowired
-    public ServicioPartidaImpl(ServicioSala servicioSala, RepositorioPartida repositorioPartida,
-                               RepositorioUsuario repositorioUsuario, RepositorioSala repositorioSala,
-                                ServicioGeneradorIA servicioGeneradorIA) {
-        this.servicioSala = servicioSala;
+    public ServicioPartidaImpl(RepositorioPartida repositorioPartida,
+                               RepositorioUsuario repositorioUsuario, RepositorioSala repositorioSala) {
         this.repositorioPartida = repositorioPartida;
         this.repositorioUsuario = repositorioUsuario;
         this.repositorioSala = repositorioSala;
-        this.servicioGeneradorIA = servicioGeneradorIA;
     }
 
     @Override
@@ -59,51 +55,13 @@ public class ServicioPartidaImpl implements ServicioPartida {
         Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
 
         if (partida != null) {
+            partida.setPistasUsadas(partida.getPistasUsadas() + 1);
+            partida.setPuntaje(partida.getPuntaje() - 25);
             this.repositorioPartida.registrarPistaEnPartida(idUsuario);
-
-            partida.setPuntaje(partida.getPuntaje() - 25);
         }
 
     }
- /*
-    @Override
-    @Transactional
-    public Pista obtenerSiguientePista(Long idAcertijo, Long id_usuario) {
 
-        Integer pistasUsadas = this.repositorioPartida.obtenerPistasUsadas(idAcertijo, id_usuario);
-
-
-        List<Pista> listaObtenidaDePistas = this.repositorioPartida.obtenerListaDePistas(idAcertijo);
-        Pista pistaSeleccionada = null;
-
-        while (pistasUsadas < listaObtenidaDePistas.size() && pistaSeleccionada == null) {
-
-            switch (pistasUsadas) {
-                case 0:
-                    pistaSeleccionada = listaObtenidaDePistas.get(0);
-                    this.repositorioPartida.sumarPistaUsada(idAcertijo, id_usuario);
-                    break;
-                case 1:
-                    pistaSeleccionada = listaObtenidaDePistas.get(1);
-                    this.repositorioPartida.sumarPistaUsada(idAcertijo, id_usuario);
-                    break;
-                case 2:
-                    pistaSeleccionada = listaObtenidaDePistas.get(2);
-                    this.repositorioPartida.sumarPistaUsada(idAcertijo, id_usuario);
-                    break;
-            }
-
-        }
-        if (pistaSeleccionada != null) {
-            this.repositorioPartida.registrarPistaEnPartida(id_usuario);
-            Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(id_usuario);
-            partida.setPuntaje(partida.getPuntaje() - 25);
-        }
-
-        return pistaSeleccionada;
-        return null;
-    }
-*/
     @Transactional
     @Override
     public Boolean validarRespuesta(AcertijoActualDTO acertijoActual, String respuestaUsuario, Long idUsuario, @Nullable String ordenSecuenciaCorrecto) {
@@ -187,86 +145,7 @@ public class ServicioPartidaImpl implements ServicioPartida {
 
         return esCorrecta;
     }
-/*
-    @Override
-    @Transactional
-    public Boolean validarRespuesta(Long idAcertijo, String respuesta, Long idUsuario, @Nullable String ordenSecuenciaCorrecto) {
-        Partida partida = this.repositorioPartida.obtenerPartidaActivaPorUsuario(idUsuario);
-        boolean esCorrecta = false;
 
-        Acertijo acertijo = this.repositorioPartida.buscarAcertijoPorId(idAcertijo);
-
-        switch(acertijo.getTipo()){
-            case ADIVINANZA:
-                String[] palabrasIngresadas = respuesta.toLowerCase().split("\\s+");
-
-                Respuesta correcta =this.repositorioPartida.obtenerRespuestaCorrecta(idAcertijo);
-                if(Arrays.asList(palabrasIngresadas).contains(correcta.getRespuesta().toLowerCase())){
-                    esCorrecta = true;
-                    partida.setPuntaje(partida.getPuntaje() + 100);
-                }
-                break;
-
-            case ORDENAR_IMAGEN:
-                List<Long> ordenSeleccionado = Arrays.stream(respuesta.split(","))
-                        .map(Long::valueOf)
-                        .collect(Collectors.toList());
-
-                List<Long> ordenCorrecto = this.repositorioPartida.obtenerOrdenDeImgCorrecto(idAcertijo);
-
-                if (ordenSeleccionado.equals(ordenCorrecto)) {
-                    esCorrecta = true;
-                    partida.setPuntaje(partida.getPuntaje() + 100);
-                }
-                break;
-
-            case SECUENCIA:
-
-                if (ordenSecuenciaCorrecto == null) {
-                    throw new IllegalArgumentException("Se requiere el orden correcto para acertijo SECUENCIA");
-                }
-
-                List<Long> ordenSeleccionadoSecuencia = Arrays.stream(respuesta.split(","))
-                        .map(Long::valueOf)
-                        .collect(Collectors.toList());
-
-                List<Long> ordenCorrectoList = Arrays.stream(ordenSecuenciaCorrecto.split(","))
-                        .map(Long::valueOf)
-                        .collect(Collectors.toList());
-
-                if (ordenSeleccionadoSecuencia.equals(ordenCorrectoList)) {
-                    esCorrecta = true;
-                    partida.setPuntaje(partida.getPuntaje() + 100);
-                }
-                break;
-
-            case DRAG_DROP:
-                Map<Long, String> respuestaUsuario = Arrays.stream(respuesta.split(","))
-                        .map(pair -> pair.split(":"))
-                        .filter(arr -> arr.length == 2)
-                        .collect(Collectors.toMap(
-                                arr -> Long.valueOf(arr[0]),
-                                arr -> arr[1]
-                        ));
-
-                List<DragDropItem> itemsCorrectos = this.repositorioPartida.obtenerItemsDragDrop(idAcertijo);
-
-                boolean todoCorrecto = itemsCorrectos.stream()
-                        .allMatch(item ->
-                                respuestaUsuario.containsKey(item.getId()) &&
-                                        respuestaUsuario.get(item.getId()).equals(item.getCategoriaCorrecta())
-                        );
-                if (todoCorrecto) {
-                    esCorrecta = true;
-                    partida.setPuntaje(partida.getPuntaje() + 100);
-                }
-                break;
-
-        }
-
-        return esCorrecta;
-    }
-*/
     @Override
     @Transactional
     public Acertijo buscarAcertijoPorId(Long idAcertijo) {

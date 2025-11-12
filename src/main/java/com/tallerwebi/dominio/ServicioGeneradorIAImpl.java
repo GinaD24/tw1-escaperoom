@@ -1,5 +1,3 @@
-// Reemplaza el contenido de ServicioGeneradorIAImpl.java con esto:
-
 package com.tallerwebi.dominio;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -96,8 +94,6 @@ public class ServicioGeneradorIAImpl implements ServicioGeneradorIA {
             return nuevasPistas;
 
         } catch (HttpClientErrorException e) {
-            System.err.println("Error HTTP al llamar a Hugging Face: " + e.getStatusCode());
-            System.err.println("Respuesta del Servidor: " + e.getResponseBodyAsString());
             throw new RuntimeException("Error al llamar a la IA: revisa el token o el modelo.", e);
         } catch (Exception e) {
             throw new Exception("Error inesperado en ServicioGeneradorIA: " + e.getMessage(), e);

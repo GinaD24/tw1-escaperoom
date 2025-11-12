@@ -1,5 +1,5 @@
 # Usa la imagen base de OpenJDK 11
-FROM openjdk:11
+FROM eclipse-temurin:11-jdk
 
 # Configura la zona horaria argentina
 ENV TZ=America/Argentina/Buenos_Aires

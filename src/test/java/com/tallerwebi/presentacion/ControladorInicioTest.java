@@ -1,10 +1,8 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.entidad.Sala;
-import com.tallerwebi.dominio.entidad.SalaVista;
-import com.tallerwebi.dominio.entidad.Usuario;
-import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioLogin;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 import com.tallerwebi.dominio.enums.Dificultad;
 import com.tallerwebi.dominio.excepcion.NoHaySalasExistentes;
@@ -28,14 +26,14 @@ public class ControladorInicioTest {
     private ControladorInicio controladorInicio;
     private ServicioSala servicioSala;
     private ServicioCompra servicioCompra;
-    private RepositorioUsuario repositorioUsuario;
+    private ServicioLogin servicioLogin;
 
     @BeforeEach
     public void init(){
         this.servicioSala = mock(ServicioSala.class);
         this.servicioCompra = mock(ServicioCompra.class);
-        this.repositorioUsuario = mock(RepositorioUsuario.class);
-        this.controladorInicio = new ControladorInicio(servicioSala, servicioCompra, repositorioUsuario);
+        this.servicioLogin = mock(ServicioLogin.class);
+        this.controladorInicio = new ControladorInicio(servicioSala, servicioCompra, servicioLogin);
     }
 
     @Test
@@ -63,6 +61,10 @@ public class ControladorInicioTest {
         Sala sala2 = new Sala(2, "Sala 2", Dificultad.INTERMEDIO, "", "", true, 15, "");
         Sala sala3 = new Sala(3, "Sala 3", Dificultad.AVANZADO, "", "", true, 20, "");
 
+        sala1.setEs_paga(false);
+        sala2.setEs_paga(false);
+        sala3.setEs_paga(false);
+
         List<Sala> salas = new ArrayList<>();
         salas.add(sala1);
         salas.add(sala2);
@@ -74,7 +76,7 @@ public class ControladorInicioTest {
         // ejecución
         ModelAndView modelAndView = controladorInicio.verInicio(request);
 
-        List<SalaVista> salasObtenidas = (List<SalaVista>) modelAndView.getModel().get("salas");
+        List<Sala> salasObtenidas = (List<Sala>) modelAndView.getModel().get("salas");
 
         // verificación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("inicio"));

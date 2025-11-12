@@ -41,6 +41,7 @@ public class RepositorioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         sala.setCantidadDeEtapas(5);
+        sala.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala);
 
         Partida partida = new Partida(LocalDateTime.now());
@@ -57,6 +58,7 @@ public class RepositorioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         sala.setCantidadDeEtapas(5);
+        sala.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala);
 
         Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
@@ -73,6 +75,7 @@ public class RepositorioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         sala.setCantidadDeEtapas(5);
+        sala.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala);
 
         Etapa etapa = new Etapa("Lobby", 1, "La puerta hacia la siguiente habitación está bloqueada por un candado, busca la clave en este acertijo.", "a.png");
@@ -290,6 +293,7 @@ public class RepositorioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         sala.setCantidadDeEtapas(5);
+        sala.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala);
 
         Usuario usuario = new Usuario();
@@ -312,6 +316,7 @@ public class RepositorioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         sala.setCantidadDeEtapas(5);
+        sala.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala);
 
         Usuario usuario = new Usuario();
@@ -408,6 +413,7 @@ public class RepositorioPartidaImplTest {
         Sala sala = new Sala(1, "La Mansión Misteriosa", Dificultad.PRINCIPIANTE, "Mansion", "Una noche tormentosa te encuentras atrapado en una vieja mansion llena de acertijos.",
                 true, 10,"puerta-mansion.png");
         sala.setCantidadDeEtapas(5);
+        sala.setEs_paga(false);
         this.sessionFactory.getCurrentSession().save(sala);
 
         Usuario usuario = new Usuario();

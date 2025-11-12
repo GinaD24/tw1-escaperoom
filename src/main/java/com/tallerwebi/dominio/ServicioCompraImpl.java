@@ -16,7 +16,6 @@ import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.interfaz.repositorio.RepositorioCompra;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +30,6 @@ public class ServicioCompraImpl implements ServicioCompra {
     private RepositorioCompra repositorioCompra;
     private static final String MP_ACCESS_TOKEN = "APP_USR-6211919620729480-102619-24d439b82c041fa247a03901e9badbd0-2948865251";
 
-
     public ServicioCompraImpl() {}
 
     @Autowired
@@ -41,7 +39,7 @@ public class ServicioCompraImpl implements ServicioCompra {
 
     @Override
     @Transactional
-    public String iniciarCompra(Usuario usuario, Sala sala) { //Crea y guarda un objeto Compra.
+    public String iniciarCompra(Usuario usuario, Sala sala) {
         Compra nuevaCompra = new Compra(usuario, sala, LocalDateTime.now(), false);
         repositorioCompra.guardarCompra(nuevaCompra);
         nuevaCompra.setExternalReference(nuevaCompra.getId().toString());
@@ -50,7 +48,7 @@ public class ServicioCompraImpl implements ServicioCompra {
         try {
             MercadoPagoConfig.setAccessToken(MP_ACCESS_TOKEN);
 
-            PreferenceItemRequest itemRequest = PreferenceItemRequest.builder() //Define qué se va a compra
+            PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
                     .id(nuevaCompra.getExternalReference())
                     .title("Acceso a sala: " + sala.getNombre())
                     .description("Desbloquea la sala en Escape Room")
@@ -63,14 +61,14 @@ public class ServicioCompraImpl implements ServicioCompra {
             List<PreferenceItemRequest> items = new ArrayList<>();
             items.add(itemRequest);
 
-            String baseUrl = "https://d256840ea3b7.ngrok-free.app";
-            String notificationBaseUrl = "https://d256840ea3b7.ngrok-free.app";
-            PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder() //Se especifican las URL (backUrls) a las que MP redirigirá al usuario después de pagar (
+            String baseUrl = "https://historical-edythe-semiexternally.ngrok-free.dev";
+            String notificationBaseUrl = "https://historical-edythe-semiexternally.ngrok-free.dev";
+            PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
                     .success(baseUrl + "/spring/compra/confirmacion")
                     .failure(baseUrl + "/spring/inicio?pago=fallido")
                     .pending(baseUrl + "/spring/inicio?pago=pendiente")
                     .build();
-            PreferenceRequest preferenceRequest = PreferenceRequest.builder() //Envía toda la información a MP para crear una Preference (la pantalla de pago).
+            PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                     .items(items)
                     .backUrls(backUrls)
                     .externalReference(nuevaCompra.getExternalReference())
@@ -81,7 +79,7 @@ public class ServicioCompraImpl implements ServicioCompra {
             PreferenceClient client = new PreferenceClient();
             Preference preference = client.create(preferenceRequest);
 
-            return preference.getInitPoint(); //Devuelve el initPoint (la URL) a la que tu aplicación debe redirigir al usuario para que pague en la interfaz de Mercado Pago.
+            return preference.getInitPoint();
 
         } catch (MPApiException e) {
             e.printStackTrace();
@@ -97,13 +95,13 @@ public class ServicioCompraImpl implements ServicioCompra {
     @Transactional
     public void confirmarPago(String paymentId) {
         try {
-            MercadoPagoConfig.setAccessToken(MP_ACCESS_TOKEN); // consulta esdo de pago
-            PaymentClient paymentClient = new PaymentClient(); //Usa el paymentId proporcionado por MP para buscar la información completa del Payment en la API de Mercado Pago.
+            MercadoPagoConfig.setAccessToken(MP_ACCESS_TOKEN);
+            PaymentClient paymentClient = new PaymentClient();
             Payment payment = paymentClient.get(Long.valueOf(paymentId));
 
-            String externalReference = payment.getExternalReference(); // Del objeto Payment obtenido, se extrae el externalReference (el ID de la compra en tu sistema).
+            String externalReference = payment.getExternalReference();
 
-            if (externalReference != null) { // Utiliza el externalReference para buscar el objeto Compra correspondiente en tu repositorio.
+            if (externalReference != null) {
                 Compra compra = repositorioCompra.obtenerCompraPorExternalReference(externalReference);
 
                 if (compra != null && "approved".equals(payment.getStatus())) {
@@ -141,6 +139,5 @@ public class ServicioCompraImpl implements ServicioCompra {
             repositorioCompra.guardarCompra(compra);
         }
     }
-    // está diseñado para usarse directamente cuando tu sistema ya tiene la externalReference y el paymentId, sin tener que consultar nuevamente a la API de MP para obtener el estado del pago.
-    // forma más directa de actualizar el estado de la compra, asumiendo que el proceso de pago ya fue completado exitosamente y MP redirigió al usuario a tu URL de éxito
+
 }

@@ -1,10 +1,9 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.entidad.Sala;
-import com.tallerwebi.dominio.entidad.SalaVista;
 import com.tallerwebi.dominio.entidad.Usuario;
-import com.tallerwebi.dominio.interfaz.repositorio.RepositorioUsuario;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioCompra;
+import com.tallerwebi.dominio.interfaz.servicio.ServicioLogin;
 import com.tallerwebi.dominio.interfaz.servicio.ServicioSala;
 
 import com.tallerwebi.dominio.enums.Dificultad;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -26,13 +24,13 @@ public class ControladorInicio {
 
     private ServicioSala servicioSala;
     private ServicioCompra servicioCompra;
-    private RepositorioUsuario repositorioUsuario;
+    private ServicioLogin servicioLogin;
 
     @Autowired
-    public ControladorInicio(ServicioSala servicioSala, ServicioCompra servicioCompra, RepositorioUsuario repositorioUsuario) {
+    public ControladorInicio(ServicioSala servicioSala, ServicioCompra servicioCompra, ServicioLogin servicioLogin) {
         this.servicioSala = servicioSala;
         this.servicioCompra = servicioCompra;
-        this.repositorioUsuario = repositorioUsuario;
+        this.servicioLogin = servicioLogin;
     }
 
     @GetMapping("/")
@@ -41,20 +39,21 @@ public class ControladorInicio {
 
         try {
             List<Sala> salas = servicioSala.traerSalas();
-            List<SalaVista> salasVista = new ArrayList<>();
 
             Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");
             Usuario usuario = null;
             if (idUsuario != null) {
-                usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+                usuario = servicioLogin.buscarUsuarioPorId(idUsuario);
             }
 
             for (Sala sala : salas) {
-                boolean desbloqueada = (usuario != null) && servicioCompra.salaDesbloqueadaParaUsuario(usuario, sala);
-                salasVista.add(new SalaVista(sala, desbloqueada));
+                if(sala.getEs_paga()){
+                    boolean desbloqueada = (usuario != null) && servicioCompra.salaDesbloqueadaParaUsuario(usuario, sala);
+                    sala.setEsta_habilitada(desbloqueada);
+                }
             }
 
-            modelo.put("salas", salasVista);
+            modelo.put("salas", salas);
         } catch (NoHaySalasExistentes e) {
             modelo.put("error", "No hay salas existentes.");
         }
@@ -90,23 +89,23 @@ public class ControladorInicio {
         }
 
         List<Sala> salasFiltradas = servicioSala.obtenerSalaPorDificultad(dificultad);
-        List<SalaVista> salasVista = new ArrayList<>();
+
 
         Long idUsuario = (Long) request.getSession().getAttribute("id_usuario");
         Usuario usuario = null;
         if (idUsuario != null) {
-            usuario = repositorioUsuario.obtenerUsuarioPorId(idUsuario);
+            usuario = servicioLogin.buscarUsuarioPorId(idUsuario);
         }
 
         for (Sala sala : salasFiltradas) {
-            if (sala == null || sala.getNombre() == null) {
-                continue;
+            if( sala != null && sala.getEs_paga() && sala.getNombre() != null){
+                boolean desbloqueada = (usuario != null) && servicioCompra.salaDesbloqueadaParaUsuario(usuario, sala);
+                sala.setEsta_habilitada(desbloqueada);
             }
-            boolean desbloqueada = (usuario != null) && servicioCompra.salaDesbloqueadaParaUsuario(usuario, sala);
-            salasVista.add(new SalaVista(sala, desbloqueada));
+
         }
 
-        modelo.put("salas", salasVista);
+        modelo.put("salas", salasFiltradas);
         return new ModelAndView("inicio", modelo);
     }
 }
