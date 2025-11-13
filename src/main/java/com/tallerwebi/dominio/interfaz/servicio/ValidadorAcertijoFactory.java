@@ -39,7 +39,11 @@ public class ValidadorAcertijoFactory {
     }
 
     public ValidadorAcertijo getValidador(TipoAcertijo tipo) {
+        if(tipo.equals(TipoAcertijo.BONUS)){
+            tipo = TipoAcertijo.ADIVINANZA;
+        }
         ValidadorAcertijo validador = validadorMap.get(tipo);
+
         if (validador == null) {
             throw new UnsupportedOperationException("Tipo de acertijo no soportado: " + tipo);
         }
