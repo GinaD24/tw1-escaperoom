@@ -299,36 +299,7 @@ public class ControladorPartida {
             return;
         }
 
-        Acertijo acertijoFabricado = new Acertijo();
-        acertijoFabricado.setId(acertijoActual.getId());
-        acertijoFabricado.setTipo(acertijoActual.getTipo());
-        acertijoFabricado.setDescripcion(acertijoActual.getDescripcion());
-
-        Respuesta respuestaFabricada = new Respuesta();
-        respuestaFabricada.setRespuesta(acertijoActual.getRespuestaCorrecta());
-        respuestaFabricada.setEs_correcta(true);
-        respuestaFabricada.setAcertijo(acertijoFabricado);
-        acertijoFabricado.setRespuesta(respuestaFabricada);
-
-        int numeroPista = 1;
-
-        for (String descPista : acertijoActual.getPistas()) {
-            Pista pistaFabricada = new Pista();
-            pistaFabricada.setDescripcion(descPista);
-            pistaFabricada.setNumero(numeroPista++);
-            pistaFabricada.setAcertijo(acertijoFabricado);
-            acertijoFabricado.getPistas().add(pistaFabricada);
-        }
-
-        if (acertijoFabricado.getId() != null &&
-                (acertijoFabricado.getTipo().equals(TipoAcertijo.DRAG_DROP) ||
-                        acertijoFabricado.getTipo().equals(TipoAcertijo.ORDENAR_IMAGEN) ||
-                        acertijoFabricado.getTipo().equals(TipoAcertijo.SECUENCIA)))
-        {
-            Acertijo acertijoConItems = servicioPartida.buscarAcertijoPorId(acertijoFabricado.getId());
-            acertijoFabricado.setDragDropItems(acertijoConItems.getDragDropItems());
-            acertijoFabricado.setImagenes(acertijoConItems.getImagenes());
-        }
+        Acertijo acertijoFabricado = this.obtenerAcertijoDesdeSesion(acertijoActual);
 
         dtoDatosPartida.setAcertijo(acertijoFabricado);
     }
