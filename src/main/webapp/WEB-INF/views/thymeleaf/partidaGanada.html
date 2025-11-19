@@ -41,7 +41,7 @@
             </h5>
 
             <h5 class="ms-3 fw-bold" th:if="${partida != null}">
-                Tiempo: <span class="fw-light" th:text="${partida.tiempoTotal}  + ' seg'"></span>
+                Tiempo: <span class="fw-light" th:text="${(partida.tiempoTotal/ 60) + 'm ' + (partida.tiempoTotal % 60) + 's'}"></span>
             </h5>
         </div>
 
