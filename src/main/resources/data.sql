@@ -24,7 +24,7 @@ VALUES (
 
 
 INSERT INTO Sala (nombre, dificultad, escenario, historia, es_paga, esta_habilitada, duracion, imagenPuerta, imagenSala, cantidadDeEtapas, imagenGanada, imagenPerdida)VALUES
-                                                                                          ('La Mansión Misteriosa', 'PRINCIPIANTE', 'Mansion', 'Una tormenta te obliga a refugiarte en una mansión detenida en el tiempo. Cada habitación oculta enigmas y secretos del pasado. Escapa antes de que la casa te atrape.', FALSE, TRUE, 5,'puerta-mansion.png', 'mansion-misteriosa.png', 5, 'mansion-ganada.png', 'mansion-perdida.png'),
+                                                                                          ('La Mansión Misteriosa', 'PRINCIPIANTE', 'Mansion', 'Una tormenta te obliga a refugiarte en una mansión detenida en el tiempo. Cada habitación oculta enigmas y secretos del pasado. Escapa antes de que la casa te atrape.', FALSE, TRUE, 2,'puerta-mansion.png', 'mansion-misteriosa.png', 5, 'mansion-ganada.png', 'mansion-perdida.png'),
                                                                                           ('El Laboratorio Secreto', 'INTERMEDIO', 'Laboratorio', 'Tras la desaparición de un científico, quedas atrapado en su laboratorio. Entre fórmulas inestables y máquinas fuera de control, debes escapar antes del colapso.', FALSE,TRUE, 10, 'puerta-laboratorio.png', 'laboratorio-secreto.png', 8, 'laboratorio-ganado.png', 'laboratorio-perdido.png'),
                                                                                           ('La Carcel Abandonada', 'AVANZADO', 'Prision', 'Atrapado en una celda olvidada, descubres que los guardias no son tu único problema. Descifra los códigos y huye antes de que llegue el próximo relevo.', FALSE,TRUE, 12,'puerta-prision.png', 'carcel-abandonada.png', 10, 'carcel-ganada.png', 'carcel-perdida.png'),
                                                                                           ('El campamento maldito', 'PRINCIPIANTE', 'Campamento', 'Estás perdido en un campamento de verano olvidado, envuelto en una densa niebla. Hay pistas de un ritual a medio terminar y debes buscar la llave del predio y encontrar el camino antes de que ''algo'' te encuentre.', TRUE,FALSE, 5, 'puerta-campamento.png', 'campamento-maldito.png', 5, 'campamento-ganado.png', 'campamento-perdido.png'),
@@ -65,7 +65,7 @@ INSERT INTO ImagenAcertijo (id_acertijo, nombreArchivo, ordenCorrecto) VALUES
                                                                            (5, 'img-silla.png', 2),
                                                                            (5, 'img-mesa.png', 4),
                                                                            (5, 'img-sillon.png', 3);
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Piensa en el tamaño de los objetos en la vida real.', 1, 5);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Piensa en las medidas de los objetos en la vida real.', 1, 5);
 
 -- ACERTIJOS ETAPA 4: Despacho (id_etapa = 4)
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
@@ -142,7 +142,7 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
                                                                          (11, 'ReactivoA.png', 'Quimicos'),
                                                                          (11, 'ReactivoB.png', 'Quimicos');
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los químicos tienen etiquetas.', 1, 11);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('Los quimicos tienen etiquetas.', 1, 11);
 
 INSERT INTO Respuesta (respuesta, es_correcta, id_acertijo) VALUES ('GAS', TRUE, 12);
 
@@ -189,7 +189,7 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
 (16, 'objeto-diario.png', 'Estante de lectura'),
 (16, 'objeto-pinza.png', 'Caja de herramientas');
 
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('El cuaderno forma parte del cajón de escritura.', 1, 16);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('El cuaderno forma parte del cajon de escritura.', 1, 16);
 
 INSERT INTO Acertijo (tipo, descripcion, id_etapa) VALUES
 ('DRAG_DROP', '¡Alerta de Fusión del Núcleo! El reactor está fallando. Para desviar la energía a la puerta de escape, debes arrastrar los componentes funcionales al "Núcleo" y desechar los defectuosos en el "Contenedor de Residuos". ¡No te equivoques!', 13);
@@ -456,7 +456,7 @@ INSERT INTO DragDropItem (id_acertijo, contenido, categoriaCorrecta) VALUES
                                                                          (38, 'expediente-sello-verde-cerrado2.png', 'Cerrados'),
                                                                          (38, 'expediente-sello-rojo-abierto3.png', 'Abiertos'),
                                                                          (38, 'expediente-sello-verde-cerrado3.png', 'Cerrados');
-INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('El color rojo siempre indica una alerta, un caso que aún está en proceso.', 1, 38);
+INSERT INTO Pista (descripcion, numero, id_acertijo) VALUES ('El color rojo siempre indica una alerta, un caso que aun está en proceso.', 1, 38);
 
 -- ------------------------------------------------------------------
 -- ETAPA 5: Sala de Tratamientos (id_etapa = 33)

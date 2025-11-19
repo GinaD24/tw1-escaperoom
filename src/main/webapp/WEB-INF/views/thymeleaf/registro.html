@@ -35,28 +35,31 @@
 </div>
 
 
-<header class="w-full fixed top-0 left-0 z-10 py-8" style="background-color: #1a1a3b;">
-    <div class="container-fluid flex justify-between items-center px-4">
-        <div>
-            <a th:href="@{/login}">
-                <img class="logo-escape" style="width: 60px" alt="logo" th:src="@{/img/Logo.png}">
-            </a>
-        </div>
-        <a class="text-5xl sm:text-5xl font-bold text-center text-yellow-300 tracking-wider hover:text-blue-800"
-           style="
-               font-family: 'Rajdhani', sans-serif;
-               text-shadow: 0 0 10px rgba(255, 235, 59, 0.3);
-           ">
-            ESCAPE ROOM
+<header class="w-full fixed top-0 left-0 z-10 py-8"
+        style="background-color: rgba(26, 26, 59, 0.49);
+               border-bottom: 2px solid rgba(90, 27, 167, 0.69);">
+
+    <div class="relative container-fluid flex items-center px-4">
+
+        <!-- LOGO IZQUIERDA -->
+        <a th:href="@{/home}" class="mr-auto">
+            <img class="logo-escape" style="width: 60px" alt="logo"
+                 th:src="@{/img/Logo.png}">
         </a>
-        <div class="h-6 flex gap-6 items-center">
-        </div>
+
+        <!-- TÍTULO CENTRADO ABSOLUTO -->
+        <h1 class="absolute left-1/2 transform -translate-x-1/2
+                   text-5xl sm:text-7xl font-bold"
+            style="font-family: 'Rajdhani', sans-serif;     color: #fafb63;">
+            ESCAPE ROOM
+        </h1>
+
     </div>
 </header>
 
 <main class="w-full max-w-2xl mt-20">  <div class="p-8 rounded-2xl shadow-2xl bg-white/10 backdrop-blur-md border border-yellow-400/20">
     <h2 class="text-3xl title-font font-bold text-center text-yellow-300 mb-6">
-        Crear Nueva Cuenta
+        Crear nueva cuenta
     </h2>
 
     <form th:action="@{/registrarme}" method="post" th:object="${usuario}" class="space-y-6" id="registroForm">
@@ -83,16 +86,16 @@
 
         <div>
             <label for="nombreUsuario" class="block mb-2 text-sm font-medium text-yellow-100 flex items-center">
-                Nombre de Usuario
+                Nombre de usuario
             </label>
             <input th:field="*{nombreUsuario}" type="text" id="nombreUsuario"
                    class="w-full px-4 py-3 rounded-xl bg-white/10 border border-yellow-200/30 text-white placeholder-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition duration-200"
-                   placeholder="Minimo 4 caracteres" required minlength="4">
+                   placeholder="Mínimo 4 caracteres" required minlength="4">
         </div>
 
         <div>
             <label for="email" class="block mb-2 text-sm font-medium text-yellow-100 flex items-center">
-                Correo Electronico
+                Correo electrónico
             </label>
             <input th:field="*{email}" type="email" id="email"
                    class="w-full px-4 py-3 rounded-xl bg-white/10 border border-yellow-200/30 text-white placeholder-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition duration-200"
@@ -106,26 +109,26 @@
 
             <div>
                 <label for="password" class="block mb-2 text-sm font-medium text-yellow-100 flex items-center">
-                    Contrasenia
+                    Contraseña
                 </label>
                 <input th:field="*{password}" type="password" id="password"
                        class="w-full px-4 py-3 rounded-xl bg-white/10 border border-yellow-200/30 text-white placeholder-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition duration-200"
-                       placeholder="Minimo 8 caracteres" required minlength="8">
+                       placeholder="Mínimo 8 caracteres" required minlength="8">
             </div>
 
             <div>
                 <label for="confirmPassword" class="block mb-2 text-sm font-medium text-yellow-100 flex items-center">
-                    Confirmar Contrasenia
+                    Confirmar contraseña
                 </label>
                 <input type="password" id="confirmPassword" name="confirmPassword"
                        class="w-full px-4 py-3 rounded-xl bg-white/10 border border-yellow-200/30 text-white placeholder-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition duration-200"
-                       placeholder="Repite la contrasenia" required>
+                       placeholder="Repite la contraseña" required>
             </div>
         </div>
 
         <div>
             <label for="fechaNacimiento" class="block mb-2 text-sm font-medium text-yellow-100 flex items-center">
-                Fecha de Nacimiento
+                Fecha de nacimiento
             </label>
             <input th:field="*{fechaNacimiento}" type="date" id="fechaNacimiento"
                    class="w-full px-4 py-3 rounded-xl bg-white/10 border border-yellow-200/30 text-white placeholder-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition duration-200"
@@ -141,7 +144,7 @@
 
     <div class="mt-6 text-center">
         <a th:href="@{/login}" class="text-purple-300 hover:text-yellow-300 underline transition duration-200">
-            Ya tenes cuenta? <span class="font-semibold">Inicia Sesion</span>
+            ¿Ya tenés cuenta? <span class="font-semibold">Iniciá Sesión</span>
         </a>
     </div>
 </div>

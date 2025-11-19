@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&display=swap');
+
+body {
+    background: linear-gradient(135deg, #1e0d58, #0b1a38, #271144);
+    background-size: cover;
+    height: 100vh;
+    color: #F5EB4D;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.titulo-logo{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 5rem;
+}
+
+.titulo {
+    font-size: 6rem;
+    font-weight: 800;
+    letter-spacing: 5px;
+
+}
+
+.subtitulo {
+    margin-top: 30px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+.botones{
+    display: flex;
+    flex-direction: row;
+    gap:90px;
+    justify-content: center;
+    margin-top: 10rem;
+
+}
+
+.boton-azul {
+    background-color: #005DFF;
+    color: white;
+    font-size: 1.3rem;
+    border-radius: 30px;
+    Padding: 14px 30px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+.boton-rojo {
+    background-color: #FF3A32;
+    color: white;
+    font-size: 1.3rem;
+    border-radius: 30px;
+    Padding: 14px 30px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+.boton-azul, .boton-rojo {
+    transition: transform 0.3s ease;
+}
+
+.boton-azul:hover,
+.boton-rojo:hover {
+    transform: scale(1.08);
+}
+
+
+.icono-salida {
+    width: 250px;
+    height: 250px;
+    margin-top: 90px;
+}
