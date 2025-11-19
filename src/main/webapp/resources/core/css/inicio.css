@@ -17,9 +17,11 @@ body {
     color: #fafb63;
 }
 
-.navbar-brand a:hover {
-   color: yellow;
+.navbar-brand:hover {
+    color: #fafb63 !important;  /* el mismo color del estado normal */
+    text-decoration: none;
 }
+
 .logo-escape{
     width: 60px;
 }
